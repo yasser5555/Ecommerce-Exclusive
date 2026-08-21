@@ -11,5 +11,5 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "/src/uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 module.exports = app;

@@ -2,9 +2,7 @@ const authService = require("./auth.service");
 
 const register = async (req, res, next) => {
   try {
-    // ? Creating a new user if not exist
-    const result = await authService.register(req.body);
-    // ? Sending user-data within Response
+     const result = await authService.register(req.body);
     res.status(201).json(result);
   } catch (error) {
     next(error);
@@ -12,7 +10,7 @@ const register = async (req, res, next) => {
 };
 
 const login = async (req, res, next) => {
-  var Result ;
+  var Result;
   try {
     Result = await authService.login(req.body.email, req.body.password);
     res.status(200).json(Result);

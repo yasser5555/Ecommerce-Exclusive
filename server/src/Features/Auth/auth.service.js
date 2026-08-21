@@ -5,16 +5,16 @@ const crypto = require("crypto");
 const sendEmail = require("../../shared/utils/sendEmail");
 
 const register = async (data) => {
-  // ! Check if the user-data Exist in the Database or not
   const existingUser = await authRepository.findUserByEmail(data.email);
   if (existingUser) {
     throw new Error("Email already exists");
   }
-  //  ! Hashing user-Password (Secuirty-purpose)
   const hashedPassword = await bcrypt.hash(data.password, 10);
-  //  ! Creating User with Provided user-data
   const userId = await authRepository.createUser({
-    name: data.name,
+    first_name: data.first_name,
+    last_name: data.last_name,
+    gender: data.gender,
+    phone_number: data.phone_number,
     email: data.email,
     password: hashedPassword,
   });
@@ -47,7 +47,6 @@ const login = async (email, password) => {
     },
   };
 };
-
 
 const forgotPassword = async (email) => {
   const user = await authRepository.findUserByEmail(email);
