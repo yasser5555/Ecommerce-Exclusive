@@ -1,0 +1,122 @@
+.register-page {
+  min-height: 100vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem;
+
+  background: white;
+}
+
+.register-wrapper {
+  width: 100%;
+  max-width: 420px;
+}
+
+.register-title {
+  font-size: 2.2rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.register-subtitle {
+  font-size: 14px;
+  margin-bottom: 40px;
+}
+
+.exclusive-input {
+  width: 100%;
+
+  border: none;
+  border-bottom: 1px solid #ccc;
+
+  outline: none;
+
+  padding: 12px 0;
+
+  background: transparent;
+}
+
+.exclusive-input:focus {
+  border-bottom: 1px solid #db4444;
+}
+
+.create-btn {
+  border: none;
+
+  background: #db4444;
+  color: white;
+
+  padding: 14px;
+
+  border-radius: 4px;
+
+  transition: 0.3s;
+}
+
+.create-btn:hover {
+  background: #c73636;
+}
+
+.google-btn {
+  background: white;
+
+  border: 1px solid #ddd;
+
+  border-radius: 4px;
+
+  padding: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+
+  transition: 0.3s;
+}
+
+.google-btn:hover {
+  background: #f8f8f8;
+}
+
+.login-link {
+  color: black;
+  text-decoration: none;
+  border-bottom: 1px solid #999;
+}
+
+.login-link:hover {
+  color: #db4444;
+}
+
+/* Animation */
+
+.animate-register {
+  animation: slideIn 0.7s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+  .register-title {
+    font-size: 1.8rem;
+  }
+
+  .register-wrapper {
+    max-width: 100%;
+  }
+}

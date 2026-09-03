@@ -1,0 +1,221 @@
+.product-card {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+}
+
+/* =========================
+   Image
+========================= */
+
+.product-image-wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  background: #f5f5f5;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.product-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* =========================
+   Sale Badge
+========================= */
+
+.sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  z-index: 2;
+
+  background: #e53935;
+  color: white;
+
+  padding: 5px 9px;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  border-radius: 3px;
+}
+
+/* =========================
+   Action Buttons
+========================= */
+
+.product-actions {
+  position: absolute;
+
+  top: 10px;
+  right: 10px;
+
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.action-btn {
+  width: 34px;
+  height: 34px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  color: #222;
+
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #f1f1f1;
+  transform: scale(1.05);
+}
+
+/* =========================
+   Product Info
+========================= */
+
+.product-info {
+  padding-top: 12px;
+}
+
+.product-name {
+  margin: 0 0 8px;
+
+  font-size: 15px;
+  font-weight: 500;
+
+  color: #111;
+
+  line-height: 1.4;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-bottom: 7px;
+}
+
+.current-price {
+  color: #e53935;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.old-price {
+  color: #888;
+
+  font-size: 14px;
+
+  text-decoration: line-through;
+}
+
+/* =========================
+   Rating
+========================= */
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+
+  color: #ff9f1c;
+}
+
+.review-count {
+  color: #777;
+  font-size: 13px;
+}
+
+/* =========================
+   Tablet
+========================= */
+
+@media (max-width: 991px) {
+  .product-card {
+    max-width: 240px;
+  }
+
+  .product-name {
+    font-size: 14px;
+  }
+
+  .current-price {
+    font-size: 14px;
+  }
+
+  .old-price {
+    font-size: 13px;
+  }
+}
+
+/* =========================
+   Mobile
+========================= */
+
+@media (max-width: 575px) {
+  .product-card {
+    max-width: 100%;
+  }
+
+  .product-image-wrapper {
+    aspect-ratio: 1 / 1;
+  }
+
+  .product-actions {
+    top: 8px;
+    right: 8px;
+  }
+
+  .action-btn {
+    width: 32px;
+    height: 32px;
+  }
+
+  .sale-badge {
+    top: 8px;
+    left: 8px;
+
+    font-size: 11px;
+    padding: 4px 7px;
+  }
+
+  .product-info {
+    padding-top: 10px;
+  }
+
+  .product-name {
+    font-size: 14px;
+  }
+}

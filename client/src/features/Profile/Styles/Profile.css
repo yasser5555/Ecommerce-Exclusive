@@ -1,0 +1,27 @@
+.avatar-container {
+  width: 100%;
+}
+
+.profile-avatar {
+  width: 180px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #eee;
+  display: block;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .profile-avatar {
+    width: 130px;
+    height: 130px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+  }
+}

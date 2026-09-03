@@ -1,0 +1,112 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 2rem;
+}
+
+.login-wrapper {
+  width: 100%;
+  max-width: 380px;
+}
+
+.login-title {
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+.login-subtitle {
+  font-size: 14px;
+  color: #000;
+ }
+
+/* Inputs */
+
+.exclusive-input {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid #cfcfcf;
+  padding: 12px 0;
+  font-size: 15px;
+  outline: none;
+  background: transparent;
+}
+
+.exclusive-input::placeholder {
+  color: #999;
+}
+
+.exclusive-input:focus {
+  border-bottom: 1px solid #db4444;
+}
+
+/* Button */
+
+.exclusive-btn {
+  background: #db4444;
+  border: none;
+  color: white;
+  padding: 12px 40px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.exclusive-btn:hover {
+  background: #c93737;
+  transform: translateY(-2px);
+}
+
+/* Forgot Password */
+
+.forgot-link {
+  color: #db4444;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.forgot-link:hover {
+  color: #c93737;
+}
+
+/* Animation */
+
+.animate-login {
+  animation: slideFade 0.8s ease;
+}
+
+@keyframes slideFade {
+  from {
+    opacity: 0;
+    transform: translateY(35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    max-width: 100%;
+  }
+
+  .login-title {
+    font-size: 1.7rem;
+  }
+
+  .exclusive-btn {
+    width: 100%;
+  }
+
+  .forgot-link {
+    width: 100%;
+    text-align: center;
+  }
+}
