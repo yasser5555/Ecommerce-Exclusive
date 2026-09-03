@@ -11,11 +11,7 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Navigate to="/auth/login" replace />,
   },
-
-  // Auth routes WITHOUT Navbar and Footer
   authRoutes,
-
-  // Main application routes WITH Navbar and Footer
   {
     element: <MainLayout />,
     children: [

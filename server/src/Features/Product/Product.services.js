@@ -1,13 +1,36 @@
 const ProductRepository = require("./Product.repository");
 // For Products page
-const getAllProducts = async () => {
+const getAllProducts = async (page, limit) => {
   try {
-    const products = await ProductRepository.getAllProducts();
-    return products;
+    page = Number(page);
+    limit = Number(limit);
+    const startIndex = (page - 1) * limit;
+    const products = await ProductRepository.getAllProducts(limit, startIndex);
+    const totalProducts = await ProductRepository.getProductsCount();
+    const totalPages = Math.ceil(totalProducts / limit);
+    const result = {
+      data: products,
+      pagination: {
+        currentPage: page,
+        limit: limit,
+        totalProducts: totalProducts,
+        totalPages: totalPages,
+      },
+    };
+    // Previous page
+    if (page > 1) {
+      result.pagination.prev = page - 1;
+    }
+    // Next page
+    if (page < totalPages) {
+      result.pagination.next = page + 1;
+    }
+    return result;
   } catch (error) {
     throw new Error(`error at Product.services.getAllProducts ===> ${error}`);
   }
 };
+
 // For product-page
 const getProductById = async (product_id) => {
   try {
@@ -17,6 +40,7 @@ const getProductById = async (product_id) => {
     throw new Error(`error at Product.services.getAllProducts ===> ${error}`);
   }
 };
+
 
 module.exports = {
   getAllProducts,

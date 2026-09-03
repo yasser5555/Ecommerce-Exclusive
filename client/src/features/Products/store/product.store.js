@@ -8,26 +8,35 @@ import {
 export const useProductStore = create((set) => ({
   products: null,
   productDetails: null,
+  pagination: null,
   isLoading: false,
   error: null,
-  FetchProducts: async () => {
+  FetchProducts: async ({ page, limit }) => {
     try {
       set({
         isLoading: true,
         error: null,
       });
-      const response = await getAllProduct();
+
+      const response = await getAllProduct({
+        page,
+        limit,
+      });
+
       set({
-        products: response,
+        products: response.data,
+        pagination: response.pagination,
         isLoading: false,
       });
+
       return response;
     } catch (error) {
       set({
-        error: error,
+        error: error.message,
         isLoading: false,
       });
-      console.error(error);
+
+      throw error;
     }
   },
   getproductDetials: async (payload) => {
@@ -38,8 +47,6 @@ export const useProductStore = create((set) => ({
       });
 
       const response = await getProductByID(payload);
-
-      console.log("STORE RESPONSE:", response);
 
       set({
         productDetails: response,
@@ -54,7 +61,7 @@ export const useProductStore = create((set) => ({
       });
 
       console.error(error);
-      throw error; // مهم
+      throw error;
     }
   },
 }));
