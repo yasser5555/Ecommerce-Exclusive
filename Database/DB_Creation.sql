@@ -1,3 +1,4 @@
+-- drop database if exists ecommerce;
 CREATE DATABASE IF NOT EXISTS ecommerce;
 USE ecommerce;
 
@@ -6,12 +7,9 @@ USE ecommerce;
 -- ===================================
 
 
-
-
 -- ===================================
 -- USERS
 -- ===================================
-
 CREATE TABLE IF NOT EXISTS users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     avatar VARCHAR(255),
@@ -62,10 +60,13 @@ CREATE TABLE products (
 CREATE TABLE IF NOT EXISTS credit_card (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    last4 CHAR(4) NOT NULL,
+    card_type ENUM('Visa', 'Mastercard', 'American Express') NOT NULL,
     bank_name VARCHAR(100) NOT NULL,
+    last4 CHAR(4) NOT NULL,
+    expiry_day TINYINT NOT NULL,
     expiry_month TINYINT NOT NULL,
     expiry_year SMALLINT NOT NULL,
+    balance DECIMAL(12, 2) NOT NULL DEFAULT 0.00,
     FOREIGN KEY (user_id)
         REFERENCES users (id)
         ON DELETE CASCADE
@@ -174,7 +175,8 @@ CREATE TABLE product_reviews (
     comment TEXT,
     rating INT NOT NULL,
     commented_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id)
+    FOREIGN KEY (product_id) 
+
         REFERENCES products (id)
         ON DELETE CASCADE,
     FOREIGN KEY (user_id)

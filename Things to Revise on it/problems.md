@@ -23,7 +23,8 @@ caused an error because `profile` was initially `null`.
 Use optional chaining:
 
 ```js
-profile?.avatar;
+profile?.avatar; 
+
 ```
 
 This safely accesses `avatar` only when `profile` exists.

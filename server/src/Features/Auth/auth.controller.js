@@ -1,24 +1,24 @@
 const authService = require("./auth.service");
-
-const register = async (req, res, next) => {
+const register = async (req, res ) => {
   try {
-     const result = await authService.register(req.body);
+    const result = await authService.register(req.body);
     res.status(201).json(result);
   } catch (error) {
-    next(error);
-  }
+    res.status(500).json({
+      Error:`error at Auth.Controller.Register ${error}` 
+    });  }
 };
 
-const login = async (req, res, next) => {
+const login = async (req, res, ) => {
   var Result;
   try {
     Result = await authService.login(req.body.email, req.body.password);
     res.status(200).json(Result);
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: `error at Auth.Controller.login ${error}` })
   }
 };
-const forgotPassword = async (req, res, next) => {
+const forgotPassword = async (req, res, ) => {
   try {
     await authService.forgotPassword(req.body.email);
 
@@ -26,11 +26,11 @@ const forgotPassword = async (req, res, next) => {
       message: "Password reset email sent",
     });
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: `error at Auth.Controller.login ${error}` })
   }
 };
 
-const resetPassword = async (req, res, next) => {
+const resetPassword = async (req, res, ) => {
   try {
     await authService.resetPassword(req.params.token, req.body.password);
 
@@ -38,7 +38,7 @@ const resetPassword = async (req, res, next) => {
       message: "Password updated successfully",
     });
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: `error at Auth.Controller.login ${error}` })
   }
 };
 
