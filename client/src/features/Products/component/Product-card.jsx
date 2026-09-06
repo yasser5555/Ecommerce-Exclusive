@@ -3,7 +3,7 @@ import "../styles/ProductCard.css";
 
 function ProductCard({ product, callback } ) {
   const {
-    name,
+    title,
     Discount_price,
     old_price,
     stock,
@@ -52,7 +52,7 @@ function ProductCard({ product, callback } ) {
 
         <img
           src={product_image}
-          alt={name}
+          alt={title}
           className="product-image"
           loading="lazy"
         />
@@ -60,8 +60,8 @@ function ProductCard({ product, callback } ) {
 
       {/* Product Information */}
       <div className="product-info">
-        <h3 className="product-name" name={name}>
-          {name}
+        <h3 className="product-title" title={title}>
+          {title}
         </h3>
 
         {/* Price */}

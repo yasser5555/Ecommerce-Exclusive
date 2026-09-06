@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useProductsStore } from "./../hooks/useProductStore";
+import { useProducts, } from "./../hooks/useProductStore";
 
 export default function Productdetails() {
   const { id } = useParams();
 
-  const { productDetails, getproductDetials, isLoading } = useProductsStore();
+  const { productDetails, getproductDetials, isLoading } = useProducts();
 
   const [selectedImage, setSelectedImage] = useState("");
 

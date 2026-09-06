@@ -11,6 +11,7 @@ const getAllProducts = async (req, res) => {
       .json({ message: "Error retrieving products", error: error.message });
   }
 };
+
 const getProductById = async (req, res) => {
   try {
     const product = await ProductService.getProductById(req.params.id);
@@ -21,7 +22,18 @@ const getProductById = async (req, res) => {
       .json({ message: "Error retrieving products", error: error.message });
   }
 };
+
+const findProductByTitle = async (req, res) => {
+     try {
+     const product = await ProductService.findProductByTitle(req.query.title);
+     res.status(200).json(product);
+    } catch (error) {
+    res.status(200).json({ message: "Error at findProductByTitle From Controller", error: error.message });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
+  findProductByTitle,
 };

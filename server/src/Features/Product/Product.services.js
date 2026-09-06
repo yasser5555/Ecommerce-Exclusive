@@ -41,8 +41,20 @@ const getProductById = async (product_id) => {
   }
 };
 
+const findProductByTitle = async (title) => {
+  try {
+    // 7. Call repository
+    const products = await ProductRepository.findProductByTitle(title);
+    return products;
+  } catch (error) {
+    throw new Error(
+      `error at Product.services.findProductByTitle ===> ${error}`,
+    );
+  }
+};
 
 module.exports = {
   getAllProducts,
   getProductById,
+  findProductByTitle,
 };

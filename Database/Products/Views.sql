@@ -4,3 +4,4 @@ from products
     inner join categories on products.category_id = categories.id;
 
 -- drop View if EXISTS catogeries_count;
+select products.title from products  WHERE products.title LIKE "f%" ;
