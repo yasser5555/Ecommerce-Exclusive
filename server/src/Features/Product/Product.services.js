@@ -52,9 +52,17 @@ const findProductByTitle = async (title) => {
     );
   }
 };
-
+const GetCatogeries = async () => {
+  try {
+    const catogeries = await ProductRepository.GetCatogeries();
+    return catogeries;
+  } catch (error) {
+    throw new Error(`error at Product.services.GetCatogeries ===> ${error}`);
+  }
+};
 module.exports = {
   getAllProducts,
   getProductById,
   findProductByTitle,
+  GetCatogeries,
 };
