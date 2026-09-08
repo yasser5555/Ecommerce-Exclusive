@@ -1,60 +1,38 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { useProducts, } from "./../hooks/useProductStore";
+import { Star } from "lucide-react";
+import { useProducts } from "./../hooks/useProductStore";
 
 export default function Productdetails() {
+  const stars = [1, 2, 3, 4, 5];
   const { id } = useParams();
-
   const { productDetails, getproductDetials, isLoading } = useProducts();
-
   const [selectedImage, setSelectedImage] = useState("");
-
   useEffect(() => {
-    if (!id) return;
-
     const getProduct = async () => {
       try {
-        console.log("Product ID:", id);
-
-        const data = await getproductDetials(id);
-
-        console.log("Fetched product:", data);
+        await getproductDetials(id);
       } catch (error) {
         console.error("Error fetching product:", error);
       }
     };
 
     getProduct();
-  }, [id, getproductDetials]);
+  }, [id]);
 
-  // Set the main image when product data arrives
-  useEffect(() => {
-    if (productDetails?.product_image) {
-      setSelectedImage(productDetails.product_image);
-    }
-  }, [productDetails]);
+  // ================= PRODUCT DATA =================
 
-  // ================= LOADING =================
-
-  if (isLoading) {
-    return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border" role="status">
-          <span className="visually-hidden">Loading...</span>
-        </div>
-
-        <p className="mt-3 text-muted">Loading product...</p>
-      </div>
-    );
-  }
+  // The API returns an array
+  const product = Array.isArray(productDetails)
+    ? productDetails[0]
+    : productDetails;
 
   // ================= NOT FOUND =================
 
-  if (!productDetails) {
+  if (!product) {
     return (
       <div className="container py-5 text-center">
         <h2>Product not found</h2>
-
         <p className="text-muted">
           The product you're looking for doesn't exist.
         </p>
@@ -65,54 +43,41 @@ export default function Productdetails() {
   // ================= PRODUCT DATA =================
 
   const {
-    title,
-    description,
-    Discount_price,
-    old_price,
+    id: productId,
+    cat_id: categoryId,
+    image,
+    name,
+    category,
+    price,
+    price_after_discount,
     stock,
-    product_image,
-    Added_at,
-  } = productDetails;
+    rating,
+    review_count,
+  } = product;
 
   // ================= DISCOUNT =================
 
   const discountPercentage =
-    old_price && Discount_price
+    price && price_after_discount
       ? Math.round(
-          ((Number(old_price) - Number(Discount_price)) / Number(old_price)) *
+          ((Number(price) - Number(price_after_discount)) / Number(price)) *
             100,
         )
       : 0;
 
-  // ================= DATE =================
+  // ================= RATING =================
 
-  const addedDate = Added_at
-    ? new Date(Added_at).toLocaleDateString("en-US", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "Unknown";
+  const currentRating = Number(rating) || 0;
 
   // ================= QUANTITY =================
 
-  const maxQuantity = Math.min(stock, 10);
+  const maxQuantity = Math.min(Number(stock) || 0, 10);
 
   return (
     <div className="container py-5">
-      {/* =====================================================
-          PRODUCT
-      ===================================================== */}
-
       <div className="row g-5">
-        {/* =================================================
-            PRODUCT IMAGES
-        ================================================= */}
-
         <div className="col-12 col-lg-6">
           <div className="card border-0">
-            {/* Main Image */}
-
             <div
               className="border rounded overflow-hidden bg-light"
               style={{
@@ -120,8 +85,8 @@ export default function Productdetails() {
               }}
             >
               <img
-                src={selectedImage || product_image}
-                alt={title}
+                src={selectedImage || image}
+                alt={name}
                 className="w-100 h-100"
                 style={{
                   objectFit: "contain",
@@ -129,16 +94,12 @@ export default function Productdetails() {
               />
             </div>
 
-            {/* Thumbnail */}
-
             <div className="d-flex gap-3 mt-3">
               <button
                 type="button"
-                onClick={() => setSelectedImage(product_image)}
+                onClick={() => setSelectedImage(image)}
                 className={`p-0 bg-white rounded ${
-                  selectedImage === product_image
-                    ? "border border-primary"
-                    : "border"
+                  selectedImage === image ? "border border-primary" : "border"
                 }`}
                 style={{
                   width: "90px",
@@ -147,8 +108,8 @@ export default function Productdetails() {
                 }}
               >
                 <img
-                  src={product_image}
-                  alt={`${title} thumbnail`}
+                  src={image}
+                  alt={`${name} thumbnail`}
                   className="w-100 h-100"
                   style={{
                     objectFit: "cover",
@@ -163,31 +124,79 @@ export default function Productdetails() {
           </div>
         </div>
 
-        {/* =================================================
-            PRODUCT INFORMATION
-        ================================================= */}
-
         <div className="col-12 col-lg-6">
+          {/* Category */}
+
+          <p className="text-muted mb-2">{category}</p>
+
           {/* Title */}
 
-          <h1 className="display-6 fw-bold mb-3">{title}</h1>
+          <h1 className="display-6 fw-bold mb-3">{name}</h1>
 
           {/* Product ID */}
+          <p className="text-muted mb-3">Product ID: #{productId}</p>
+          <div className="d-flex align-items-center gap-2 mb-4">
+            <div className="d-flex align-items-center">
+              {stars.map((star) => {
+                let fillPercentage = 0;
+                if (currentRating >= star) {
+                  fillPercentage = 100;
+                } else if (currentRating > star - 1) {
+                  fillPercentage = (currentRating - (star - 1)) * 100;
+                }
+                return (
+                  <div
+                    key={star}
+                    style={{
+                      position: "relative",
+                      width: "18px",
+                      height: "18px",
+                    }}
+                  >
+                    {/* Empty Star */}
+                    <Star
+                      size={18}
+                      style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        color: "#d1d5db",
+                      }}
+                    />
 
-          <p className="text-muted mb-4">Product ID: #{productDetails.id}</p>
+                    {/* Filled Part */}
 
-          {/* =================================================
-              PRICE
-          ================================================= */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "-30%",
+                        left: 0,
+                        width: `${fillPercentage}%`,
+                        // height: "18px",
+                        overflow: "hidden",
+                        color: "#fbbf24",
+                      }}
+                    >
+                      <Star size={18} fill="currentColor" />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <span className="fw-semibold">{currentRating.toFixed(1)}</span>
+
+            <span className="text-muted">({review_count} reviews)</span>
+          </div>
 
           <div className="d-flex align-items-center flex-wrap gap-3 mb-4">
             <span className="fs-2 fw-bold">
-              ${Number(Discount_price).toFixed(2)}
+              ${Number(price_after_discount).toFixed(2)}
             </span>
 
-            {old_price && (
+            {price && (
               <span className="fs-5 text-muted text-decoration-line-through">
-                ${Number(old_price).toFixed(2)}
+                ${Number(price).toFixed(2)}
               </span>
             )}
 
@@ -198,19 +207,11 @@ export default function Productdetails() {
             )}
           </div>
 
-          {/* =================================================
-              DESCRIPTION
-          ================================================= */}
-
           <div className="mb-4">
-            <h5 className="fw-bold">Description</h5>
+            <h5 className="fw-bold">Category</h5>
 
-            <p className="text-secondary lh-lg">{description}</p>
+            <p className="text-secondary">{category}</p>
           </div>
-
-          {/* =================================================
-              STOCK
-          ================================================= */}
 
           <div className="mb-4">
             {stock > 0 ? (
@@ -224,10 +225,6 @@ export default function Productdetails() {
               <div className="text-danger fw-semibold">✕ Out of stock</div>
             )}
           </div>
-
-          {/* =================================================
-              QUANTITY
-          ================================================= */}
 
           {stock > 0 && (
             <div className="mb-4">
@@ -255,17 +252,13 @@ export default function Productdetails() {
             </div>
           )}
 
-          {/* =================================================
-              BUTTONS
-          ================================================= */}
-
           <div className="d-flex flex-column flex-sm-row gap-3 mb-4">
             <button
               type="button"
               className="btn btn-primary btn-lg flex-grow-1"
               disabled={stock <= 0}
               onClick={() => {
-                console.log("Add to cart:", productDetails.id);
+                console.log("Add to cart:", productId);
               }}
             >
               {stock > 0 ? "Add to Cart" : "Out of Stock"}
@@ -275,16 +268,12 @@ export default function Productdetails() {
               type="button"
               className="btn btn-outline-danger btn-lg"
               onClick={() => {
-                console.log("Add to wishlist:", productDetails.id);
+                console.log("Add to wishlist:", productId);
               }}
             >
               ♡ Wishlist
             </button>
           </div>
-
-          {/* =================================================
-              PRODUCT DETAILS
-          ================================================= */}
 
           <div className="border rounded p-4">
             <h5 className="fw-bold mb-3">Product Information</h5>
@@ -295,17 +284,23 @@ export default function Productdetails() {
               <div className="col-12 col-sm-6">
                 <small className="text-muted d-block">Product ID</small>
 
-                <span className="fw-semibold">#{productDetails.id}</span>
+                <span className="fw-semibold">#{productId}</span>
+              </div>
+
+              {/* Category ID */}
+
+              <div className="col-12 col-sm-6">
+                <small className="text-muted d-block">Category ID</small>
+
+                <span className="fw-semibold">#{categoryId}</span>
               </div>
 
               {/* Category */}
 
               <div className="col-12 col-sm-6">
-                <small className="text-muted d-block">Category ID</small>
+                <small className="text-muted d-block">Category</small>
 
-                <span className="fw-semibold">
-                  #{productDetails.category_id}
-                </span>
+                <span className="fw-semibold">{category}</span>
               </div>
 
               {/* Stock */}
@@ -316,19 +311,25 @@ export default function Productdetails() {
                 <span className="fw-semibold">{stock}</span>
               </div>
 
-              {/* Added At */}
+              {/* Rating */}
 
               <div className="col-12 col-sm-6">
-                <small className="text-muted d-block">Added At</small>
+                <small className="text-muted d-block">Rating</small>
 
-                <span className="fw-semibold">{addedDate}</span>
+                <span className="fw-semibold">
+                  {currentRating.toFixed(1)} / 5
+                </span>
+              </div>
+
+              {/* Reviews */}
+
+              <div className="col-12 col-sm-6">
+                <small className="text-muted d-block">Reviews</small>
+
+                <span className="fw-semibold">{review_count}</span>
               </div>
             </div>
           </div>
-
-          {/* =================================================
-              SHIPPING
-          ================================================= */}
 
           <div className="mt-4">
             <div className="d-flex align-items-center mb-3">
@@ -370,20 +371,10 @@ export default function Productdetails() {
         </div>
       </div>
 
-      {/* =====================================================
-          REVIEWS
-      ===================================================== */}
-
       <section className="mt-5 pt-5 border-top">
-        <div className="row">
-          <div className="col-12">
-            <h2 className="h3 fw-bold mb-2">Customer Reviews</h2>
+        <h2 className="h3 fw-bold mb-2">Customer Reviews</h2>
 
-            <p className="text-muted">
-              Reviews will appear here once the review system is connected.
-            </p>
-          </div>
-        </div>
+        <p className="text-muted">{review_count} customer reviews</p>
       </section>
     </div>
   );

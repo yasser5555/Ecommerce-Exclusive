@@ -14,7 +14,12 @@ export default function Productspage() {
   const navigate = useNavigate();
   const { searchResults, products, pagination, FetchProducts, productSearch } =
     useProducts();
+
   useEffect(() => {
+    if (searchResults.trim()) {
+      return;
+    }
+
     const getProducts = async () => {
       try {
         await FetchProducts({
@@ -25,8 +30,10 @@ export default function Productspage() {
         console.error("Error fetching products:", error);
       }
     };
+
     getProducts();
   }, [page, limit, searchResults, FetchProducts]);
+
   useEffect(() => {
     if (!searchResults.trim()) {
       return;
@@ -34,7 +41,6 @@ export default function Productspage() {
 
     const search = async () => {
       try {
-        console.log("SEARCH RESULTS FROM STORE:", searchResults);
         await productSearch(searchResults);
       } catch (error) {
         console.error("Error searching products:", error);
@@ -43,7 +49,6 @@ export default function Productspage() {
 
     search();
   }, [searchResults, productSearch]);
-
   const handlePageChange = (newPage) => {
     setSearchParams({
       page: newPage,
@@ -63,7 +68,6 @@ export default function Productspage() {
         </aside>
 
         {/* PRODUCTS */}
-
         <section className="col-12 col-lg-9">
           {/* HEADER */}
 
@@ -92,7 +96,8 @@ export default function Productspage() {
                 <ProductCard
                   product={product}
                   callback={() => {
-                    navigate(`/products/${product.id}`);
+                    
+                    navigate(`/products/${product.p_id}`);
                   }}
                 />
               </div>
@@ -127,7 +132,7 @@ export default function Productspage() {
                   <li
                     key={pageNumber}
                     className={`page-item ${
-                      pageNumber === page ? "active" : ""
+                      pageNumber === page ? "active bg-danger" : ""
                     }`}
                   >
                     <button
