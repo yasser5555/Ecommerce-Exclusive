@@ -3,6 +3,7 @@ const cors = require("cors");
 const authRoutes = require("./Features/Auth/auth.routes");
 const profileRoutes = require("./Features/Profile/profile.routes.js");
 const productRoutes = require("./Features/Product/Product.routes.js");
+const productReviewRoutes = require("./Features/Product_Reviews/Product_Reviews.routes.js");
 const app = express();
 const path = require("path");
 // ! Middlewares
@@ -11,5 +12,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/products",productRoutes);
+ 
+app.use("/api/reviews", productReviewRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 module.exports = app;

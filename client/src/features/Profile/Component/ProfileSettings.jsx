@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 import ProfileSidebar from "./Profile-SideBar";
 import { useEffect } from "react";
 import { useProfile } from "../Hooks/useProfile";
-import { FetchOnRender } from "../Utils/useFetchProfile";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 function ProfileSettings() {
   const { profile, fetchProfile } = useProfile();

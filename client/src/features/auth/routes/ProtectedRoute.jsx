@@ -1,7 +1,6 @@
 import { Navigate } from "react-router-dom";
-
 import { useAuth } from "../hooks/useAuth";
-
+import { toast } from "react-toastify";
 export default function ProtectedRoute({ children }) {
   const { token, isLoading } = useAuth();
 
@@ -10,6 +9,7 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (!token) {
+    toast.error(`please Login to access page`)
     return <Navigate to="/auth/login" />;
   }
 

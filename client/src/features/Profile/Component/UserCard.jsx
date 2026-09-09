@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useShowCard } from "../Hooks/useShowCard";
-import { FetchOnRender } from "./../Utils/useFetchProfile";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 function CreditCardManager() {
   const {

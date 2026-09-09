@@ -59,12 +59,9 @@ function useProfileForm() {
   // Save profile
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       await updateProfile(formData);
-
       toast.success("Profile Updated ✅");
-
       setIsEditing(false);
     } catch (error) {
       toast.error("Profile Update Failed ❌");

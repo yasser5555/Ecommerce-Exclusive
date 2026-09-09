@@ -1,22 +1,70 @@
-const ProductService = require('./Product.services');
-
+const ProductService = require("./Product.services");
 const getAllProducts = async (req, res) => {
   try {
-    const products = await ProductService.getAllProducts();  
-    res.status(200).json(products); 
-    } catch (error) {
-    res.status(500).json({ message: 'Error retrieving products', error: error.message });
-    }
+    const page = parseInt(req.query.page);
+    const limit = parseInt(req.query.limit);
+    const products = await ProductService.getAllProducts(page, limit);
+    res.status(200).json(products);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error retrieving products", error: error.message });
+  }
 };
+
 const getProductById = async (req, res) => {
   try {
-    const product = await ProductService.getProductById(req.params.id);  
-    res.status(200).json(product); 
-    } catch (error) {
-    res.status(500).json({ message: 'Error retrieving products', error: error.message });
-    }
+    const product = await ProductService.getProductById(req.params.id);
+    res.status(200).json(product);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error retrieving products", error: error.message });
+  }
+};
+
+const findProductByTitle = async (req, res) => {
+  try {
+    const product = await ProductService.findProductByTitle(req.query.title);
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(200).json({
+      message: "Error at findProductByTitle From Controller",
+      error: error.message,
+    });
+  }
+};
+
+const GetCatogeries = async (req, res) => {
+  try {
+    const catogeries = await ProductService.GetCatogeries();
+    res.status(200).json(catogeries);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error Getting Catogeries", error: error.message });
+  }
+};
+const getFilterData = async (req, res) => {
+ 
+  try {
+    const fitlterdData = await ProductService.getFilterData(
+      req.query.catogeries,
+      req.query.rating,
+      req.query.min,
+      req.query.max,
+    );
+    res.status(200).json(fitlterdData);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error Getting getFilteredData", error: error.message });
+  }
 };
 module.exports = {
   getAllProducts,
   getProductById,
-};  
+  findProductByTitle,
+  GetCatogeries,
+  getFilterData
+};

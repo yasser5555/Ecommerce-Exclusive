@@ -2,7 +2,7 @@ const db = require("../../shared/Database/DB");
 // Get user profile by id
 const getProfileById = async (userId) => {
   try {
-    const [rows] = await db.execute(`SELECT * FROM users WHERE id = ?`, [
+    const [rows] = await db.query(`SELECT * FROM users WHERE id = ?`, [
       userId,
     ]);
 
@@ -23,7 +23,7 @@ const updateProfile = async (
   email,
 ) => {
   try {
-    const [result] = await db.execute(
+    const [result] = await db.query(
       `UPDATE users 
        SET first_name = ?, last_name = ?, phone_number = ?, email = ? 
        WHERE id = ?`,
@@ -41,7 +41,7 @@ const updateProfile = async (
 // Upload avatar
 const uploadAvatar = async (userId, avatar) => {
   try {
-    const [result] = await db.execute(
+    const [result] = await db.query(
       `UPDATE users SET avatar = ? WHERE id = ?`,
       [avatar, userId],
     );
@@ -57,7 +57,7 @@ const uploadAvatar = async (userId, avatar) => {
 // Update avatar
 const updateAvatar = async (userId, avatar) => {
   try {
-    const [result] = await db.execute(
+    const [result] = await db.query(
       `UPDATE users SET avatar = ? WHERE id = ?`,
       [avatar, userId],
     );
@@ -72,7 +72,7 @@ const updateAvatar = async (userId, avatar) => {
 
 const GetProfileData = async (userId) => {
   try {
-    const [rows, x] = await db.execute(`CALL get_user_data(?)`, [userId]);
+    const [rows, x] = await db.query(`CALL get_user_data(?)`, [userId]);
     return rows[0][0];
   } catch (error) {
     const Error = {};
@@ -83,7 +83,7 @@ const GetProfileData = async (userId) => {
 
 const GetUserCards = async (userId) => {
   try {
-    const [rows, x] = await db.execute(
+    const [rows, x] = await db.query(
       `SELECT * FROM user_card WHERE user_id = ?`,
       [userId],
     );
@@ -103,7 +103,7 @@ const Add_userCard = async (
   expiry_year,
 ) => {
   try {
-    const [result] = await db.execute(`CALL add_user_card(?,?,?,?,?,?,?,?)`, [
+    const [result] = await db.query(`CALL add_user_card(?,?,?,?,?,?,?,?)`, [
       user_id,
       card_type,
       bank_name,
@@ -124,7 +124,7 @@ const Add_userCard = async (
 
 const DeleteUserCard = async (userId) => {
   try {
-    const [rows, x] = await db.execute(
+    const [rows, x] = await db.query(
       `DELETE FROM credit_card WHERE user_id = ? ORDER BY id DESC LIMIT 1;`,
       [userId],
     );
@@ -137,7 +137,7 @@ const DeleteUserCard = async (userId) => {
 
 const GetUserAddresses = async (userId) => {
   try {
-    const [rows, x] = await db.execute(
+    const [rows, x] = await db.query(
       `select * from user_address where user_id = ? LIMIT 2`,
       [userId],
     );
@@ -158,7 +158,7 @@ const addUserAddress = async (
   apartement_number,
 ) => {
   try {
-    const [rows, x] = await db.execute(`CALL add_user_address(?,?,?,?,?,?)`, [
+    const [rows, x] = await db.query(`CALL add_user_address(?,?,?,?,?,?)`, [
       user_id,
       country,
       city,
@@ -174,7 +174,7 @@ const addUserAddress = async (
 
 const deleteUserAddress = async (user_id) => {
   try {
-    const [rows, x] = await db.execute(
+    const [rows, x] = await db.query(
       `DELETE FROM addresses WHERE id = ? ORDER BY id DESC LIMIT 1`,
       [user_id],
     );
@@ -186,7 +186,7 @@ const deleteUserAddress = async (user_id) => {
 
 const getUserOrders = async (user_id) => {
   try {
-    const [rows, x] = await db.execute(
+    const [rows, x] = await db.query(
       `SELECT * FROM user_orders WHERE id = ? ORDER BY total_price desc`,
       [user_id],
     );

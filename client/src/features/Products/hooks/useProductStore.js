@@ -1,4 +1,4 @@
 import { useProductStore } from './../store/product.store';
-export const useProductsStore = () =>{
+export const useProducts = () =>{
     return useProductStore();
 }

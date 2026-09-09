@@ -5,23 +5,14 @@ export const productsRoutes = {
   children: [
     {
       index: true,
-      element: <Productspage />,
+
+      element: (
+        <Productspage />
+      ),
     },
     {
-      path:"/products/:id",
-      element:<Productdetails/>
-    }
-    //     {
-    //       path: "my_credits",
-    //       element: <CreditCardManager/>
-    //     },
-    //     {
-    //       path: "addresses",
-    //       element: <AddressManager/>
-    //     },
-    //     {
-    //       path: "order_history",
-    //       element: <OrderHistory/>
-    //     },
+      path: "/products/:id",
+      element: <Productdetails />,
+    },
   ],
 };

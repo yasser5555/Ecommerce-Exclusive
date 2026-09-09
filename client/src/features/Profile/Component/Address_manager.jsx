@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useProfileStore } from "../Store/profile.store";
 import { useAddressmanager } from "../Hooks/useAddressManager";
-import { FetchOnRender } from "../Utils/useFetchProfile";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 function AddressManager() {
   const {
     userAddresses,
