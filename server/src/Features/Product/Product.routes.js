@@ -7,4 +7,5 @@ router.get("/", protect, ProductController.getAllProducts);
 router.get("/product/:id", protect, ProductController.getProductById);
 router.get("/search", protect, ProductController.findProductByTitle);
 router.get("/catogeries", protect, ProductController.GetCatogeries);
+router.get("/filterData", protect, ProductController.getFilterData);
  module.exports = router;

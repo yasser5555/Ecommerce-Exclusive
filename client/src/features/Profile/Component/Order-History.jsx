@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { FetchOnRender } from "./../Utils/useFetchProfile";
+ import { FetchOnRender } from "../../../shared/Utils/useFetch";
 import { useOrderhistory } from "../Hooks/useOrderhistory";
 import { useProfileStore } from "./../Store/profile.store";
 

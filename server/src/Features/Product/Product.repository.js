@@ -71,10 +71,26 @@ const GetCatogeries = async () => {
     return catogeries;
   } catch (error) {
     console.error(
-      `error at Product.repository.findProductPosition ===> ${error.message}`,
+      `error at Product.repository.GetCatogeries ===> ${error.message}`,
     );
   }
 };
+const getFilterData = async (catogery, rating, min, max) => {
+  try {
+    const [filteredCatogery, x] = await db.query(`CALL filter_Product (?,?,?,?)`, [
+      catogery ,
+      rating ,
+      min ,
+      max ,
+    ]);
+    return filteredCatogery[0];
+  } catch (error) {
+    console.error(
+      `error at Product.repository.getFilterData ===> ${error.message}`,
+    );
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -82,4 +98,5 @@ module.exports = {
   findProductByTitle,
   findProductPosition,
   GetCatogeries,
+  getFilterData
 };

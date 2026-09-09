@@ -60,9 +60,27 @@ const GetCatogeries = async () => {
     throw new Error(`error at Product.services.GetCatogeries ===> ${error}`);
   }
 };
+
+const getFilterData = async (catogery, rating, min, max) => {
+  try {
+    const filtered_Data = await ProductRepository.getFilterData(
+      catogery || null,
+      rating || null,
+      min || null,
+      max || null,
+    );
+    return filtered_Data;
+  } catch (error) {
+    console.error(
+      `error at Product.repository.getFilterData ===> ${error.message}`,
+    );
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
   findProductByTitle,
   GetCatogeries,
+  getFilterData,
 };

@@ -28,12 +28,10 @@ const findProductByTitle = async (req, res) => {
     const product = await ProductService.findProductByTitle(req.query.title);
     res.status(200).json(product);
   } catch (error) {
-    res
-      .status(200)
-      .json({
-        message: "Error at findProductByTitle From Controller",
-        error: error.message,
-      });
+    res.status(200).json({
+      message: "Error at findProductByTitle From Controller",
+      error: error.message,
+    });
   }
 };
 
@@ -47,9 +45,26 @@ const GetCatogeries = async (req, res) => {
       .json({ message: "Error Getting Catogeries", error: error.message });
   }
 };
+const getFilterData = async (req, res) => {
+ 
+  try {
+    const fitlterdData = await ProductService.getFilterData(
+      req.query.catogeries,
+      req.query.rating,
+      req.query.min,
+      req.query.max,
+    );
+    res.status(200).json(fitlterdData);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Error Getting getFilteredData", error: error.message });
+  }
+};
 module.exports = {
   getAllProducts,
   getProductById,
   findProductByTitle,
   GetCatogeries,
+  getFilterData
 };

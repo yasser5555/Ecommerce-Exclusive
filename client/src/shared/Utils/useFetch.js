@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 
-
-export function FetchOnRender(fetchFunction , changeToRender = null) {
+export function FetchOnRender(fetchFunction, changeToRender = null) {
   useEffect(() => {
     fetchFunction();
   }, [changeToRender]);
 }
+

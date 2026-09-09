@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Star } from "lucide-react";
 import { useProducts } from "./../hooks/useProductStore";
+ 
+import ProductComments from "./../component/ProductReviews";
 
 export default function Productdetails() {
   const stars = [1, 2, 3, 4, 5];
@@ -375,6 +377,7 @@ export default function Productdetails() {
         <h2 className="h3 fw-bold mb-2">Customer Reviews</h2>
 
         <p className="text-muted">{review_count} customer reviews</p>
+        <ProductComments productId={product?.p_id}/>
       </section>
     </div>
   );

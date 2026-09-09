@@ -1,80 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { useProducts } from "../hooks/useProductStore";
+import useProductBar from "../hooks/useProductBar";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 export default function ProductFilterSidebar() {
-  const [rating, setRating] = useState(null);
-  const [catgoeryState, setCatogery] = useState([]);
-  const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
-  const [price, setPrice] = useState({
-    min: "",
-    max: "",
-  });
-
-  const [search, setSearch] = useState("");
-
   const {
-    searchResults,
-    getSearchResult,
-    products,
-    getCatogeries,
+     getCatogeries,
     catogery,
-    error,
-  } = useProducts();
+    rating,
+    Catogery,
+    isCategoriesOpen,
+    setIsCategoriesOpen,
+    price,
+    search,
+    setSearch,
+    handleCategoryChange,
+    handlePriceChange,
+    handleRatingChange,
+    handleSubmit,
+    handleClear,
+    products
+  } = useProductBar();
 
-  const handleCategoryChange = (e) => {
-    const { value, checked } = e.target;
-
-    setCatogery((prev) => {
-      if (checked) {
-        return [...prev, value];
-      }
-
-      return prev.filter((category) => category !== value);
-    });
-  };
-
-  const handlePriceChange = (e) => {
-    const { name, value } = e.target;
-    setPrice((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleRatingChange = (e) => {
-    setRating(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const filters = {
-      search: search.trim(),
-      categories: catgoeryState,
-      minPrice: price.min,
-      maxPrice: price.max,
-    };
-    console.log(`min price is ${price.min}`);
-    console.log(`max price is ${price.max}`);
-    console.log(`Catogery is ${catgoeryState}`);
-
-    getSearchResult(search.trim());
-  };
-
-  const handleClear = () => {
-    setSearch("");
-    setCatogery([]);
-    setPrice({
-      min: "",
-      max: "",
-    });
-
-    getSearchResult("");
-  };
-
-  useEffect(() => {
-    getCatogeries();
-  }, []);
+  // Render Catogeries
+  FetchOnRender(() => getCatogeries());
 
   return (
     <aside className="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
@@ -83,6 +32,7 @@ export default function ProductFilterSidebar() {
           <div>
             <h5 className="mb-1 fw-bold">Filters</h5>
             <small className="text-white-50">Find the products you need</small>
+            <h6 className="text-white">Product Found {products.length}</h6>
           </div>
 
           <button
@@ -128,7 +78,7 @@ export default function ProductFilterSidebar() {
 
                 <div className="d-flex align-items-center gap-2">
                   <span className="badge bg-light text-dark border">
-                    {catgoeryState.length}
+                    {catogery.length}
                   </span>
 
                   <span
@@ -163,7 +113,7 @@ export default function ProductFilterSidebar() {
                         id={`category-${item.category}`}
                         name="category"
                         value={item.category}
-                        checked={catgoeryState.includes(item.category)}
+                        checked={Catogery?.includes(item.category)}
                         onChange={handleCategoryChange}
                         className="form-check-input flex-shrink-0"
                       />

@@ -2,7 +2,7 @@ import AvatarUploader from "../Component/AvatarUploader";
 import { fetchStats, useProfile } from "../Hooks/useProfile";
 import { useEffect, useState } from "react";
 import ProfileSettings from "./../Component/ProfileSettings";
-import { FetchOnRender } from "../Utils/useFetchProfile";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 function ProfilePage() {
   const { profile, profileStats, GetProfileStats } = useProfile();
