@@ -4,6 +4,7 @@ import ProductFilterSidebar from "../component/ProductFilterSidebar";
 
 import useProductPage from "../hooks/useProductPage";
 import useHeavyFetchOnRender from "../../../shared/Utils/useheavyFetch";
+import useWishlist from "../../Wishlist/Hooks/useWishlist";
 
 export default function Productspage() {
   const {
@@ -19,7 +20,13 @@ export default function Productspage() {
     filteredData,
     handlePageChange,
   } = useProductPage();
+  const { wishlist } = useWishlist();
 
+  const getWishlistStatus = (product_id) => {
+    const wishlistProduct = wishlist?.find((item) => item.p_id === product_id);
+
+    return wishlistProduct?.isWishList ?? 0;
+  };
   useHeavyFetchOnRender(() => {
     // 1. Search
     if (searchResults.trim()) {
@@ -83,6 +90,7 @@ export default function Productspage() {
               products?.map((product) => (
                 <div key={product.p_id} className="col-6 col-md-4">
                   <ProductCard
+                    isactive={getWishlistStatus(product.p_id)}
                     product={product}
                     callback={() => {
                       navigate(`/products/${product.p_id}`);

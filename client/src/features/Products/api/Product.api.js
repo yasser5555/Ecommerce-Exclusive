@@ -1,4 +1,4 @@
-import axiosInstance from "../../../shared/services/axiosInstance";
+ import axiosInstance from "../../../shared/services/axiosInstance";
 export const getAllProduct = async ({ page, limit }) => {
   try {
     const response = await axiosInstance.get("/products", {
@@ -7,6 +7,7 @@ export const getAllProduct = async ({ page, limit }) => {
         limit,
       },
     });
+ 
     return response.data;
   } catch (error) {
     console.error("Error fetching products:", error);

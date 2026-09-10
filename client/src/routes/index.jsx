@@ -5,6 +5,7 @@ import { profileRoutes } from "../features/Profile/routes/profile.routes";
 
 import MainLayout from "../shared/Layout/MainLayout";
 import { productsRoutes } from "../features/Products/routes/Products.routes";
+import { WishlistRoutes } from "../features/Wishlist/routes/Wishlist.routes";
 
 export const router = createBrowserRouter([
   {
@@ -16,7 +17,8 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       profileRoutes,
-      productsRoutes
+      productsRoutes,
+      WishlistRoutes
     ],
   },
 ]);

@@ -1,13 +1,14 @@
 import React, { useEffect } from "react";
 import { useProfile } from "../../features/Profile/Hooks/useProfile";
-import { NavLink } from 'react-router-dom';
-import { useAuth } from './../../features/auth/hooks/useAuth';
+import { NavLink } from "react-router-dom";
+import { useAuth } from "./../../features/auth/hooks/useAuth";
+import useWishlist from "../../features/Wishlist/Hooks/useWishlist";
 
 export default function Navbar() {
-  const wishlistCount = 0;
+  const { wishlist } = useWishlist();
   const cartCount = 0;
   const { profile, fetchProfile } = useProfile();
-  const {logout} = useAuth();
+  const { logout } = useAuth();
   useEffect(() => {
     const FetchProfile = async () => {
       try {
@@ -74,16 +75,16 @@ export default function Navbar() {
             {/* Icons */}
             <div className="d-flex align-items-lg-center align-items-baseline justify-content-lg-center gap-4">
               {/* Wishlist */}
-              <a
-                href="#"
+              <NavLink
+                to="/wishlist"
                 className="position-relative text-dark text-decoration-none "
               >
                 <i className="bi bi-heart"></i>
 
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
-                  {wishlistCount > 10 ? "+10" : wishlistCount}
+                  {wishlist.length > 10 ? "+10" : wishlist.length}
                 </span>
-              </a>
+              </NavLink>
 
               {/* Cart */}
               <a

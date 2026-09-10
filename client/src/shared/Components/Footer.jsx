@@ -1,4 +1,5 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 export default function Footer() {
   const footerData = [
@@ -29,11 +30,11 @@ export default function Footer() {
       type: "links",
       title: "Account",
       links: [
-        { name: "My Account", href: "#" },
-        { name: "Settings", href: "#" },
+        { name: "My Account", href: "/profile" },
+        { name: "Settings", href: "/setting" },
         { name: "Cart", href: "#" },
-        { name: "Wishlist", href: "#" },
-        { name: "Shop", href: "#" },
+        { name: "Wishlist", href: "/Wishlist" },
+        { name: "Shop", href: "/products" },
       ],
     },
     {
@@ -75,12 +76,12 @@ export default function Footer() {
 
                     {item.links.map((link) => (
                       <p key={link.name} className="mb-3">
-                        <a
-                          href={link.href}
+                        <NavLink
+                          to={link.href}
                           className="text-white text-decoration-none"
                         >
                           {link.name}
-                        </a>
+                        </NavLink>
                       </p>
                     ))}
                   </>

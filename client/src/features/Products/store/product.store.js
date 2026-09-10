@@ -43,9 +43,11 @@ export const useProductStore = create((set, get) => ({
         page,
         limit,
       });
+      console.log("PRODUCTS FROM API:", response);
+      
 
       set({
-        products: response.data,
+        products: response.data[0],
         pagination: response.pagination,
         isLoading: false,
       });
@@ -142,10 +144,10 @@ export const useProductStore = create((set, get) => ({
   getFilters: (payload) => {
     set({
       filters: {
-        Catogery: payload.Catogery,
-        rating: payload.rating,
-        minprice: payload.minprice,
-        maxprice: payload.maxprice,
+        Catogery: payload?.Catogery,
+        rating: payload?.rating,
+        minprice: payload?.minprice,
+        maxprice: payload?.maxprice,
       },
     });
   },
@@ -187,9 +189,6 @@ export const useProductStore = create((set, get) => ({
 
       const response = await getProductReviewsRequest(productId);
 
-      console.log("FETCH REVIEWS RESPONSE:", response);
-      console.log("FETCH REVIEWS DATA:", response.data);
-
       set({
         reviews: Array.isArray(response.data) ? response.data : [],
         isLoading: false,
@@ -222,7 +221,7 @@ export const useProductStore = create((set, get) => ({
 
       await get().fetchReviews(productId);
       console.log("REVIEWS AFTER FETCH:", get().reviews);
-      
+
       return response;
     } catch (error) {
       set({

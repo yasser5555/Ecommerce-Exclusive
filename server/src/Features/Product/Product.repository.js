@@ -1,26 +1,29 @@
 const db = require("../../shared/Database/db");
 // Get all Produts
-const getAllProducts = async (limit, offset) => {
+const getAllProducts = async (limit, offset, user_id) => {
   try {
-    const [Products] = await db.query(
-      `SELECT * FROM product_card LIMIT ? OFFSET ?`,
-      [limit, offset],
-    );
+    const [Products] = await db.query(`CALL get_all_products(?, ?, ?)`, [
+      user_id,
+      limit,
+      offset,
+    ]);
+
     return Products;
   } catch (error) {
     throw new Error(`error at Product.repository.getAllProducts ===> ${error}`);
   }
 };
 
-const getProductById = async (product_id) => {
+const getProductById = async (product_id, user_id) => {
   try {
-    const [Product] = await db.query(
-      `SELECT * FROM product_card where p_id = ?`,
-      [product_id],
-    );
-    return Product;
+    const [Product] = await db.query(`CALL get_product_by_id(?, ?)`, [
+      product_id,
+      user_id,
+    ]);
+
+    return Product[0];
   } catch (error) {
-    throw new Error(`error at Product.repository.getAllProducts ===> ${error}`);
+    throw new Error(`error at Product.repository.getProductById ===> ${error}`);
   }
 };
 
@@ -77,12 +80,10 @@ const GetCatogeries = async () => {
 };
 const getFilterData = async (catogery, rating, min, max) => {
   try {
-    const [filteredCatogery, x] = await db.query(`CALL filter_Product (?,?,?,?)`, [
-      catogery ,
-      rating ,
-      min ,
-      max ,
-    ]);
+    const [filteredCatogery, x] = await db.query(
+      `CALL filter_Product (?,?,?,?)`,
+      [catogery, rating, min, max],
+    );
     return filteredCatogery[0];
   } catch (error) {
     console.error(
@@ -98,5 +99,5 @@ module.exports = {
   findProductByTitle,
   findProductPosition,
   GetCatogeries,
-  getFilterData
+  getFilterData,
 };

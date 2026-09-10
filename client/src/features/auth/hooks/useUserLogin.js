@@ -32,7 +32,7 @@ export const useUserLogin = () => {
     try {
       response = await login(formData, rememberMe);
       toast.success(`Welcome back ${response.user.email}!`);
-      console.log(response);
+ 
       navigate("/profile", {
         replace: true,
       });

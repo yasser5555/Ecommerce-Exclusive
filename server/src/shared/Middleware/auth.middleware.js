@@ -13,6 +13,7 @@ const protect = (req, res, next) => {
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.user = decoded;
+    // Note: Accessing user id From it use req.user.id
     next();
   } catch (error) {
     return res.status(401).json({

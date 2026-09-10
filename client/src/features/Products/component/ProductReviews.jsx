@@ -1,86 +1,27 @@
-import { useEffect, useState } from "react";
 import { Star, Send, MessageCircle } from "lucide-react";
-import { useProductStore } from "../store/product.store";
+import { FetchOnRender } from "./../../../shared/Utils/useFetch";
+import { useProductReviews } from "../hooks/useProductReviews";
 
 export default function ProductReviews({ productId }) {
-  const { reviews, isLoading, error, fetchReviews, createReview } =
-    useProductStore();
-  const [COMMENT, setComment] = useState("");
-  const [rating, setRating] = useState(0);
-  const [hoverRating, setHoverRating] = useState(0);
-  const [submitting, setSubmitting] = useState(false);
+  const {
+    reviews,
+    error,
+    fetchReviews,
+    COMMENT,
+    setComment,
+    rating,
+    submitting,
+    handleSubmit,
+    averageRating,
+    getAvatarUrl,
+    isloaded,
+    renderStars,
+  } = useProductReviews();
 
-  useEffect(() => {
-    fetchReviews(productId);
-  }, [productId]);
+  FetchOnRender(() => fetchReviews(productId), productId);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!COMMENT.trim()) return;
-    if (!rating) return;
-    try {
-      setSubmitting(true);
-      await createReview(productId, COMMENT, rating);
-      setComment("");
-      setRating(0);
-      setHoverRating(0);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setSubmitting(false);
-    }
-  };
-  const averageRating =
-    reviews.length > 0
-      ? (
-          reviews.reduce((sum, review) => sum + (review.rating || 0), 0) /
-          reviews.length
-        ).toFixed(1)
-      : "0.0";
-  const renderStars = (value, interactive = false) => {
-    const activeValue = interactive ? hoverRating || rating : value;
-    return (
-      <div className="d-flex align-items-center gap-1">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <Star
-            key={star}
-            size={interactive ? 25 : 17}
-            strokeWidth={1.8}
-            fill={star <= activeValue ? "#ffc107" : "none"}
-            color={star <= activeValue ? "#ffc107" : "#adb5bd"}
-            style={{
-              cursor: interactive ? "pointer" : "default",
-              transition: "all 0.15s ease",
-            }}
-            onMouseEnter={interactive ? () => setHoverRating(star) : undefined}
-            onMouseLeave={interactive ? () => setHoverRating(0) : undefined}
-            onClick={interactive ? () => setRating(star) : undefined}
-          />
-        ))}
-      </div>
-    );
-  };
-  const getAvatarUrl = (avatar) => {
-    if (!avatar) return null;
+  isloaded();
 
-    // لو URL كامل
-    if (avatar.startsWith("http://") || avatar.startsWith("https://")) {
-      return avatar;
-    }
-
-    // لو صورة مرفوعة على الـ backend
-    return `http://localhost:5000/${avatar}`;
-  };
-  if (isLoading) {
-    return (
-      <section className="py-5">
-        <div className="text-center py-5">
-          <div className="spinner-border" role="status" />
-          <p className="text-muted mt-3 mb-0"> Loading reviews... </p>
-        </div>
-      </section>
-    );
-  }
   return (
     <section className="py-4 py-lg-5">
       {/* Header */}
@@ -133,7 +74,7 @@ export default function ProductReviews({ productId }) {
             <p className="text-muted small mb-4">
               Your feedback helps other customers.
             </p>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => handleSubmit(e, productId)}>
               {/* Rating */}
               <div className="mb-3">
                 <label className="form-label fw-semibold small">
@@ -167,7 +108,7 @@ export default function ProductReviews({ productId }) {
               <button
                 type="submit"
                 disabled={submitting || !COMMENT.trim() || !rating}
-                className="btn btn-dark rounded-3 px-4 py-2 d-flex align-items-center gap-2"
+                className="btn btn-danger rounded-3 px-4 py-2 d-flex align-items-center gap-2"
               >
                 <Send size={16} />
                 {submitting ? "Posting..." : "Post Review"}

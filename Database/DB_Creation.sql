@@ -89,12 +89,19 @@ CREATE TABLE IF NOT EXISTS addresses (
 -- ===================================
 -- WISHLIST
 -- ===================================
+drop TABLE if EXISTS wishlist;
 
 CREATE TABLE wishlist (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT UNIQUE NOT NULL,
-    product_id INT UNIQUE NOT NULL,
+    -- User Must be Exist
+    user_id INT NOT NULL,
+    -- Product Must be Exist
+    product_id INT NOT NULL,
+    -- user Can't add same Product to WishList more than a time 
+    UNIQUE (user_id, product_id),
+    -- Link User Table
     FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    -- Link Product Table 
     FOREIGN KEY (product_id) REFERENCES products (id) ON DELETE CASCADE
 );
 
