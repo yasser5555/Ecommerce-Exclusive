@@ -517,7 +517,6 @@ EMAIL_USER=your_email
 EMAIL_PASSWORD=your_email_password
 ```
 
-> Do not commit `.env` files or other secrets to GitHub.
 
 ---
 
