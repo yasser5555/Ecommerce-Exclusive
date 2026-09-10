@@ -639,20 +639,6 @@ The main goals of this project are to:
 The project is primarily focused on learning through implementation: designing the database, building the backend API, connecting it to a React frontend, debugging real application problems, and continuously improving the architecture.
 
 ---
-
-## 📚 Project Documentation
-
-Additional project notes and documentation are maintained inside the repository, including:
-
-* Project blueprint
-* Current project state
-* Problems and solutions
-* Zustand notes
-* GitHub workflow notes
-* React UI library references
-
----
-
 ## 📄 License
 
 This project is currently intended for educational and portfolio purposes.
