@@ -1,14 +1,25 @@
 import React, { useEffect } from "react";
-import { useProfile } from "../../features/Profile/Hooks/useProfile";
 import { NavLink } from "react-router-dom";
+import {
+  Heart,
+  ShoppingCart,
+  Settings,
+  LogOut,
+  UserCircle,
+} from "lucide-react";
+
+import { useProfile } from "../../features/Profile/Hooks/useProfile";
 import { useAuth } from "./../../features/auth/hooks/useAuth";
 import useWishlist from "../../features/Wishlist/Hooks/useWishlist";
+import useCartStore from "../../features/Cart/store/Cart.store";
 
 export default function Navbar() {
+  const { cart } = useCartStore();
   const { wishlist } = useWishlist();
-  const cartCount = 0;
+
   const { profile, fetchProfile } = useProfile();
   const { logout } = useAuth();
+
   useEffect(() => {
     const FetchProfile = async () => {
       try {
@@ -17,6 +28,7 @@ export default function Navbar() {
         console.error("Error fetching profile:", error);
       }
     };
+
     FetchProfile();
   }, [fetchProfile]);
 
@@ -24,9 +36,9 @@ export default function Navbar() {
     <nav className="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
         {/* Logo */}
-        <a className="navbar-brand fw-bold fs-4" href="#">
+        <NavLink className="navbar-brand fw-bold fs-4" to="/home">
           Exclusive
-        </a>
+        </NavLink>
 
         {/* Mobile Toggle */}
         <button
@@ -45,15 +57,15 @@ export default function Navbar() {
           {/* Navigation */}
           <ul className="navbar-nav me-auto align-items-lg-center">
             <li className="nav-item">
-              <NavLink className="nav-link active px-3" to="/products">
+              <NavLink className="nav-link px-3" to="/products">
                 Products
               </NavLink>
             </li>
 
             <li className="nav-item">
-              <a className="nav-link px-3" href="#">
+              <NavLink className="nav-link px-3" to={"/about"}>
                 About
-              </a>
+              </NavLink>
             </li>
           </ul>
 
@@ -62,12 +74,12 @@ export default function Navbar() {
             {/* Search */}
             <form className="d-flex">
               <input
-                className="form-control "
+                className="form-control"
                 type="search"
                 placeholder="Search"
               />
 
-              <button className="btn  btn-outline-danger ms-2" type="submit">
+              <button className="btn btn-outline-danger ms-2" type="submit">
                 Search
               </button>
             </form>
@@ -77,63 +89,77 @@ export default function Navbar() {
               {/* Wishlist */}
               <NavLink
                 to="/wishlist"
-                className="position-relative text-dark text-decoration-none "
+                className="position-relative text-dark text-decoration-none"
+                aria-label="Wishlist"
               >
-                <i className="bi bi-heart"></i>
+                <Heart size={21} strokeWidth={1.8} />
 
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {wishlist.length > 10 ? "+10" : wishlist.length}
                 </span>
               </NavLink>
 
               {/* Cart */}
-              <a
-                href="#"
-                className="position-relative text-dark text-decoration-none "
+              <NavLink
+                to="/cart"
+                className="position-relative text-dark text-decoration-none"
+                aria-label="Shopping cart"
               >
-                <i className="bi bi-cart3"></i>
+                <ShoppingCart size={21} strokeWidth={1.8} />
 
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger ">
-                  {cartCount > 10 ? "+10" : cartCount}
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  {cart?.length > 10 ? "+10" : cart?.length}
                 </span>
-              </a>
+              </NavLink>
 
               {/* Profile */}
               <div className="dropdown">
-                <a
-                  href="#"
-                  className="dropdown-toggle text-decoration-none"
+                <button
+                  className="btn p-0 border-0 bg-transparent dropdown-toggle"
+                  type="button"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
                 >
-                  <img
-                    src={
-                      profile?.avatar
-                        ? `http://localhost:5000/${profile.avatar}`
-                        : "https://i.imgur.com/HeIi0wU.png"
-                    }
-                    alt="User"
-                    width="35"
-                    height="35"
-                    className="rounded-circle"
-                  />
-                </a>
+                  {profile?.avatar ? (
+                    <img
+                      src={`http://localhost:5000/${profile.avatar}`}
+                      alt="User"
+                      width="35"
+                      height="35"
+                      className="rounded-circle"
+                    />
+                  ) : (
+                    <UserCircle size={35} strokeWidth={1.5} />
+                  )}
+                </button>
 
                 <ul className="dropdown-menu text-start dropdown-menu-end">
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a
+                      className="dropdown-item d-flex align-items-center gap-2"
+                      href="#"
+                    >
+                      <Settings size={17} />
                       Setting
                     </a>
                   </li>
 
                   <li>
-                    <button className="dropdown-item" onClick={logout}>
+                    <button
+                      className="dropdown-item d-flex align-items-center gap-2"
+                      onClick={logout}
+                    >
+                      <LogOut size={17} />
                       Signout
                     </button>
                   </li>
 
                   <li>
-                    <NavLink className="dropdown-item" to="/profile">
+                    <NavLink
+                      className="dropdown-item d-flex align-items-center gap-2"
+                      to="/profile"
+                    >
+                      <UserCircle size={17} />
                       Profile Page
                     </NavLink>
                   </li>

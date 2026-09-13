@@ -2,8 +2,11 @@ import React from "react";
 
 import WishlistCard from "../Component/WishlistCard";
 import useWishlist from "../Hooks/useWishlist";
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 
 export default function WishlistPage() {
+      useChangeTitle({title:`Wishlist`})
+  
   const { wishlist, isLoading, error, handleRemoveFromWishlist } =
     useWishlist();
 

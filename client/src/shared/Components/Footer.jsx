@@ -32,7 +32,7 @@ export default function Footer() {
       links: [
         { name: "My Account", href: "/profile" },
         { name: "Settings", href: "/setting" },
-        { name: "Cart", href: "#" },
+        { name: "Cart", href: "/cart" },
         { name: "Wishlist", href: "/Wishlist" },
         { name: "Shop", href: "/products" },
       ],

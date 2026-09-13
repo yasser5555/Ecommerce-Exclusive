@@ -1,13 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import React, { useState } from "react";
 import { Star } from "lucide-react";
-import { useProducts } from "./../hooks/useProductStore";
 
 import ProductComments from "./../component/ProductReviews";
 import useProductdetails from "../hooks/useProductdetails";
-import { FetchOnRender } from "./../../../shared/Utils/useFetch";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
+import useCartStore from "../../Cart/store/Cart.store";
+import { useAuthStore } from "../../auth/store/auth.store";
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 
 export default function Productdetails() {
+
+  const [quantity, setQuantity] = useState(1);
+  const { user } = useAuthStore();
+  const { addProductToCart } = useCartStore();
+
   const {
     product,
     id,
@@ -25,73 +31,66 @@ export default function Productdetails() {
 
   isExist();
 
+ const handleAddToCart = async () => {
+  if (!product?.p_id) {
+    console.log("Product ID is missing");
+    return;
+  }
+
+  console.log("Product ID:", product.p_id);
+  console.log("Selected Quantity:", quantity);
+
+  await addProductToCart({
+    product_id: product.p_id,
+    quantity: quantity,
+    user_id: user?.id,
+  });
+};
+  useChangeTitle({title:`${product?.name}`})
   return (
     <div className="container py-5">
       <div className="row g-5">
+        {/* ================= IMAGE ================= */}
         <div className="col-12 col-lg-6">
           <div className="card border-0">
             <div
               className="border rounded overflow-hidden bg-light"
               style={{
-                height: "500px",
+                height: "90dvh",
               }}
             >
               <img
                 src={selectedImage || product?.image}
-                alt={product?.name}
+                alt={product?.name || "Product"}
                 className="w-100 h-100"
                 style={{
                   objectFit: "contain",
                 }}
               />
             </div>
-
-            <div className="d-flex gap-3 mt-3">
-              <button
-                type="button"
-                onClick={() => setSelectedImage(product?.image)}
-                className={`p-0 bg-white rounded ${
-                  selectedImage === product?.image
-                    ? "border border-primary"
-                    : "border"
-                }`}
-                style={{
-                  width: "90px",
-                  height: "90px",
-                  overflow: "hidden",
-                }}
-              >
-                <img
-                  src={product?.image}
-                  alt={`${product?.name} thumbnail`}
-                  className="w-100 h-100"
-                  style={{
-                    objectFit: "cover",
-                  }}
-                />
-              </button>
-            </div>
-
-            <small className="text-muted mt-2">
-              Click the image to preview it.
-            </small>
           </div>
         </div>
 
+        {/* ================= PRODUCT INFO ================= */}
         <div className="col-12 col-lg-6">
+          {/* Category */}
           <p className="text-muted mb-2">{product?.category}</p>
 
+          {/* Name */}
           <h1 className="display-6 fw-bold mb-3">{product?.name}</h1>
 
+          {/* ================= RATING ================= */}
           <div className="d-flex align-items-center gap-2 mb-4">
             <div className="d-flex align-items-center">
               {stars.map((star) => {
                 let fillPercentage = 0;
+
                 if (currentRating >= star) {
                   fillPercentage = 100;
                 } else if (currentRating > star - 1) {
                   fillPercentage = (currentRating - (star - 1)) * 100;
                 }
+
                 return (
                   <div
                     key={star}
@@ -101,6 +100,7 @@ export default function Productdetails() {
                       height: "18px",
                     }}
                   >
+                    {/* Empty Star */}
                     <Star
                       size={18}
                       style={{
@@ -111,15 +111,13 @@ export default function Productdetails() {
                       }}
                     />
 
-                    {/* Filled Part */}
-
+                    {/* Filled Star */}
                     <div
                       style={{
                         position: "absolute",
                         top: "-30%",
                         left: 0,
                         width: `${fillPercentage}%`,
-                        // height: "18px",
                         overflow: "hidden",
                         color: "#fbbf24",
                       }}
@@ -131,21 +129,20 @@ export default function Productdetails() {
               })}
             </div>
 
-            <span className="fw-semibold">{currentRating.toFixed(1)}</span>
+            <span className="fw-semibold">
+              {Number(currentRating).toFixed(1)}
+            </span>
 
             <span className="text-muted">
-              ({product?.review_count} reviews)
+              ({product?.review_count || 0} reviews)
             </span>
           </div>
 
+          {/* ================= PRICE ================= */}
           <div className="d-flex align-items-center flex-wrap gap-3 mb-4">
-            <span className="fs-2 fw-bold">
-              ${Number(product?.price_after_discount).toFixed(2)}
-            </span>
-
             {product?.price && (
-              <span className="fs-5 text-muted text-decoration-line-through">
-                ${Number(product?.price).toFixed(2)}
+              <span className="fs-5 text-danger fw-bolder">
+                ${Number(product.price).toFixed(2)}
               </span>
             )}
 
@@ -156,18 +153,25 @@ export default function Productdetails() {
             )}
           </div>
 
+          {/* ================= DESCRIPTION ================= */}
+          <p className="text-black text-sm md:text-base leading-7 max-w-3xl">
+            {product?.description}
+          </p>
+
+          {/* ================= CATEGORY ================= */}
           <div className="mb-4">
             <h5 className="fw-bold">Category</h5>
 
             <p className="text-secondary">{product?.category}</p>
           </div>
 
+          {/* ================= STOCK ================= */}
           <div className="mb-4">
             {product?.stock > 0 ? (
               <div className="text-success fw-semibold">
                 ✓ In stock
                 <span className="text-muted fw-normal ms-2">
-                  ({product?.stock} available)
+                  ({product.stock} available)
                 </span>
               </div>
             ) : (
@@ -175,6 +179,7 @@ export default function Productdetails() {
             )}
           </div>
 
+          {/* ================= QUANTITY ================= */}
           {product?.stock > 0 && (
             <div className="mb-4">
               <label htmlFor="quantity" className="form-label fw-semibold">
@@ -187,38 +192,39 @@ export default function Productdetails() {
                 style={{
                   maxWidth: "150px",
                 }}
-                defaultValue="1"
+                value={quantity}
+                onChange={(e) => setQuantity(Number(e.target.value))}
               >
                 {Array.from(
-                  { length: maxQuantity },
+                  {
+                    length: maxQuantity,
+                  },
                   (_, index) => index + 1,
-                ).map((quantity) => (
-                  <option key={quantity} value={quantity}>
-                    {quantity}
+                ).map((value) => (
+                  <option key={value} value={value}>
+                    {value}
                   </option>
                 ))}
               </select>
             </div>
           )}
 
+          {/* ================= ADD TO CART ================= */}
           <div className="d-flex flex-column flex-sm-row gap-3 mb-4">
             <button
               type="button"
               className="btn btn-danger btn-lg flex-grow-1"
               disabled={product?.stock <= 0}
-              onClick={() => {
-                console.log("Add to cart:", product?.p_id);
-              }}
+              onClick={handleAddToCart}
             >
               {product?.stock > 0 ? "Add to Cart" : "Out of Stock"}
             </button>
-
-            
           </div>
         </div>
       </div>
 
-      <section className="mt-1 pt-1 border-top  border-2">
+      {/* ================= REVIEWS ================= */}
+      <section className="mt-1 pt-1">
         <ProductComments productId={product?.p_id} />
       </section>
     </div>

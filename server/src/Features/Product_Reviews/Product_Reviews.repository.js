@@ -1,4 +1,4 @@
-const db = require("../../shared/Database/DB");
+const db = require("../../shared/Database/db");
 
 const getProductReviews = async (productId) => {
   try {
@@ -29,9 +29,26 @@ const createReview = async (userId, productId, comment, rating) => {
     );
   }
 };
+const deleteReview = async (reviewId, userId) => {
+  try {
+    const [deletedReview] = await db.query(
+      `DELETE FROM product_reviews
+       WHERE product_reviews.id = ? AND product_reviews.user_id = ?`,
+      [reviewId, userId],
+    );
+
+    return deletedReview;
+  } catch (error) {
+    console.error(
+      `error at Product.repository.deleteReview ===> ${error.message}`,
+    );
+    throw error;
+  }
+};
 
 module.exports = {
   getProductReviews,
   createReview,
+  deleteReview,
 };
  

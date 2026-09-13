@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   createProductReviewRequest,
+  deleteProductReviewRequest,
   filterData,
   getAllProduct,
   GetCatogeries,
@@ -44,7 +45,6 @@ export const useProductStore = create((set, get) => ({
         limit,
       });
       console.log("PRODUCTS FROM API:", response);
-      
 
       set({
         products: response.data[0],
@@ -230,7 +230,26 @@ export const useProductStore = create((set, get) => ({
           error.message ||
           "Failed to create review",
       });
-
+      throw error;
+    }
+  },
+  deleteReview: async (reviewId) => {
+    try {
+      set({ error: null });
+      const response = await deleteProductReviewRequest(reviewId);
+      set((state) => ({
+        reviews: state.reviews.filter(
+          (review) => review.review_id !== reviewId,
+        ),
+      }));
+      return response;
+    } catch (error) {
+      set({
+        error:
+          error.response?.data?.message ||
+          error.message ||
+          "Failed to delete review",
+      });
       throw error;
     }
   },

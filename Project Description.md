@@ -99,6 +99,42 @@ These database operations are organized under the Products database module.
 
 ---
 
+### 🛒 Shopping Cart
+
+A dedicated **Shopping Cart feature** has been implemented to provide users with a persistent shopping experience and manage products before checkout.
+
+Users can:
+
+* Add products to their cart
+* Select the desired product quantity
+* View products currently in the cart
+* Display product prices and quantities
+* Calculate cart-related totals
+* Manage cart items through the dedicated Cart interface
+
+The Cart functionality follows the project's **Feature-Based Architecture** and is separated into its own frontend feature.
+
+The frontend Cart feature includes:
+
+* Cart API
+* Zustand Cart store
+* Cart page
+* Cart table
+* Cart summary
+* Coupon component
+* Cart routes
+
+The selected product quantity is handled dynamically through the Cart workflow, allowing the quantity chosen by the user to be used when adding a product to the cart.
+
+The backend and database layers are also prepared specifically for Cart operations, keeping Cart-related logic separated from the Product feature.
+
+The database implementation includes dedicated Cart queries and a `Cart_Product` view for retrieving cart-related product information.
+
+The Cart feature is integrated with the Product Details workflow, allowing users to move from browsing products to managing their selected products in the shopping cart.
+
+
+---
+
 ### ❤️ Wishlist
 
 Users can:
@@ -655,5 +691,4 @@ Additional project notes and documentation are maintained inside the repository,
 ---
 
 ## 📄 License
-
 This project is currently intended for educational and portfolio purposes.

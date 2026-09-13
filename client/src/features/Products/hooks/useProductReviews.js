@@ -3,7 +3,7 @@ import { useProductStore } from "../store/product.store";
 import { Star } from "lucide-react";
 
 export const useProductReviews = () => {
-  const { reviews, isLoading, error, fetchReviews, createReview } =
+  const { reviews, isLoading, error, fetchReviews, createReview , deleteReview } =
     useProductStore();
   const [COMMENT, setComment] = useState("");
   const [rating, setRating] = useState(0);
@@ -81,6 +81,15 @@ export const useProductReviews = () => {
       </div>
     );
   };
+
+  const handleDeleteReview = async (reviewId) => {
+    try {
+      await deleteReview(reviewId);
+    } catch (error) {
+      console.error("Error deleting review:", error);
+    }
+  };
+
   return {
     reviews,
     isLoading,
@@ -100,5 +109,6 @@ export const useProductReviews = () => {
     getAvatarUrl,
     isloaded,
     renderStars,
+    handleDeleteReview
   };
 };

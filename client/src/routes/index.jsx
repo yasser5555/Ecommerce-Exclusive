@@ -6,6 +6,9 @@ import { profileRoutes } from "../features/Profile/routes/profile.routes";
 import MainLayout from "../shared/Layout/MainLayout";
 import { productsRoutes } from "../features/Products/routes/Products.routes";
 import { WishlistRoutes } from "../features/Wishlist/routes/Wishlist.routes";
+import { CartRoutes } from "../features/Cart/routes/Cart.routes";
+import { HomeRoutes } from "../features/Home/routes/Home.routes";
+import { AboutRoutes } from "../features/About/routes/About.routes";
 
 export const router = createBrowserRouter([
   {
@@ -18,7 +21,10 @@ export const router = createBrowserRouter([
     children: [
       profileRoutes,
       productsRoutes,
-      WishlistRoutes
+      WishlistRoutes,
+      CartRoutes,
+      HomeRoutes,
+      AboutRoutes,
     ],
   },
 ]);

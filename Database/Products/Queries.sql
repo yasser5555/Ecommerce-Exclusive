@@ -47,3 +47,10 @@ GROUP BY
     category
 
 -- SELECT * from  product_card WHERE category = "Smartphones" and rating > 3 or price BETWEEN 2355.65 and 2450.40 ORDER BY price
+
+-- DELETE  FROM ategory;
+
+ALTER TABLE products
+MODIFY COLUMN old_price DECIMAL(10,3);
+
+SELECT  * FROM categories; 

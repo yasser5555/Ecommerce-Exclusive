@@ -1,8 +1,10 @@
-import { Star, Send, MessageCircle } from "lucide-react";
+import { Star, Send, MessageCircle, Trash2 } from "lucide-react";
 import { FetchOnRender } from "./../../../shared/Utils/useFetch";
 import { useProductReviews } from "../hooks/useProductReviews";
+import { useAuthStore } from "./../../auth/store/auth.store";
 
 export default function ProductReviews({ productId }) {
+  const { user } = useAuthStore();
   const {
     reviews,
     error,
@@ -12,6 +14,7 @@ export default function ProductReviews({ productId }) {
     rating,
     submitting,
     handleSubmit,
+    handleDeleteReview,
     averageRating,
     getAvatarUrl,
     isloaded,
@@ -57,7 +60,7 @@ export default function ProductReviews({ productId }) {
                 </small>
               </div>
             </div>
-            <div className="border-top pt-3 mt-3">
+            <div className=" pt-3 mt-3">
               <div className="d-flex justify-content-between small">
                 <span className="text-muted"> Customer feedback </span>
                 <span className="fw-semibold">
@@ -69,7 +72,7 @@ export default function ProductReviews({ productId }) {
         </div>
         {/* Write Review */}
         <div className="col-12 col-lg-8">
-          <div className="border rounded-4 p-4 h-100">
+          <div className=" rounded-4 p-4 h-100">
             <h5 className="fw-bold mb-1"> Share your experience </h5>
             <p className="text-muted small mb-4">
               Your feedback helps other customers.
@@ -162,7 +165,7 @@ export default function ProductReviews({ productId }) {
                   <div className="flex-grow-1">
                     <div className="d-flex flex-column flex-lg-row justify-content-between gap-2">
                       <div>
-                        <h6 className="fw-bold mb-1"> {review.email} </h6>
+                        <h6 className="fw-bold mb-1">{review.email}</h6>
                         <div className="d-flex align-items-center gap-2">
                           {renderStars(review.rating || 0)}
                           {review.rating && (
@@ -172,9 +175,22 @@ export default function ProductReviews({ productId }) {
                           )}
                         </div>
                       </div>
-                      <small className="text-muted">
-                        {new Date(review.commented_at).toLocaleDateString()}
-                      </small>
+
+                      <div className="d-flex align-items-center gap-3">
+                        <small className="text-muted">
+                          {new Date(review.commented_at).toLocaleDateString()}
+                        </small>
+
+                        {user?.id === review.user_id && (
+                          <button
+                            type="button"
+                            className="btn btn-sm btn-outline-danger"
+                            onClick={() => handleDeleteReview(review.review_id)}
+                          >
+                            <Trash2 size={15} />
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <p className="text-secondary mb-0 mt-3 lh-lg">
                       {review.COMMENT}

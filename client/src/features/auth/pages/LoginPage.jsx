@@ -2,8 +2,9 @@ import { useEffect } from "react";
 import LoginForm from "../components/LoginForm";
 import "../Styles/login.css";
 import { useNavigate } from "react-router-dom";
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 function LoginPage() {
-  document.title = "login"
+  useChangeTitle({title:`Login`})
   const navigate = useNavigate();
   useEffect(() => {
     function CheckToken() {

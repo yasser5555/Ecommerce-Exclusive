@@ -29,14 +29,7 @@ function ProductCard({ product, callback, isactive }) {
     setActive(wishlistStatus);
   }, [isactive, product?.p_id]);
 
-  // Calculate discount percentage
-  const discountPercentage =
-    price && price_after_discount
-      ? Math.round(
-          ((Number(price) - Number(price_after_discount)) / Number(price)) *
-            100,
-        )
-      : 0;
+ 
 
   const handleWishlist = async () => {
     try {
@@ -62,10 +55,7 @@ function ProductCard({ product, callback, isactive }) {
     <article className="product-card">
       {/* Product Image */}
       <div className="product-image-wrapper">
-        {/* Sale Badge */}
-        {discountPercentage > 0 && (
-          <span className="sale-badge">-{discountPercentage}%</span>
-        )}
+ 
 
         {/* Action Buttons */}
         <div className="product-actions">
@@ -76,11 +66,11 @@ function ProductCard({ product, callback, isactive }) {
             className="action-btn"
             aria-label={active ? "Remove from wishlist" : "Add to wishlist"}
           >
-           <Heart
-  className={active ? "text-danger" : ""}
-  fill={active ? "currentColor" : "none"}
-  size={18}
-/>
+            <Heart
+              className={active ? "text-danger" : ""}
+              fill={active ? "currentColor" : "none"}
+              size={18}
+            />
           </button>
 
           {/* Quick View */}
@@ -109,12 +99,10 @@ function ProductCard({ product, callback, isactive }) {
 
         {/* Price */}
         <div className="product-price">
-          <span className="current-price">
-            ${Number(price_after_discount).toFixed(2)}
-          </span>
+ 
 
           {price && (
-            <span className="old-price">${Number(price).toFixed(2)}</span>
+            <span className="text-danger fw-bolder">${Number(price).toFixed(2)}</span>
           )}
         </div>
 

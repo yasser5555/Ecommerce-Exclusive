@@ -1,7 +1,10 @@
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 import RegisterForm from "../components/RegisterForm";
 import "../Styles/register.css";
 
 function RegisterPage() {
+    useChangeTitle({title:`Register`})
+  
   return (
     <div className="register-page">
       <div className="register-wrapper animate-register">

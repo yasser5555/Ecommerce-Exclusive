@@ -1,6 +1,9 @@
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 import ForgotPasswordForm from "../components/ForgotPasswordForm";
 
 function ForgotPasswordPage() {
+    useChangeTitle({title:`Forget Password`})
+  
   return (
     <>
       <h1 className="register-title">Forgot Password</h1>

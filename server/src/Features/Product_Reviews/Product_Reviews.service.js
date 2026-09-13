@@ -11,7 +11,7 @@ const getProductReviews = async (productId) => {
   }
 };
 
-const createReview = async (userId, productId, comment,rating) => {
+const createReview = async (userId, productId, comment, rating) => {
   try {
     if (!comment || !comment.trim()) {
       throw new Error("Comment cannot be empty");
@@ -25,7 +25,7 @@ const createReview = async (userId, productId, comment,rating) => {
       userId,
       productId,
       comment.trim(),
-      rating
+      rating,
     );
 
     return {
@@ -41,7 +41,23 @@ const createReview = async (userId, productId, comment,rating) => {
   }
 };
 
+const deleteReview = async (reviewId, userId) => {
+  try {
+    const deletedRows = await reviewRepository.deleteReview(reviewId, userId);
+
+    return {
+      deleteReview,
+      reviewId,
+    };
+  } catch (error) {
+    throw new Error(
+      `error at Product_Reviews.service.deleteReview ===> ${error.message}`,
+    );
+  }
+};
+
 module.exports = {
   getProductReviews,
   createReview,
+  deleteReview,
 };

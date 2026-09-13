@@ -8,4 +8,6 @@ ALTER TABLE product_reviews ADD INDEX idx_user_id (user_id);
 
 ALTER TABLE product_reviews DROP INDEX user_id;
 
-CONSTRAINT `product_reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+CONSTRAINT `product_reviews_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+SELECT * from product_reviews

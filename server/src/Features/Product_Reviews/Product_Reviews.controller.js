@@ -32,7 +32,31 @@ const createReview = async (req, res, next) => {
   }
 };
 
+const deleteReview = async (req, res) => {
+  try {
+    const { reviewId } = req.params;
+    const userId = req.user.id;
+
+    const deletedReview = await reviewService.deleteReview(
+      reviewId,
+      userId,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: "Review deleted successfully",
+      data: deletedReview,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error Deleting Review",
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   getProductReviews,
   createReview,
+  deleteReview,
 };

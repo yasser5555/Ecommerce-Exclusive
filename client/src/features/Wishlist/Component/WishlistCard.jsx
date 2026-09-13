@@ -1,5 +1,6 @@
 import React from "react";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 export default function WishlistCard({ product, onRemove, onAddToCart }) {
   const removeFromWishlist = () => {
@@ -12,21 +13,7 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
 
   const addToCart = () => {
     try {
-      console.log(
-        `1. WishlistCard: add to cart clicked for product ${product.p_id}`,
-      );
-
       onAddToCart(product);
-
-      console.log(
-        `2. WishlistCard: addToCart function called for product ${product.p_id}`,
-      );
-
-      console.log("3. WishlistCard: waiting for cart operation");
-
-      console.log(
-        `4. WishlistCard: add to cart operation finished for product ${product.p_id}`,
-      );
     } catch (error) {
       console.log(
         "4. WishlistCard: error while adding product to cart:",
@@ -80,7 +67,7 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
 
               {/* Price */}
               <div className="mb-1">
-                <span className="fw-semibold me-2">
+                <span className="text-danger fw-semibold me-2">
                   ${finalPrice.toFixed(2)}
                 </span>
 
@@ -92,8 +79,9 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
               </div>
 
               {/* Rating */}
-              <small className="text-secondary">
-                ★ {product.rating} ({product.review_count} reviews)
+              <small className="text-warning-emphasis ">
+                <Star size={16} fill="currentcolor" /> {product.rating} (
+                {product.review_count} reviews)
               </small>
             </div>
 
@@ -111,13 +99,22 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
         {/* Action */}
         <div className="col-12 col-md-auto">
           {Number(product.stock) > 0 ? (
-            <button
-              onClick={addToCart}
-              className="btn btn-dark btn-sm w-100 d-flex align-items-center justify-content-center gap-1"
-            >
-              <ShoppingCart size={14} />
-              Add to Cart
-            </button>
+            <>
+              <button
+                onClick={addToCart}
+                className="btn btn-danger btn-sm w-100 d-flex mb-1 align-items-center justify-content-center gap-1"
+              >
+                <ShoppingCart size={14} />
+                Add to Cart
+              </button>
+              <NavLink to={`/products/${product.p_id}`}
+                onClick={addToCart}
+                className="btn btn-danger btn-sm w-100 d-flex align-items-center justify-content-center gap-1"
+              >
+                <Eye size={14} />
+                View Product
+              </NavLink>
+            </>
           ) : (
             <button disabled className="btn btn-secondary btn-sm w-100">
               Out of Stock

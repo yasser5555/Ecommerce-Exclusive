@@ -5,8 +5,10 @@ import ProductFilterSidebar from "../component/ProductFilterSidebar";
 import useProductPage from "../hooks/useProductPage";
 import useHeavyFetchOnRender from "../../../shared/Utils/useheavyFetch";
 import useWishlist from "../../Wishlist/Hooks/useWishlist";
+import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 
 export default function Productspage() {
+  useChangeTitle({ title: `Shop` });
   const {
     filters,
     searchResults,

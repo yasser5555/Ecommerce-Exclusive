@@ -1,6 +1,6 @@
 -- drop View if EXISTS catogeries_count;
 -- Search Producr using Title
-
+SELECT * from products;
 -- Product Card
 CREATE OR REPLACE VIEW product_card AS SELECT
     p.id AS p_id,
@@ -9,9 +9,8 @@ CREATE OR REPLACE VIEW product_card AS SELECT
     p.title AS name,
     c.name AS category,
     p.old_price AS price,
-    p.Discount_price AS price_after_discount,
+    p.description,
     p.stock,
-
     ROUND(AVG(pr.rating), 1) AS rating,
     COUNT(pr.id) AS review_count
 
