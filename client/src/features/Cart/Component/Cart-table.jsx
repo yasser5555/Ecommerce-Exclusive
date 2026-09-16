@@ -1,46 +1,22 @@
 import React, { useEffect } from "react";
 import { Trash2, Minus, Plus } from "lucide-react";
-import useCartStore from "../store/Cart.store";
-import { FetchOnRender } from './../../../shared/Utils/useFetch';
-import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
+import { FetchOnRender } from "./../../../shared/Utils/useFetch";
+import useCartTable from "../Hooks/useCartTable";
+import { NavLink } from "react-router-dom";
 
-export default function CartTable({ userId  }) {
-  
+export default function CartTable({ userId }) {
   const {
     cart,
     isLoading,
     removeCartItem,
     updateProductQuantity,
-    getUserCart,
-  } = useCartStore();
+    GetCart,
+    handleQuantity,
+    handleDelete,
+  } = useCartTable();
 
-
-FetchOnRender(()=>getUserCart(userId),userId)
-
-  const handleQuantity = async (item, action) => {
-    const success = await updateProductQuantity({
-      cart_id: item.cart_id,
-      user_id: userId,
-      quantity: 1, // Control how many is added or not Added
-      action,
-    });
-
-    if (success) {
-      await getUserCart(userId);
-    }
-  };
-
-  const handleDelete = async (cartId) => {
-    const success = await removeCartItem({
-      cart_id: cartId,
-      user_id: userId,
-    });
-
-    if (success) {
-      await getUserCart(userId);
-    }
-  };
-
+  FetchOnRender(() => GetCart(userId), userId);
+ 
   if (isLoading) {
     return (
       <div className="text-center py-5">
@@ -54,6 +30,9 @@ FetchOnRender(()=>getUserCart(userId),userId)
       <div className="text-center py-5">
         <h4 className="fw-bold">Your cart is empty</h4>
         <p className="text-secondary">Add some products to your cart.</p>
+        <NavLink className="btn btn-danger" to={"/products"}>
+        to Shop
+        </NavLink>
       </div>
     );
   }
@@ -105,7 +84,7 @@ FetchOnRender(()=>getUserCart(userId),userId)
                   type="button"
                   className="btn btn-sm"
                   disabled={isLoading || Number(item.quantity) <= 1}
-                  onClick={() => handleQuantity(item, "decrease")}
+                  onClick={() => handleQuantity(item, "decrease", userId)}
                 >
                   <Minus size={15} />
                 </button>
@@ -116,7 +95,7 @@ FetchOnRender(()=>getUserCart(userId),userId)
                   type="button"
                   className="btn btn-sm"
                   disabled={isLoading}
-                  onClick={() => handleQuantity(item, "increase")}
+                  onClick={() => handleQuantity(item, "increase", userId)}
                 >
                   <Plus size={15} />
                 </button>
@@ -135,7 +114,7 @@ FetchOnRender(()=>getUserCart(userId),userId)
                 type="button"
                 className="btn btn-sm text-danger"
                 disabled={isLoading}
-                onClick={() => handleDelete(item.cart_id)}
+                onClick={() => handleDelete(item.cart_id, userId)}
               >
                 <Trash2 size={18} />
               </button>

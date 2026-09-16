@@ -24,13 +24,13 @@ const useCartStore = create((set, get) => ({
 
     try {
       const response = await getCart(user_id);
- 
-  
       set({
         cart: response.data || [],
         isLoading: false,
         error: null,
       });
+ 
+      
       return response
     } catch (error) {
       console.log(`error at Cart.store getUserCart: ${error}`);
@@ -43,16 +43,15 @@ const useCartStore = create((set, get) => ({
     }
   },
 
-  addProductToCart: async (data) => {
+addProductToCart: async (data) => {
   set({
     isLoading: true,
     error: null,
   });
 
   try {
-    const response = await addToCart(data);
+    await addToCart(data);
 
-    console.log("2. Cart Store: Product added successfully", response);
 
     // Get getUserCart from the same Zustand store
     await get().getUserCart(data.user_id);
@@ -133,12 +132,7 @@ const useCartStore = create((set, get) => ({
     });
 
     try {
-      console.log("3. Cart Store: Clearing cart...");
-
-      const response = await clearCart(user_id);
-
-      console.log("4. Cart Store: Cart cleared", response);
-
+       const response = await clearCart(user_id);
       set({
         cart: [],
         isLoading: false,

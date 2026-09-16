@@ -1,5 +1,6 @@
-CREATE VIEW user_address AS
+CREATE OR REPLACE VIEW user_address AS
 SELECT
+addresses.id as address_id,
     user_id,
     country,
     city,

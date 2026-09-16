@@ -1,23 +1,26 @@
-import { Heart, Eye, Star } from "lucide-react";
+import { Heart, Eye, Star, ShoppingCart } from "lucide-react";
 import "../styles/ProductCard.css";
 import { useEffect, useState } from "react";
 import useWishlist from "../../Wishlist/Hooks/useWishlist";
+import { useAuthStore } from "../../auth/store/auth.store";
+import useCartStore from "../../Cart/store/Cart.store";
 
 function ProductCard({ product, callback, isactive }) {
   const { handleAddToWishlist, handleRemoveFromWishlist } = useWishlist();
-
+  const { user } = useAuthStore();
+  const { addProductToCart } = useCartStore();
   const stars = [1, 2, 3, 4, 5];
 
   const {
     name,
-    price_after_discount,
+ 
     price,
     stock,
     category,
     image,
     rating,
     review_count,
-    isWishList,
+ 
   } = product;
   const [active, setActive] = useState(Number(isactive) === 1); /*
    * Keep local active state synchronized
@@ -51,12 +54,24 @@ function ProductCard({ product, callback, isactive }) {
     }
   };
 
+  const handleAddToCart = async () => {
+  if (!product?.p_id) {
+    console.log("Product ID is missing");
+    return;
+  }
+
+  await addProductToCart({
+    product_id: product.p_id,
+    quantity: 1,
+    user_id: user?.id,
+  });
+};
+
   return (
     <article className="product-card">
       {/* Product Image */}
       <div className="product-image-wrapper">
  
-
         {/* Action Buttons */}
         <div className="product-actions">
           {/* Wishlist */}
@@ -81,6 +96,14 @@ function ProductCard({ product, callback, isactive }) {
             aria-label="Quick view"
           >
             <Eye size={18} />
+          </button>
+          <button
+            type="button"
+            onClick={handleAddToCart}
+            className="action-btn"
+            aria-label="Quick view"
+          >
+            <ShoppingCart size={18} />
           </button>
         </div>
 

@@ -14,12 +14,12 @@ import {
   GetUserOrders,
 } from "../api/profile.api";
 
-export const useProfileStore = create((set) => ({
+export const useProfileStore = create((set, get) => ({
   profile: null,
   isLoading: false,
   error: null,
   profileStats: null,
-  userCards: null,
+  userCards: [],
   userAddresses: null,
   userOrders: null,
   fetchProfile: async () => {
@@ -33,7 +33,6 @@ export const useProfileStore = create((set) => ({
         profile: response,
         isLoading: false,
       });
-
       return response;
     } catch (error) {
       set({
@@ -59,7 +58,6 @@ export const useProfileStore = create((set) => ({
         isLoading: true,
         error: null,
       });
-
       const response = await uploadAvatarRequest(payload);
       set({
         profile: response.user,
@@ -186,6 +184,7 @@ export const useProfileStore = create((set) => ({
         userAddresses: response,
         isLoading: false,
       });
+
       return response;
     } catch (error) {
       set({
@@ -221,6 +220,7 @@ export const useProfileStore = create((set) => ({
       throw error;
     }
   },
+ 
   fetchUserOrders: async (data) => {
     try {
       set({
@@ -241,7 +241,6 @@ export const useProfileStore = create((set) => ({
         error: error.response?.data?.message || error.message,
         isLoading: false,
       });
-
       throw error;
     }
   },

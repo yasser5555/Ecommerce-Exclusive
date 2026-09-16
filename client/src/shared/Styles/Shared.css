@@ -1,3 +1,6 @@
 .max-height{
     max-height: 100dvh !important;
 }
+.priorty{
+    z-index: 9999999 !important;
+}

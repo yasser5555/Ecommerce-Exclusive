@@ -33,3 +33,4 @@ GROUP BY
     p.stock;
 ORDER BY products.id;
 SELECT * from product_card ;
+DESCRIBE product_card;

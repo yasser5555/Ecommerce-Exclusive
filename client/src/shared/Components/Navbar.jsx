@@ -11,15 +11,16 @@ import {
 import { useProfile } from "../../features/Profile/Hooks/useProfile";
 import { useAuth } from "./../../features/auth/hooks/useAuth";
 import useWishlist from "../../features/Wishlist/Hooks/useWishlist";
-import useCartStore from "../../features/Cart/store/Cart.store";
+ 
+import useCartTable from "../../features/Cart/Hooks/useCartTable";
+import { FetchOnRender } from "../Utils/useFetch";
 
 export default function Navbar() {
-  const { cart } = useCartStore();
+  const { cart , GetCart } = useCartTable();
   const { wishlist } = useWishlist();
-
   const { profile, fetchProfile } = useProfile();
   const { logout } = useAuth();
-
+  
   useEffect(() => {
     const FetchProfile = async () => {
       try {
@@ -32,8 +33,10 @@ export default function Navbar() {
     FetchProfile();
   }, [fetchProfile]);
 
+  FetchOnRender(() => GetCart(profile?.userId), profile?.userId);
+  FetchOnRender(() => GetCart(profile?.userId), profile?.userId);
   return (
-    <nav className="navbar navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
+    <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
         {/* Logo */}
         <NavLink className="navbar-brand fw-bold fs-4" to="/home">
@@ -56,13 +59,19 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarContent">
           {/* Navigation */}
           <ul className="navbar-nav me-auto align-items-lg-center">
+              <li className="nav-item">
+              <NavLink className="nav-link px-3" to={"/home"}>
+                Home
+              </NavLink>
+            </li>
             <li className="nav-item">
               <NavLink className="nav-link px-3" to="/products">
-                Products
+                Shop
               </NavLink>
             </li>
 
-            <li className="nav-item">
+          
+              <li className="nav-item">
               <NavLink className="nav-link px-3" to={"/about"}>
                 About
               </NavLink>
@@ -133,7 +142,7 @@ export default function Navbar() {
                   )}
                 </button>
 
-                <ul className="dropdown-menu text-start dropdown-menu-end">
+                <ul className="dropdown-menu text-start dropdown-menu-start">
                   <li>
                     <a
                       className="dropdown-item d-flex align-items-center gap-2"

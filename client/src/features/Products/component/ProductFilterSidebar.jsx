@@ -5,7 +5,7 @@ import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 export default function ProductFilterSidebar() {
   const {
-     getCatogeries,
+    getCatogeries,
     catogery,
     rating,
     Catogery,
@@ -19,14 +19,14 @@ export default function ProductFilterSidebar() {
     handleRatingChange,
     handleSubmit,
     handleClear,
-    products
+    products,
   } = useProductBar();
 
   // Render Catogeries
   FetchOnRender(() => getCatogeries());
 
   return (
-    <aside className="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
+    <aside className="card border-0 shadow-sm rounded-4 overflow-hidden p-md-0 px-3 h-100">
       <div className="card-header bg-danger text-white border-0 p-4">
         <div className="d-flex justify-content-between align-items-center">
           <div>

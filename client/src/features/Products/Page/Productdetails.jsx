@@ -19,7 +19,6 @@ export default function Productdetails() {
     id,
     stars,
     selectedImage,
-    setSelectedImage,
     getProduct,
     discountPercentage,
     currentRating,

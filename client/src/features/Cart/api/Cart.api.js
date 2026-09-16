@@ -63,7 +63,7 @@ export const deleteCartItem = async (data) => {
 
 export const clearCart = async (user_id) => {
   try {
-    const response = await axiosInstance.delete("/cart/clear", {
+    const response = await axiosInstance.delete("/cart/clear_cart", {
       data: {
         user_id,
       },

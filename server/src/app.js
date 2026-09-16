@@ -6,7 +6,7 @@ const productRoutes = require("./Features/Product/Product.routes.js");
 const productReviewRoutes = require("./Features/Product_Reviews/Product_Reviews.routes.js");
 const wishlistRoutes = require("./Features/Wishlists/wishlist.routes.js");
 const CartRoutes = require("./Features/Cart_items/Cart_items.routes.js");
-
+const OrdersRoute = require("./Features/Orders/Order.routes.js");
 const app = express();
 const path = require("path");
 // ! Middlewares
@@ -18,5 +18,6 @@ app.use("/api/products", productRoutes);
 app.use("/api/reviews", productReviewRoutes);
 app.use("/api/wishlist", wishlistRoutes);
 app.use("/api/cart", CartRoutes);
+app.use("/api/orders", OrdersRoute);
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 module.exports = app;

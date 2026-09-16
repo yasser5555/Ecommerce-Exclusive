@@ -33,7 +33,7 @@ export const useProductStore = create((set, get) => ({
   reviews: [],
 
   // Get Product
-  FetchProducts: async ({ page, limit }) => {
+  FetchProducts: async ({ page , limit }) => {
     try {
       set({
         isLoading: true,
@@ -41,10 +41,10 @@ export const useProductStore = create((set, get) => ({
       });
 
       const response = await getAllProduct({
-        page,
+        page ,
         limit,
       });
-      console.log("PRODUCTS FROM API:", response);
+ 
 
       set({
         products: response.data[0],

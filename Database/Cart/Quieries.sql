@@ -25,6 +25,7 @@ UPDATE cart_items SET cart_items.quantity = quantity - 1 where user_id = 1;
 CREATE OR REPLACE VIEW user_cart_items AS
 SELECT
     product_card.p_id as product_id,
+    product_card.name,
     cart_items.id as cart_id,
     cart_items.user_id as user_cart_id,
     product_card.image,
@@ -35,7 +36,8 @@ FROM product_card
     INNER JOIN cart_items on product_card.p_id = cart_items.product_id;
 
 
-SELECT * from cart_items WHERE user_id =  1 ;
+SELECT * from cart_items ;
+SELECT * FROM orders; 
 SELECT * from user_cart_items WHERE user_cart_id = 1 ;
 
 INSERT INTO

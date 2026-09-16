@@ -34,10 +34,8 @@ const useWishlist = () => {
 
   const handleRemoveFromWishlist = async (product_id) => {
     try {
- 
       await remove_FromWishlist(product_id);
       await get_Wishlist();
-
     } catch (error) {
       console.log(
         "4. Wishlist Hook: error while removing product:",
