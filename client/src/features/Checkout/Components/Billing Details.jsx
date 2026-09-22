@@ -14,9 +14,16 @@ export default function BillingDetails() {
     handleSelectAddress,
     selectAddress,
   } = useBillingDetails();
+//  console.log(`user profile is ${profile}`);
  
+  // console.log(`user address is ${userAddresses}`);
+useEffect(() => {
+  if (userAddresses?.length > 0) {
+    selectAddress();
+  }
+}, [userAddresses]);
+  // FetchOnRender(() => get_address(), );
 
-  FetchOnRender(() => get_address(), profile?.id);
   FetchOnRender(() => selectAddress(), userAddresses);
 
   return (

@@ -42,35 +42,40 @@ export const useOrderStore = create((set, get) => ({
     }
   },
 
-  CreateOrder: async ({ address_id, total_price, status }) => {
-    set({
-      isloading: true,
+CreateOrder: async ({
+  address_id,
+  status,
+  products,
+  card_id,
+}) => {
+  set({
+    isloading: true,
+  });
+
+  try {
+    const response = await CreateOrder({
+      address_id,
+      status,
+      products,
+      card_id,
     });
 
-    try {
-      const response = await CreateOrder({
-        address_id,
-        total_price,
-        status,
-      });
+    set({
+      order: response,
+      isloading: false,
+    });
 
-      set({
-        order: response,
-        orderId: response.result.insertId,
-        isloading: false,
-      });
+    return response;
+  } catch (error) {
+    console.error(`error at CreateOrder Store: ${error.message}`);
 
-      return response;
-    } catch (error) {
-      console.error(`error at CreateOrder Store: ${error.message}`);
+    set({
+      isloading: false,
+    });
 
-      set({
-        isloading: false,
-      });
-
-      throw error;
-    }
-  },
+    throw error;
+  }
+},
 
   CreateOrderHistory: async ({ order_id, product_id, quantity, price }) => {
     set({

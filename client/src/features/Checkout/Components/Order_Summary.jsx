@@ -65,69 +65,38 @@ export default function OrderSummary({ cartProducts = [] }) {
       toast.error(`there's an Error ${error.message}`);
     }
   };
- 
   const handlePlaceOrder = async () => {
     const value = handleValidate();
-
     if (!value) {
       return;
     }
-
     try {
-      // Create Order
       const order = await CreateOrder({
         address_id: selectedAddress.address_id,
-        total_price: subtotal,
         status: "pending",
+        products: cartProducts,
+        card_id: paymentMethod === "card" ? selectedCard.card_id : null,
       });
 
-      if (!order?.result?.insertId) {
-        toast.error("Failed to create order.");
-        return;
-      }
+      const orderID = order.result[0][0].order_id;
+      const newBalcne = parseInt(order.result[0][0].new_balance);
+      console.log(`new balcne is ${newBalcne}`); //
 
-      const order_id = order.result.insertId;
-
-      // Create Order Items
-      for (const product of cartProducts) {
-        await CreateOrderHistory({
-          order_id,
-          product_id: product.product_id,
-          quantity: product.quantity,
-          price: product.price,
-        });
-      }
-
-      // Pay Order if payment method is card
-      if (paymentMethod === "card") {
-        await PayOrder({
-          order_id,
-          card_id: selectedCard.card_id,
-        });
-
-        toast.success("Payment completed successfully.");
-      }
-
-      // Clear Cart
+      setselectedCard({
+        ...selectedCard,
+        balance: newBalcne,
+      });
       await clearUserCart(profile.id);
-
-      toast.success("Cart Cleared successfully.");
       toast.success("Order created successfully.");
-
-      // Go to confirmation page
-      navigate(`/orderConfirmation/${order_id}`, {
+      navigate(`/myorders/orderConfirmation/${orderID}`, {
         replace: true,
       });
     } catch (error) {
-      console.error(
-        "Error at OrderSummary.handlePlaceOrder:",
-        error,
-      );
+      console.error("Error at OrderSummary.handlePlaceOrder:", error);
 
       toast.error("Failed to process order.");
     }
   };
-
   return (
     <div className="col-lg-5">
       <div className="border rounded-3 p-4 sticky-lg-top" style={{ top: 20 }}>
@@ -196,9 +165,7 @@ export default function OrderSummary({ cartProducts = [] }) {
                 <div className="d-flex justify-content-between">
                   <span className="fw-medium small">Free Shipping</span>
 
-                  <span className="text-success small fw-semibold">
-                    Free
-                  </span>
+                  <span className="text-success small fw-semibold">Free</span>
                 </div>
 
                 <small className="text-muted">
@@ -225,9 +192,7 @@ export default function OrderSummary({ cartProducts = [] }) {
           <div className="d-flex justify-content-between align-items-center">
             <span className="fw-semibold">Total</span>
 
-            <span className="fs-5 fw-bold text-danger">
-              ${subtotal}
-            </span>
+            <span className="fs-5 fw-bold text-danger">${subtotal}</span>
           </div>
         </div>
 
@@ -253,13 +218,8 @@ export default function OrderSummary({ cartProducts = [] }) {
                 id="cardPayment"
               />
 
-              <label
-                className="form-check-label w-100"
-                htmlFor="cardPayment"
-              >
-                <span className="small fw-medium">
-                  Credit / Debit Card
-                </span>
+              <label className="form-check-label w-100" htmlFor="cardPayment">
+                <span className="small fw-medium">Credit / Debit Card</span>
               </label>
             </div>
 
@@ -282,9 +242,7 @@ export default function OrderSummary({ cartProducts = [] }) {
                           className="form-check-input"
                           type="radio"
                           name="savedCard"
-                          checked={
-                            selectedCard?.last4 === card.last4
-                          }
+                          checked={selectedCard?.last4 === card.last4}
                           onChange={() => setselectedCard(card)}
                         />
 
@@ -321,9 +279,7 @@ export default function OrderSummary({ cartProducts = [] }) {
 
           <div
             className={`border rounded-3 p-3 ${
-              paymentMethod === "cash"
-                ? "border-danger bg-light"
-                : ""
+              paymentMethod === "cash" ? "border-danger bg-light" : ""
             }`}
           >
             <div className="form-check">
@@ -370,18 +326,12 @@ export default function OrderSummary({ cartProducts = [] }) {
               </div>
 
               <div className="col-md-6">
-                <span className="text-muted small">
-                  Balance Before:
-                </span>{" "}
-                <span className="small fw-medium">
-                  {selectedCard.balance}
-                </span>
+                <span className="text-muted small">Balance Before:</span>{" "}
+                <span className="small fw-medium">{selectedCard.balance}</span>
               </div>
 
               <div className="col-md-6">
-                <span className="text-muted small">
-                  Balance After:
-                </span>{" "}
+                <span className="text-muted small">Balance After:</span>{" "}
                 <span className="small fw-medium">
                   {selectedCard.balance - subtotal < 0
                     ? "Not Enough Money"

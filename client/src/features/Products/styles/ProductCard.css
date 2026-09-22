@@ -149,7 +149,6 @@
   display: flex;
   align-items: center;
   gap: 2px;
-
   color: #ff9f1c;
 }
 
@@ -239,9 +238,8 @@
 
 .star-filled {
   position: absolute;
-  top: -34%;
+  top: -34% !important;
   left: 0;
-
   overflow: hidden;
   color: #fbbf24;
 }

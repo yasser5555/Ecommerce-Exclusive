@@ -1,16 +1,28 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { useProducts } from "./useProductStore";
 
 export default function useProductBar() {
-  const { getSearchResult, getCatogeries, catogery, filters, getFilters , products } =
-    useProducts();
+  const {
+    productSearch,
+    getSearchResult,
+    getCatogeries,
+    catogery,
+    filters,
+    getFilters,
+    products,
+    FetchProducts,
+  } = useProducts();
+
   const [rating, setRating] = useState(null);
   const [Catogery, setCatogery] = useState(null);
   const [isCategoriesOpen, setIsCategoriesOpen] = useState(false);
+
   const [price, setPrice] = useState({
     min: "",
     max: "",
   });
+
   const [search, setSearch] = useState("");
 
   const handleCategoryChange = (e) => {
@@ -25,6 +37,7 @@ export default function useProductBar() {
 
   const handlePriceChange = (e) => {
     const { name, value } = e.target;
+
     setPrice((prev) => ({
       ...prev,
       [name]: value,
@@ -35,6 +48,8 @@ export default function useProductBar() {
     setRating(e.target.value);
   };
 
+ 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -44,27 +59,33 @@ export default function useProductBar() {
       minprice: price.min,
       maxprice: price.max,
     };
-
-    console.log("FILTER OBJECT:", filtered);
+ 
 
     getFilters(filtered);
-    getSearchResult(search.trim());
   };
 
   const handleClear = () => {
     setSearch("");
     setCatogery(null);
     setRating(null);
+
     setPrice({
       min: "",
       max: "",
     });
-    getFilters(Catogery, rating, price.min, price.max);
+
+    getFilters({
+      Catogery: null,
+      rating: null,
+      minprice: "",
+      maxprice: "",
+    });
 
     getSearchResult("");
   };
 
   return {
+    productSearch,
     getSearchResult,
     getCatogeries,
     catogery,
@@ -84,6 +105,9 @@ export default function useProductBar() {
     handleRatingChange,
     handleSubmit,
     handleClear,
-    products
+    products,
+    FetchProducts,
+    getFilters
   };
 }
+ 

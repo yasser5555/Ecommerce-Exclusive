@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useProducts } from "../hooks/useProductStore";
+import React, { useEffect } from "react";
 import useProductBar from "../hooks/useProductBar";
 import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
@@ -20,10 +19,45 @@ export default function ProductFilterSidebar() {
     handleSubmit,
     handleClear,
     products,
+    getFilters,
+    productSearch,
+    FetchProducts,
   } = useProductBar();
 
-  // Render Catogeries
+  // Render Categories
   FetchOnRender(() => getCatogeries());
+
+  // Live Search with Debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const searchValue = search.trim();
+      if (searchValue === "") {
+        FetchProducts({
+          page: 1,
+          limit: 10,
+        });
+
+        return;
+      }
+      productSearch(searchValue);
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [search, productSearch]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      const filtered = {
+        Catogery,
+        rating,
+        minprice: price.min,
+        maxprice: price.max,
+      };
+
+      getFilters(filtered);
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [Catogery, rating, price.min, price.max, getFilters]);
 
   return (
     <aside className="card border-0 shadow-sm rounded-4 overflow-hidden p-md-0 px-3 h-100">
@@ -31,7 +65,9 @@ export default function ProductFilterSidebar() {
         <div className="d-flex justify-content-between align-items-center">
           <div>
             <h5 className="mb-1 fw-bold">Filters</h5>
+
             <small className="text-white-50">Find the products you need</small>
+
             <h6 className="text-white">Product Found {products.length}</h6>
           </div>
 
@@ -47,6 +83,7 @@ export default function ProductFilterSidebar() {
 
       <form onSubmit={handleSubmit}>
         <div className="card-body p-4 bg-white">
+          {/* Search */}
           <div className="mb-4">
             <label
               htmlFor="product-search"
@@ -67,6 +104,7 @@ export default function ProductFilterSidebar() {
             </div>
           </div>
 
+          {/* Categories */}
           <div className="mb-4 border-bottom pb-3">
             <button
               type="button"
@@ -135,6 +173,7 @@ export default function ProductFilterSidebar() {
             </div>
           </div>
 
+          {/* Price */}
           <div className="mb-4">
             <h6 className="fw-bold mb-3">Price Range</h6>
 
@@ -189,6 +228,7 @@ export default function ProductFilterSidebar() {
             </div>
           </div>
 
+          {/* Rating */}
           <div className="border-top pt-4">
             <div className="mb-4">
               <h6 className="fw-bold mb-3">Rating</h6>
@@ -213,6 +253,7 @@ export default function ProductFilterSidebar() {
 
                     <span className="text-warning">
                       {"★".repeat(value)}
+
                       <span className="text-secondary">
                         {"★".repeat(5 - value)}
                       </span>

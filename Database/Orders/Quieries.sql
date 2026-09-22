@@ -1,4 +1,6 @@
-SELECT * FROM orders;
+SELECT * FROM orders ; 
+UPDATE orders SET status = "pending" WHERE id >= 351;
+enum('pending','processing','shipped','delivered','cancelled')
 
 INSERT INTO
     orders (
@@ -108,7 +110,44 @@ where
 ;
 SELECT * from credit_card WHERE user_id = 1;
 
-SELECT * from credit_card where user_id = 1 ;
-SELECT * from orders where user_id = 1 ;
-call PayOrder(328,1,220);
-SELECT * from credit_card where user_id = 1 ;
+-- SELECT * from credit_card where user_id = 1 ;
+-- SELECT * from orders where user_id = 1 ;
+-- call PayOrder(328,1,220);
+-- SELECT * from credit_card where user_id = 1 ;
+SELECT * from user_order WHERE order_id = 331;
+
+SELECT * from user_order WHERE products LIKE "%REDMI 10%";
+
+SELECT COUNT(*) FROM order_items;
+
+SELECT * FROM orders;
+
+SELECT *
+FROM user_order
+WHERE
+    user_order.order_id IN (
+        SELECT DISTINCT (order_id)
+        FROM
+            orders
+            JOIN order_items ON order_items.order_id = orders.id
+            JOIN products p ON p.id = order_items.product_id
+        WHERE
+            p.title LIKE '%AR32AR2841HDFL%'
+    );
+
+-- Search Query For My Orders
+SELECT *
+FROM user_order
+where
+    user_order.order_id in (
+        SELECT DISTINCT (order_id)
+        FROM
+            orders
+            INNER join order_items on orders.id = order_items.order_id
+            inner join products on order_items.product_id = products.id
+            WHERE products.title like "%Acer%" 
+    );
+
+
+UPDATE products SET  stock = stock - 1  WHERE products.id = 1;
+SELECT * FROM products  WHERE products.id = 1;

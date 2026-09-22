@@ -18,7 +18,9 @@ export default function DeliveryAddress({
   selectedCard,
 }) {
   const navigate = useNavigate();
-
+ 
+console.log("Selected Card:", selectedCard);
+console.log("Current Balance:", selectedCard?.balance);
   return (
     <div className="col-lg-4">
       <div className="card border-0 shadow-sm mb-4">
@@ -66,13 +68,13 @@ export default function DeliveryAddress({
               <div className="flex-grow-1">
                 <strong className="d-block small">
                   {paymentMethod === "card"
-                    ? "Credit Card"
+                    ? "Credit Card" 
                     : "Cash on Delivery"}
                 </strong>
 
                 {paymentMethod === "card" && selectedCard && (
                   <span className="text-muted small">
-                    Balance: ${Number(selectedCard.balance).toFixed(2)}
+                    Balance: ${Number(selectedCard.balance).toLocaleString()}
                   </span>
                 )}
               </div>
@@ -124,7 +126,7 @@ export default function DeliveryAddress({
           <h6 className="fw-bold mb-3">Next Actions</h6>
 
           <button
-            onClick={() => navigate("/orders")}
+            onClick={() => navigate("/myorders")}
             className="btn btn-danger w-100 mb-2 d-flex align-items-center justify-content-center gap-2"
           >
             View My Orders

@@ -1,6 +1,8 @@
 import React from "react";
 import { ArrowRight, ShoppingCart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 export default function HereoSection() {
+  const Navigate = useNavigate();
   return (
     <>
       {/* Hero / Story Section */}
@@ -29,7 +31,7 @@ export default function HereoSection() {
                 receiving it at their doorstep.
               </p>
 
-              <button className="btn btn-danger px-4 py-3 rounded-3 fw-semibold">
+              <button onClick={()=>Navigate("/products/")} className="btn btn-danger px-4 py-3 rounded-3 fw-semibold">
                 Explore Products
                 <ArrowRight size={18} className="ms-2" />
               </button>

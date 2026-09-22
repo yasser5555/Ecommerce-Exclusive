@@ -5,6 +5,6 @@ export const CheckoutRoutes = {
   children: [{ 
     index:true,
     element: <Checkout/> 
-    
+  
   }],
 };

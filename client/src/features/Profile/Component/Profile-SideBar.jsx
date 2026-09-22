@@ -18,11 +18,7 @@ function ProfileSidebar() {
       label: "My Address",
       icon: "fas fa-map-marker-alt",
     },
-    {
-      to: "/profile/order_history",
-      label: "Order history",
-      icon: "fas fa-map-marker-alt",
-    },
+    
   ];
 
   return (

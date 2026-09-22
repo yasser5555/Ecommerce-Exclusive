@@ -10,9 +10,7 @@ SELECT
     orders.status,
     orders.created_at,
     orders.arrive_at,
-
     SUM(order_items.quantity * order_items.price) AS total_sum,
-
     JSON_ARRAYAGG(
         JSON_OBJECT(
             'product_id', order_items.product_id,
@@ -25,13 +23,10 @@ SELECT
     ) AS products
 
 FROM orders
-
 INNER JOIN order_items
     ON orders.id = order_items.order_id
-
 INNER JOIN products
     ON order_items.product_id = products.id
-
 GROUP BY
     orders.id,
     orders.user_id,
@@ -42,6 +37,7 @@ GROUP BY
 SELECT * from user_order WHERE user_id = 1;
 
 delete from user_order WHERE user_id = 1;
+delete from user_order WHERE user_id ;
 
 SELECT * from orders;
 

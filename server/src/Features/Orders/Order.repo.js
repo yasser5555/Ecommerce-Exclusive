@@ -1,36 +1,33 @@
 const pool = require("../../shared/database/DB");
 
-const CreateOrders = async (user_id, address_id, total_price, status) => {
+const CreateOrders = async (
+  user_id,
+  address_id,
+  status,
+  products,
+  card_id,
+) => {
   try {
-    const [msg, X] = await pool.query(
-      `INSERT INTO orders
-      (user_id, address_id, total_price, status)
-      VALUES (?, ?, ?, ?)`,
-      [user_id, address_id, total_price, status || "pending"],
+    const [result] = await pool.query(
+      `CALL create_order(?, ?, ?, ?, ?)`,
+      [
+        user_id,
+        address_id,
+        status || "pending",
+        JSON.stringify(products),
+        card_id || null,
+      ],
     );
 
-    return msg;
-  } catch (error) {
-    throw new Error(`Error at Orders.Repo.CreateOrders: ${error.message}`);
-  }
-};
+    return result;
 
-const CreateOrderHistroy = async (order_id, product_id, quantity, price) => {
-  try {
-    const [msg, X] = await pool.query(
-      `INSERT INTO order_items
-      (order_id, product_id, quantity, price)
-      VALUES (?, ?, ?, ?)`,
-      [order_id, product_id, quantity, price],
-    );
-
-    return msg;
   } catch (error) {
     throw new Error(
-      `Error at Orders.Repo.CreateOrderHistroy: ${error.message}`,
+      `Error at Orders.Repo.CreateOrders: ${error.message}`,
     );
   }
 };
+ 
 
 const GetOrders = async (user_id) => {
   try {
@@ -69,31 +66,11 @@ const getTotalPayment = async (order_id, user_id) => {
     throw new Error(`Error at Orders.Repo.getTotalPayment: ${error.message}`);
   }
 };
-const getorderpage = async (order_id) => {
-  try {
-    const [order] = await pool.query();
-  } catch (error) {
-    throw new Error(`Error at Orders.Repo.getorderpage: ${error}`);
-  }
-};
-
-const PayOrder = async (order_id, user_id, card_id) => {
-  try {
-    const [result] = await pool.query(`CALL PayOrder(?, ?, ?)`, [
-      order_id,
-      user_id,
-      card_id,
-    ]);
-
-    return result;
-  } catch (error) {
-    throw new Error(`Error at Orders.Repo.PayOrder: ${error.message}`);
-  }
-};
+ 
+ 
 module.exports = {
   CreateOrders,
-  CreateOrderHistroy,
-  GetOrders,
+   GetOrders,
   getTotalPayment,
-  PayOrder
+
 };

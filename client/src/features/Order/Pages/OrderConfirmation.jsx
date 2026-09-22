@@ -10,17 +10,10 @@ import { useParams } from "react-router-dom";
 
 export default function OrderConfirmationPage() {
   const { orderHistory, FetchOrder, isloading } = useOrderStore();
-  const { id } = useParams();
-
+  const { orderID } = useParams();
   const { profile, fetchProfile } = useProfileStore();
-
-  const {
-    selectedAddress,
-    selectedCard,
-    paymentMethod,
-    shippingMethod,
-  } = useCheckoutStore();
-
+  const { selectedAddress, selectedCard, paymentMethod, shippingMethod } =
+    useCheckoutStore();
   useEffect(() => {
     fetchProfile();
   }, [fetchProfile]);
@@ -32,7 +25,7 @@ export default function OrderConfirmationPage() {
   }, [profile?.id, FetchOrder]);
 
   useEffect(() => {
-    if (!id) return;
+    if (!orderID) return;
 
     const duration = 2500;
     const end = Date.now() + duration;
@@ -56,20 +49,14 @@ export default function OrderConfirmationPage() {
     }, 150);
 
     return () => clearInterval(interval);
-  }, [id]);
+  }, [orderID]);
 
-  const orders = orderHistory?.data ?? [];
-
-  const order = orders.find(
-    (item) => String(item.order_id) === String(id)
-  );
+  const order = orderHistory?.data?.find((item) => item.order_id === parseInt(orderID));
+  console.log(`order is ${order}`); // why undefined
 
   return (
     <div className="container">
-      <Introduction
-        order={order}
-        isLoading={isloading}
-      />
+      <Introduction order={order} isLoading={isloading} />
 
       <div className="row g-4">
         <Orderedproducts

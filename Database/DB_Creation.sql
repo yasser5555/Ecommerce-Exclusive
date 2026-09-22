@@ -46,27 +46,19 @@ CREATE TABLE categories (
 -- ===================================
 -- PRODUCTS
 -- ===================================
-
-CREATE TABLE products (
+ALTER table products drop COLUMN Discount_price;
+CREATE or REPLACE TABLE products (
     id INT AUTO_INCREMENT PRIMARY KEY,
-
     -- Each Product belongs to ONE Category
     -- Relationship:
     -- categories (1) -------- (N) products
     category_id INT,
-
     title VARCHAR(200) NOT NULL,
-
     description TEXT NOT NULL,
-
     Discount_price DECIMAL(10, 2) DEFAULT 0,
-
     old_price DECIMAL(10, 2) NOT NULL,
-
     stock INT DEFAULT 0,
-
     product_image VARCHAR(255),
-
     Added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
     -- FK: products.category_id -> categories.id

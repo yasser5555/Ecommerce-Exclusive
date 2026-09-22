@@ -6,20 +6,27 @@ function AvatarUploader() {
   return (
     <div className="d-flex flex-column align-items-center">
       {/* Avatar */}
-      <img
-        src={
-          profile?.avatar
-            ? `http://localhost:5000/${profile.avatar}`
-            : "https://i.imgur.com/HeIi0wU.png"
-        }
-        alt="Profile Avatar"
-        className="rounded-circle border img-fluid"
-        style={{
-          width: "150px",
-          height: "150px",
-          objectFit: "cover",
-        }}
-      />
+    <div
+  className="rounded-circle overflow-hidden border shadow-sm"
+  style={{
+    width: "120px",
+    height: "120px",
+  }}
+>
+  <img
+    src={
+      profile?.avatar
+        ? `http://localhost:5000/${profile.avatar}`
+        : "https://i.imgur.com/HeIi0wU.png"
+    }
+    alt="Profile Avatar"
+    className="w-100 h-100"
+    style={{
+      objectFit: "contain",
+      objectPosition: "center",
+    }}
+  />
+</div>
 
       {/* File Input */}
       <div className="w-100 mt-3">

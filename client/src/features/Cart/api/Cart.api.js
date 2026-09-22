@@ -1,5 +1,5 @@
 import axiosInstance from "../../../shared/services/axiosInstance";
-// Cart/api/Cart.api.js
+ 
 
 export const addToCart = async (data) => {
   try {

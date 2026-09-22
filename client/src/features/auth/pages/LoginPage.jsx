@@ -9,7 +9,7 @@ function LoginPage() {
   useEffect(() => {
     function CheckToken() {
       if (localStorage.getItem("token")) {
-        navigate("/profile", {
+        navigate("/home", {
           replace: true,
         });
       }

@@ -13,12 +13,9 @@ CREATE OR REPLACE VIEW product_card AS SELECT
     p.stock,
     ROUND(AVG(pr.rating), 1) AS rating,
     COUNT(pr.id) AS review_count
-
 FROM products p
-
 INNER JOIN categories c
     ON p.category_id = c.id
-
 LEFT JOIN product_reviews pr
     ON p.id = pr.product_id
 
@@ -29,7 +26,6 @@ GROUP BY
     p.title,
     c.name,
     p.old_price,
-    p.Discount_price,
     p.stock;
 ORDER BY products.id;
 SELECT * from product_card ;

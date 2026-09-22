@@ -4,3 +4,9 @@
 .priorty{
     z-index: 9999999 !important;
 }
+@media (min-width: 768px) {
+  .responsive-dropdown {
+    left: auto !important;
+    right: 0 !important;
+  }
+}

@@ -4,10 +4,11 @@ import BillingDetails from "../Components/Billing Details";
 import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
 import OrderSummary from "../Components/Order_Summary";
 import useCart from "./../../Cart/Hooks/useCart";
+import { FetchOnRender } from "../../../shared/Utils/useFetch";
 export default function CheckoutPage() {
   useChangeTitle({ title: "Placing Order" });
-  const { cart } = useCart();
-  
+  const { cart, getUserCart } = useCart();
+  FetchOnRender(()=>getUserCart() ,cart )
   
   return (
     <div className="bg-white">

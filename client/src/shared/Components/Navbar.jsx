@@ -6,21 +6,59 @@ import {
   Settings,
   LogOut,
   UserCircle,
+  ListOrdered,
 } from "lucide-react";
 
 import { useProfile } from "../../features/Profile/Hooks/useProfile";
 import { useAuth } from "./../../features/auth/hooks/useAuth";
 import useWishlist from "../../features/Wishlist/Hooks/useWishlist";
- 
 import useCartTable from "../../features/Cart/Hooks/useCartTable";
 import { FetchOnRender } from "../Utils/useFetch";
 
 export default function Navbar() {
-  const { cart , GetCart } = useCartTable();
+  const { cart, GetCart } = useCartTable();
   const { wishlist } = useWishlist();
   const { profile, fetchProfile } = useProfile();
   const { logout } = useAuth();
-  
+
+  const navLinks = [
+    {
+      title: "Home",
+      path: "/home",
+    },
+    {
+      title: "Shop",
+      path: "/products",
+    },
+
+    {
+      title: "About",
+      path: "/about",
+    },
+    {
+      title: "Contact",
+      path: "/contact",
+    },
+  ];
+
+  const profileLinks = [
+    {
+      title: "Setting",
+      path: "/settings",
+      icon: Settings,
+    },
+    {
+      title: "Profile Page",
+      path: "/profile",
+      icon: UserCircle,
+    },
+    {
+      title: "My Orders",
+      path: "/myOrders",
+      icon: ListOrdered,
+    },
+  ];
+
   useEffect(() => {
     const FetchProfile = async () => {
       try {
@@ -34,7 +72,7 @@ export default function Navbar() {
   }, [fetchProfile]);
 
   FetchOnRender(() => GetCart(profile?.userId), profile?.userId);
-  FetchOnRender(() => GetCart(profile?.userId), profile?.userId);
+
   return (
     <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
@@ -59,41 +97,17 @@ export default function Navbar() {
         <div className="collapse navbar-collapse" id="navbarContent">
           {/* Navigation */}
           <ul className="navbar-nav me-auto align-items-lg-center">
-              <li className="nav-item">
-              <NavLink className="nav-link px-3" to={"/home"}>
-                Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link px-3" to="/products">
-                Shop
-              </NavLink>
-            </li>
-
-          
-              <li className="nav-item">
-              <NavLink className="nav-link px-3" to={"/about"}>
-                About
-              </NavLink>
-            </li>
+            {navLinks.map((link) => (
+              <li className="nav-item" key={link.path}>
+                <NavLink className="nav-link px-3" to={link.path}>
+                  {link.title}
+                </NavLink>
+              </li>
+            ))}
           </ul>
 
           {/* Right Side */}
           <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
-            {/* Search */}
-            <form className="d-flex">
-              <input
-                className="form-control"
-                type="search"
-                placeholder="Search"
-              />
-
-              <button className="btn btn-outline-danger ms-2" type="submit">
-                Search
-              </button>
-            </form>
-
-            {/* Icons */}
             <div className="d-flex align-items-lg-center align-items-baseline justify-content-lg-center gap-4">
               {/* Wishlist */}
               <NavLink
@@ -133,25 +147,35 @@ export default function Navbar() {
                     <img
                       src={`http://localhost:5000/${profile.avatar}`}
                       alt="User"
-                      width="35"
-                      height="35"
-                      className="rounded-circle"
+                      width="38"
+                      height="38"
+                      className="rounded-circle border border-2 shadow-sm"
+                      style={{
+                        objectFit: "Contain",
+                        objectPosition: "center",
+                      }}
                     />
                   ) : (
                     <UserCircle size={35} strokeWidth={1.5} />
                   )}
                 </button>
 
-                <ul className="dropdown-menu text-start dropdown-menu-start">
-                  <li>
-                    <a
-                      className="dropdown-item d-flex align-items-center gap-2"
-                      href="#"
-                    >
-                      <Settings size={17} />
-                      Setting
-                    </a>
-                  </li>
+                <ul className="dropdown-menu text-start dropdown-menu-start responsive-dropdown">
+                  {profileLinks.map((link) => {
+                    const Icon = link.icon;
+
+                    return (
+                      <li key={link.path}>
+                        <NavLink
+                          className="dropdown-item d-flex align-items-center gap-2"
+                          to={link.path}
+                        >
+                          <Icon size={17} />
+                          {link.title}
+                        </NavLink>
+                      </li>
+                    );
+                  })}
 
                   <li>
                     <button
@@ -161,16 +185,6 @@ export default function Navbar() {
                       <LogOut size={17} />
                       Signout
                     </button>
-                  </li>
-
-                  <li>
-                    <NavLink
-                      className="dropdown-item d-flex align-items-center gap-2"
-                      to="/profile"
-                    >
-                      <UserCircle size={17} />
-                      Profile Page
-                    </NavLink>
                   </li>
                 </ul>
               </div>

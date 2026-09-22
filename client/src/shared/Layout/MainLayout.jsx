@@ -11,7 +11,6 @@ export default function MainLayout() {
     <>
       <ProtectedRoute>
         <Navbar />
-
         <main>
           <Outlet />
         </main>

@@ -1,10 +1,16 @@
 import axiosInstance from "../../../shared/services/axiosInstance";
-export const CreateOrder = async ({ address_id, total_price, status }) => {
+export const CreateOrder = async ({
+  address_id,
+  status,
+  products,
+  card_id,
+}) => {
   try {
     const response = await axiosInstance.post("/orders/", {
       address_id,
-      total_price,
       status,
+      products,
+      card_id,
     });
     return response.data;
   } catch (error) {
@@ -49,9 +55,7 @@ export const payOrder = async ({ order_id, card_id }) => {
 
     return response.data;
   } catch (error) {
-    console.error(
-      `There's an error at payOrder API: ${error.message}`
-    );
+    console.error(`There's an error at payOrder API: ${error.message}`);
 
     throw error;
   }
