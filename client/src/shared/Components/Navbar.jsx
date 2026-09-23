@@ -30,7 +30,6 @@ export default function Navbar() {
       title: "Shop",
       path: "/products",
     },
-
     {
       title: "About",
       path: "/about",
@@ -77,7 +76,7 @@ export default function Navbar() {
     <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
         {/* Logo */}
-        <NavLink className="navbar-brand fw-bold fs-4" to="/home">
+        <NavLink className={`navbar-brand fw-bold fs-4  text-dark`} to="/home">
           Exclusive
         </NavLink>
 
@@ -99,7 +98,14 @@ export default function Navbar() {
           <ul className="navbar-nav me-auto align-items-lg-center">
             {navLinks.map((link) => (
               <li className="nav-item" key={link.path}>
-                <NavLink className="nav-link px-3" to={link.path}>
+                <NavLink
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `nav-link px-3 ${
+                      isActive ? "active text-danger fw-semibold" : "text-dark"
+                    }`
+                  }
+                >
                   {link.title}
                 </NavLink>
               </li>
@@ -112,7 +118,11 @@ export default function Navbar() {
               {/* Wishlist */}
               <NavLink
                 to="/wishlist"
-                className="position-relative text-dark text-decoration-none"
+                className={({ isActive }) =>
+                  `position-relative text-decoration-none ${
+                    isActive ? "text-danger" : "text-dark"
+                  }`
+                }
                 aria-label="Wishlist"
               >
                 <Heart size={21} strokeWidth={1.8} />
@@ -125,7 +135,11 @@ export default function Navbar() {
               {/* Cart */}
               <NavLink
                 to="/cart"
-                className="position-relative text-dark text-decoration-none"
+                className={({ isActive }) =>
+                  `position-relative text-decoration-none ${
+                    isActive ? "text-danger" : "text-dark"
+                  }`
+                }
                 aria-label="Shopping cart"
               >
                 <ShoppingCart size={21} strokeWidth={1.8} />
@@ -151,7 +165,7 @@ export default function Navbar() {
                       height="38"
                       className="rounded-circle border border-2 shadow-sm"
                       style={{
-                        objectFit: "Contain",
+                        objectFit: "contain",
                         objectPosition: "center",
                       }}
                     />
@@ -167,8 +181,12 @@ export default function Navbar() {
                     return (
                       <li key={link.path}>
                         <NavLink
-                          className="dropdown-item d-flex align-items-center gap-2"
                           to={link.path}
+                          className={({ isActive }) =>
+                            `dropdown-item d-flex align-items-center gap-2 ${
+                              isActive ? "active bg-danger text-white" : ""
+                            }`
+                          }
                         >
                           <Icon size={17} />
                           {link.title}

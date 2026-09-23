@@ -49,3 +49,8 @@ from orders
     INNER JOIN order_items on orders.id = order_items.order_id   order by RAND() limit 5 ;
     SELECT * FROM orders;
     -- enum('pending','processing','shipped','delivered','cancelled')
+SELECT COUNT(*) FROM products;
+SELECT COUNT(*) FROM products WHERE stock > 0;
+SELECT COUNT(*) as out_of_stock FROM products WHERE stock = 0;
+SELECT * FROM products WHERE title LIKE "%red%"  ORDER BY RAND() LIMIT 10;
+SELECT * FROM products;

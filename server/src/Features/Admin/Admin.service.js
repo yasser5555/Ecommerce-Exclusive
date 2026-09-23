@@ -27,7 +27,7 @@ const getAllProductService = async () => {
     const Products = await AdminRepo.getAllProduct();
     return Products;
   } catch (error) {
-    throw new Error(`error at Admin.Service.getAllProductService`);
+    throw new Error(`error at Admin.Service.getAllProductService ${error}`);
   }
 };
 
@@ -57,10 +57,32 @@ const getAdminDashboardService = async () => {
   }
 };
 
+const getAdminProductPageService = async () => {
+  try {
+    const response = await AdminRepo.getAdminProductPage();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getAdminProductPageService ${error}`,
+    );
+  }
+};
+
+const Search_ProductService = async (Title) =>{
+try{
+    const data = await AdminRepo.Search_Product(Title);
+    return data
+  } catch (error) {
+    throw new Error(`error at Admin.repo.update_product ${error}`);
+  }
+}
+
 module.exports = {
   createProductService,
   getAllProductService,
   deleteProductService,
   update_ProductService,
   getAdminDashboardService,
+  getAdminProductPageService,
+  Search_ProductService
 };

@@ -4,15 +4,12 @@ CREATE PROCEDURE get_product_by_id(
     IN p_user_id INT
 )
 BEGIN
-
     SELECT
         product_card.*,
-
         CASE
             WHEN wishlist.id IS NOT NULL THEN 1
             ELSE 0
         END AS isWishList
-
     FROM product_card
 
     LEFT JOIN wishlist

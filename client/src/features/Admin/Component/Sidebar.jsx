@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -55,19 +55,19 @@ export default function Sidebar() {
   ];
 
   const bottomItems = [];
-
+const [active , setActive] = useState(true)
   return (
     <aside
-      className="bg-white border-end d-flex flex-column"
-      style={{
-        width: "260px",
-        height: "100vh",
-        position: "fixed",
-        top: 0,
-        left: 0,
-        zIndex: 1000,
-      }}
-    >
+  className="bg-white border-end d-flex flex-column"
+  style={{
+    width: active ? "260px" : "0px",
+    minWidth: active ? "260px" : "0px",
+    overflow: "hidden",
+    flexShrink: 0,
+    transition: "width 0.4s ease, min-width 0.4s ease",
+    position: "relative",
+    height:"auto"  }}
+>
       {/* Logo */}
       <div className="px-4 py-4 border-bottom">
         <h5 className="fw-bold mb-0">
@@ -104,7 +104,20 @@ export default function Sidebar() {
           })}
         </nav>
       </div>
-
+<Settings
+  size={30}
+  color="black"
+  className="bg-light-subtle rounded-circle p-1"
+  style={{
+    position: "fixed",
+    top: "0%",
+    left: active ? "16%" : "0%",
+    cursor: "pointer",
+    zIndex: 2000,
+    transition: "left 0.4s ease",
+  }}
+  onClick={() => setActive((prev) => !prev)}
+/>
       {/* Admin Profile */}
       <div className="border-top p-3">
         <div className="d-flex align-items-center gap-3">

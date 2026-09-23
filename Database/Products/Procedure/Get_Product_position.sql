@@ -17,5 +17,4 @@ WHERE
         AND p.id < p_id
     );
 END //
-
 call get_Product_Postion(60);

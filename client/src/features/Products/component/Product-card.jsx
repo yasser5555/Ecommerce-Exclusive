@@ -5,27 +5,30 @@ import { useAuthStore } from "../../auth/store/auth.store";
 import useCartStore from "../../Cart/store/Cart.store";
 
 function ProductCard({ product, callback, isactive }) {
+  // ! For Handling User wishList
   const { handleAddToWishlist, handleRemoveFromWishlist } = useWishlist();
+  // ! Fetch User id for Product Reviews
   const { user } = useAuthStore();
   const { addProductToCart } = useCartStore();
-
+  // ! For Rating
   const stars = [1, 2, 3, 4, 5];
-
+  // ! For Color Show
   const [active, setActive] = useState(Number(isactive) === 1);
-
+  // ! Re-Rendering Product card with Changes
   useEffect(() => {
-    setActive(Number(isactive) === 1);
+    setActive(isactive === 1);
   }, [isactive, product?.p_id]);
-
   const handleWishlist = async () => {
     try {
+      // !  reversing Current State in order to Toggle Product in WishList
       const newState = !active;
-
+      // ! Update State
       setActive(newState);
-
+      // ! newState is true value then add it to wishlist
       if (newState) {
         await handleAddToWishlist(product?.p_id);
       } else {
+        // ! otherwise remove it from wishlist
         await handleRemoveFromWishlist(product?.p_id);
       }
     } catch (error) {
@@ -35,20 +38,18 @@ function ProductCard({ product, callback, isactive }) {
   };
 
   const handleAddToCart = async () => {
-    if (!product?.p_id) {
-      console.log("Product ID is missing");
-      return;
-    }
-
+    // ! Sending Added data to store
     await addProductToCart({
+      // ! Which product does user added it to his Cart
       product_id: product.p_id,
+      // ! can be modifeied but logically 1
       quantity: 1,
+      // ! Which user added this product to his Cart
       user_id: user?.id,
     });
   };
-
+  // ! Parsing Rating into Number will be used later on
   const Rating = Number(product?.rating) || 0;
-
   return (
     <article className="card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
       {/* Image */}
@@ -73,7 +74,6 @@ function ProductCard({ product, callback, isactive }) {
         </span>
 
         {/* Stock */}
-   
 
         {/* Action Buttons */}
         <div className="position-absolute top-0 end-0 m-3 d-flex flex-column gap-2">
@@ -119,14 +119,21 @@ function ProductCard({ product, callback, isactive }) {
         <div className="d-flex  align-items-baseline  gap-2 mb-3">
           <div className="d-flex align-items-center">
             {stars.map((star) => {
+              // ! Intial Fill Percent
               let fillPercentage = 0;
-
+              // ! if user fill the five stars then fill all of it
               if (Rating >= star) {
                 fillPercentage = 100;
+                // ! if not then find fill percent of fill:
               } else if (Rating > star - 1) {
                 fillPercentage = (Rating - (star - 1)) * 100;
               }
-
+            /*
+            * assume that:
+            * rating: 3.7 , star:4 
+            ? fill percentage = (3.7-(4-1)) * 100 = (3.7-3) * 100 = 0.7 * 100 = 70% 
+            ? Shape: ⭐⭐⭐🌗
+            */
               return (
                 <div
                   key={star}
@@ -146,7 +153,7 @@ function ProductCard({ product, callback, isactive }) {
                     className="position-absolute top-0 star-filled start-0 overflow-hidden text-warning"
                     style={{
                       width: `${fillPercentage}%`,
-                      // height: "100%",
+  
                     }}
                   >
                     <Star size={16} fill="currentColor" strokeWidth={1.5} />
@@ -173,7 +180,7 @@ function ProductCard({ product, callback, isactive }) {
           {product?.stock > 0 ? (
             <span className="badge bg-success-subtle text-success rounded-pill px-3 py-2">
               <span className="me-1">●</span>
-              In stock {product.stock}
+              In stock {product?.stock}
             </span>
           ) : (
             <span className="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">

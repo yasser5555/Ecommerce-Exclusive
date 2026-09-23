@@ -3,6 +3,8 @@ import useProductBar from "../hooks/useProductBar";
 import { FetchOnRender } from "../../../shared/Utils/useFetch";
 
 export default function ProductFilterSidebar() {
+  // ! for Rating filter and for sure order is important
+  const RatingFilter = [5, 4, 3, 2, 1]; 
   const {
     getCatogeries,
     catogery,
@@ -29,14 +31,26 @@ export default function ProductFilterSidebar() {
 
   // Live Search with Debounce
   useEffect(() => {
+    /*
+     * what's live search ?
+     * it means response is sent without clicking a button for example:
+     * Redmi => Server Search for it in database => Server send Response
+     * Problem of live search for search bar:
+     * is too many request on server for example
+     *  user search for redmin 10 power 128GB black
+     * imagining sending each letter as a request for server from one user only :)
+     * to Solve this problem we use Debounce:
+     * it wait untill user Stops writing from then wait 400ms 0.4 second then send request
+     */
     const timer = setTimeout(() => {
+      // ! CLear white spaces from search value
       const searchValue = search.trim();
+      // ! for empty search bar Fetch products
       if (searchValue === "") {
         FetchProducts({
           page: 1,
           limit: 10,
         });
-
         return;
       }
       productSearch(searchValue);
@@ -44,6 +58,7 @@ export default function ProductFilterSidebar() {
     return () => clearTimeout(timer);
   }, [search, productSearch]);
 
+  // ! Handling Filtering
   useEffect(() => {
     const timer = setTimeout(() => {
       const filtered = {
@@ -52,9 +67,8 @@ export default function ProductFilterSidebar() {
         minprice: price.min,
         maxprice: price.max,
       };
-
       getFilters(filtered);
-    }, 500);
+    });
 
     return () => clearTimeout(timer);
   }, [Catogery, rating, price.min, price.max, getFilters]);
@@ -232,9 +246,8 @@ export default function ProductFilterSidebar() {
           <div className="border-top pt-4">
             <div className="mb-4">
               <h6 className="fw-bold mb-3">Rating</h6>
-
               <div className="d-flex flex-column gap-2">
-                {[5, 4, 3].map((value) => (
+                {RatingFilter.map((value) => (
                   <label
                     key={value}
                     htmlFor={`rating-${value}`}
@@ -264,13 +277,6 @@ export default function ProductFilterSidebar() {
                 ))}
               </div>
             </div>
-
-            <button
-              type="submit"
-              className="btn btn-danger w-100 rounded-3 fw-semibold py-2"
-            >
-              Apply Filters
-            </button>
           </div>
         </div>
       </form>

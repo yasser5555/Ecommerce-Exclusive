@@ -2,31 +2,41 @@
 -- Search Producr using Title
 SELECT * from products;
 -- Product Card
-CREATE OR REPLACE VIEW product_card AS SELECT
-    p.id AS p_id,
-    c.id AS cat_id,
-    p.product_image AS image,
-    p.title AS name,
-    c.name AS category,
-    p.old_price AS price,
-    p.description,
-    p.stock,
-    ROUND(AVG(pr.rating), 1) AS rating,
-    COUNT(pr.id) AS review_count
-FROM products p
-INNER JOIN categories c
-    ON p.category_id = c.id
-LEFT JOIN product_reviews pr
-    ON p.id = pr.product_id
+CREATE OR REPLACE VIEW product_card AS
+SELECT
+    products.id AS p_id,
+    products.is_active,
+    categories.id AS cat_id,
+    products.product_image AS image,
+    products.title AS name,
+    categories.name AS category,
+    products.old_price AS price,
+    products.description,
+    products.stock,
+    ROUND(AVG(product_reviews.rating), 1) AS rating,
+    COUNT(product_reviews.id) AS review_count
+
+FROM products
+
+INNER JOIN categories
+    ON products.category_id = categories.id
+
+LEFT JOIN product_reviews
+    ON products.id = product_reviews.product_id
+
+WHERE products.is_active = 1
 
 GROUP BY
-    p.id,
-    c.id,
-    p.product_image,
-    p.title,
-    c.name,
-    p.old_price,
-    p.stock;
+    products.id,
+    products.is_active,
+    categories.id,
+    products.product_image,
+    products.title,
+    categories.name,
+    products.old_price,
+    products.description,
+    products.stock
+
 ORDER BY products.id;
 SELECT * from product_card ;
 DESCRIBE product_card;

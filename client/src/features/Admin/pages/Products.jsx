@@ -1,174 +1,102 @@
-import React, { useState } from "react";
-import { Search, Plus, Pencil, Trash2, Eye, Package, X } from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Search, Plus, Pencil, Trash2, Eye, Package } from "lucide-react";
+import { useAdminStore } from "../Store/Admin.store";
 
 export default function Products() {
-  // Temporary static data
-  // Replace this later with products from your Zustand store
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      category: "Electronics",
-      price: 120,
-      stock: 25,
-      rating: 4.5,
-      image:
-        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300",
-    },
-    {
-      id: 2,
-      name: "Smart Watch",
-      category: "Electronics",
-      price: 180,
-      stock: 12,
-      rating: 4.2,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300",
-    },
-    {
-      id: 3,
-      name: "Running Shoes",
-      category: "Shoes",
-      price: 95,
-      stock: 8,
-      rating: 4.7,
-      image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=300",
-    },
-    {
-      id: 4,
-      name: "Backpack",
-      category: "Accessories",
-      price: 65,
-      stock: 0,
-      rating: 4.1,
-      image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=300",
-    },
-  ]);
+  const {
+    productPage,
+    products,
+    SearchedProduct,
+    fetchProductPage,
+    fetchProducts,
+    SearchForProducts,
+  } = useAdminStore();
 
-  const [search, setSearch] = useState("");
+  // ================= PAGINATION =================
 
-  const [showModal, setShowModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [title, setTitle] = useState("");
 
-  const [editingProduct, setEditingProduct] = useState(null);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const productsPerPage = 10;
 
-  const [formData, setFormData] = useState({
-    name: "",
-    category: "",
-    price: "",
-    stock: "",
-    image: "",
-  });
+  // ================= FETCH PAGE DATA =================
 
-  // =========================
-  // Search
-  // =========================
+  useEffect(() => {
+    const getPageData = async () => {
+      try {
+        await fetchProductPage();
+      } catch (error) {
+        console.error(`error at admin product page ${error}`);
+      }
+    };
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(search.toLowerCase()),
-  );
+    getPageData();
+  }, [fetchProductPage]);
 
-  // =========================
-  // Open Create Modal
-  // =========================
+  // ================= FETCH ALL PRODUCTS =================
 
-  const handleCreate = () => {
-    setEditingProduct(null);
+  useEffect(() => {
+    const getProductData = async () => {
+      try {
+        await fetchProducts();
+      } catch (error) {
+        console.error(`error at admin product page ${error}`);
+      }
+    };
 
-    setFormData({
-      name: "",
-      category: "",
-      price: "",
-      stock: "",
-      image: "",
-    });
+    getProductData();
+  }, [fetchProducts]);
 
-    setShowModal(true);
-  };
+  // ================= SEARCH =================
 
-  // =========================
-  // Open Edit Modal
-  // =========================
+  useEffect(() => {
+    const timer = setTimeout(async () => {
+      try {
+        setCurrentPage(1);
 
-  const handleEdit = (product) => {
-    setEditingProduct(product);
+        // If search is empty, show all products
+        if (title.trim() === "") {
+          return;
+        }
 
-    setFormData({
-      name: product.name,
-      category: product.category,
-      price: product.price,
-      stock: product.stock,
-      image: product.image,
-    });
+        console.log("Searching for:", title.trim());
 
-    setShowModal(true);
-  };
+        const result = await SearchForProducts(title.trim());
 
-  // =========================
-  // Form Change
-  // =========================
+        console.log("Search result:", result);
+      } catch (error) {
+        console.error("error at searching products:", error);
+      }
+    }, 400);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+    return () => clearTimeout(timer);
+  }, [title, SearchForProducts]);
 
-  // =========================
-  // Create / Update
-  // =========================
+  // ================= PRODUCTS TO DISPLAY =================
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const displayProducts =
+    title.trim() !== "" ? SearchedProduct || [] : products || [];
 
-    if (editingProduct) {
-      // UPDATE
+  // ================= TOTAL PRODUCTS =================
 
-      setProducts(
-        products.map((product) =>
-          product.id === editingProduct.id
-            ? {
-                ...product,
-                ...formData,
-                price: Number(formData.price),
-                stock: Number(formData.stock),
-              }
-            : product,
-        ),
-      );
-    } else {
-      // CREATE
+  const totalProducts = displayProducts.length;
 
-      const newProduct = {
-        id: Date.now(),
-        name: formData.name,
-        category: formData.category,
-        price: Number(formData.price),
-        stock: Number(formData.stock),
-        rating: 0,
-        image:
-          formData.image || "https://via.placeholder.com/300x300?text=Product",
-      };
+  // ================= TOTAL PAGES =================
 
-      setProducts([...products, newProduct]);
-    }
+  const totalPages = Math.ceil(totalProducts / productsPerPage);
 
-    setShowModal(false);
-  };
+  // ================= CURRENT PRODUCTS =================
 
-  // =========================
-  // Delete
-  // =========================
+  const startIndex = (currentPage - 1) * productsPerPage;
 
-  const handleDelete = () => {
-    setProducts(
-      products.filter((product) => product.id !== selectedProduct.id),
-    );
+  const endIndex = startIndex + productsPerPage;
 
-    setShowDeleteModal(false);
-    setSelectedProduct(null);
+  const currentProducts = displayProducts.slice(startIndex, endIndex);
+
+  // ================= CHANGE PAGE =================
+
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -184,10 +112,7 @@ export default function Products() {
           </p>
         </div>
 
-        <button
-          className="btn btn-dark d-flex align-items-center gap-2 px-3"
-          onClick={handleCreate}
-        >
+        <button className="btn btn-dark d-flex align-items-center gap-2 px-3">
           <Plus size={18} />
           Add Product
         </button>
@@ -196,6 +121,8 @@ export default function Products() {
       {/* ================= STATISTICS ================= */}
 
       <div className="row g-3 mb-4">
+        {/* Total Products */}
+
         <div className="col-md-4">
           <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body d-flex align-items-center">
@@ -206,11 +133,15 @@ export default function Products() {
               <div>
                 <small className="text-muted">Total Products</small>
 
-                <h4 className="fw-bold mb-0">{products.length}</h4>
+                <h4 className="fw-bold mb-0">
+                  {productPage?.[0]?.[0]?.total_products || 0}
+                </h4>
               </div>
             </div>
           </div>
         </div>
+
+        {/* In Stock */}
 
         <div className="col-md-4">
           <div className="card border-0 shadow-sm rounded-4">
@@ -218,11 +149,13 @@ export default function Products() {
               <small className="text-muted">In Stock</small>
 
               <h4 className="fw-bold mb-0 text-success">
-                {products.filter((p) => p.stock > 0).length}
+                {productPage?.[1]?.[0]?.in_stock || 0}
               </h4>
             </div>
           </div>
         </div>
+
+        {/* Out Of Stock */}
 
         <div className="col-md-4">
           <div className="card border-0 shadow-sm rounded-4">
@@ -230,7 +163,7 @@ export default function Products() {
               <small className="text-muted">Out of Stock</small>
 
               <h4 className="fw-bold mb-0 text-danger">
-                {products.filter((p) => p.stock === 0).length}
+                {productPage?.[2]?.[0]?.out_of_stock || 0}
               </h4>
             </div>
           </div>
@@ -240,7 +173,7 @@ export default function Products() {
       {/* ================= PRODUCTS CARD ================= */}
 
       <div className="card border-0 shadow-sm rounded-4">
-        {/* Search */}
+        {/* ================= SEARCH ================= */}
 
         <div className="card-header bg-white border-0 p-4">
           <div className="row align-items-center">
@@ -254,15 +187,17 @@ export default function Products() {
                   type="text"
                   className="form-control bg-light border-0"
                   placeholder="Search products..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
                 />
               </div>
             </div>
 
             <div className="col-md-6 text-md-end mt-3 mt-md-0">
               <span className="text-muted small">
-                Showing {filteredProducts.length} products
+                Showing {currentProducts.length} of {totalProducts} products
               </span>
             </div>
           </div>
@@ -274,107 +209,122 @@ export default function Products() {
           <table className="table align-middle mb-0">
             <thead className="table-light">
               <tr>
-                <th className="ps-4">Product</th>
+                <th className="ps-4" style={{ width: "35%" }}>
+                  Product
+                </th>
 
-                <th>Category</th>
+                <th style={{ width: "15%" }}>Category</th>
 
-                <th>Price</th>
+                <th style={{ width: "10%" }}>Price</th>
 
-                <th>Stock</th>
+                <th style={{ width: "10%" }}>Stock</th>
 
-                <th>Rating</th>
+                <th style={{ width: "10%" }}>Rating</th>
 
-                <th>Status</th>
+                <th style={{ width: "10%" }}>Status</th>
 
-                <th className="text-end pe-4">Actions</th>
+                <th className="text-end pe-4" style={{ width: "10%" }}>
+                  Actions
+                </th>
               </tr>
             </thead>
 
             <tbody>
-              {filteredProducts.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-5 text-muted">
-                    No products found
-                  </td>
-                </tr>
-              ) : (
-                filteredProducts.map((product) => (
-                  <tr key={product.id}>
-                    {/* Product */}
+              {currentProducts.length > 0 ? (
+                currentProducts.map((product) => (
+                  <tr key={product.id || product.p_id}>
+                    {/* ================= PRODUCT ================= */}
 
                     <td className="ps-4">
                       <div className="d-flex align-items-center gap-3">
                         <img
-                          src={product.image}
-                          alt={product.name}
+                          src={product.product_image || product.image}
+                          alt={product.title || product.name}
                           width="55"
                           height="55"
                           className="rounded-3 object-fit-cover"
                         />
 
                         <div>
-                          <div className="fw-semibold">{product.name}</div>
+                          <div className="fw-semibold">
+                            {product.title || product.name}
+                          </div>
 
-                          <small className="text-muted">#{product.id}</small>
+                          <small className="text-muted">
+                            #{product.id || product.p_id}
+                          </small>
                         </div>
                       </div>
                     </td>
 
-                    {/* Category */}
+                    {/* ================= CATEGORY ================= */}
 
                     <td>
                       <span className="badge bg-light text-dark border">
-                        {product.category}
+                        {product.category || `Category #${product.category_id}`}
                       </span>
                     </td>
 
-                    {/* Price */}
+                    {/* ================= PRICE ================= */}
 
                     <td>
-                      <span className="fw-semibold">${product.price}</span>
+                      <span className="fw-semibold">
+                        $
+                        {Number(
+                          product.old_price || product.price,
+                        ).toLocaleString()}
+                      </span>
                     </td>
 
-                    {/* Stock */}
+                    {/* ================= STOCK ================= */}
 
                     <td>{product.stock}</td>
 
-                    {/* Rating */}
+                    {/* ================= RATING ================= */}
 
                     <td>
-                      <span className="fw-semibold">⭐ {product.rating}</span>
+                      <span className="fw-semibold">
+                        ⭐ {product.rating ?? 0}
+                      </span>
+
+                      <small className="text-muted ms-1">
+                        ({product.review_count ?? 0})
+                      </small>
                     </td>
 
-                    {/* Status */}
+                    {/* ================= STATUS ================= */}
 
                     <td>
-                      {product.stock > 0 ? (
+                      {product.is_active ? (
                         <span className="badge bg-success-subtle text-success rounded-pill px-3 py-2">
-                          In Stock
+                          Active
                         </span>
                       ) : (
                         <span className="badge bg-danger-subtle text-danger rounded-pill px-3 py-2">
-                          Out of Stock
+                          Inactive
                         </span>
                       )}
                     </td>
 
-                    {/* Actions */}
+                    {/* ================= ACTIONS ================= */}
 
                     <td className="text-end pe-4">
                       <div className="d-flex justify-content-end gap-2">
                         {/* View */}
 
-                        <button className="btn btn-sm btn-light" title="View">
+                        <button
+                          className="btn btn-sm btn-light"
+                          title="View"
+                          onClick={() =>
+                            console.log(product.id || product.p_id)
+                          }
+                        >
                           <Eye size={16} />
                         </button>
 
                         {/* Edit */}
 
-                        <button
-                          className="btn btn-sm btn-light"
-                          title="Edit"
-                          onClick={() => handleEdit(product)}
-                        >
+                        <button className="btn btn-sm btn-light" title="Edit">
                           <Pencil size={16} />
                         </button>
 
@@ -383,10 +333,6 @@ export default function Products() {
                         <button
                           className="btn btn-sm btn-light text-danger"
                           title="Delete"
-                          onClick={() => {
-                            setSelectedProduct(product);
-                            setShowDeleteModal(true);
-                          }}
                         >
                           <Trash2 size={16} />
                         </button>
@@ -394,202 +340,94 @@ export default function Products() {
                     </td>
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan="7" className="text-center py-5">
+                    <div className="text-muted">
+                      {title.trim()
+                        ? `No products found for "${title}"`
+                        : "No products available"}
+                    </div>
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
-      </div>
 
-      {/* ================================================= */}
-      {/* CREATE / UPDATE MODAL */}
-      {/* ================================================= */}
+        {/* ================= PAGINATION ================= */}
 
-      {showModal && (
-        <div
-          className="modal d-block"
-          tabIndex="-1"
-          style={{
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow rounded-4">
-              <div className="modal-header border-0">
-                <h5 className="modal-title fw-bold">
-                  {editingProduct ? "Update Product" : "Create Product"}
-                </h5>
-
-                <button
-                  className="btn btn-light rounded-circle"
-                  onClick={() => setShowModal(false)}
-                >
-                  <X size={18} />
-                </button>
-              </div>
-
-              <form onSubmit={handleSubmit}>
-                <div className="modal-body">
-                  {/* Product Name */}
-
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">
-                      Product Name
-                    </label>
-
-                    <input
-                      type="text"
-                      name="name"
-                      className="form-control"
-                      placeholder="Enter product name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-
-                  {/* Category */}
-
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">Category</label>
-
-                    <select
-                      name="category"
-                      className="form-select"
-                      value={formData.category}
-                      onChange={handleChange}
-                      required
+        {totalProducts > 0 && (
+          <div className="card-footer bg-white border-0 p-4">
+            <div className="d-flex justify-content-between align-items-center">
+              {/* Page Information */}
+              <small className="text-muted">
+                Showing {startIndex + 1}-{Math.min(endIndex, totalProducts)} of{" "}
+                {totalProducts}
+              </small>
+              {/* Pagination */}
+              <nav>
+                <ul className="pagination mb-0">
+                  {/* Previous */}
+                  <li
+                    className={`page-item ${
+                      currentPage === 1 ? "disabled" : ""
+                    }`}
+                  >
+                    <button
+                      className={`page-link ${
+                        currentPage !== 1 ? "text-danger" : ""
+                      }`}
+                      onClick={() => handlePageChange(currentPage - 1)}
                     >
-                      <option value="">Select category</option>
+                      Previous
+                    </button>
+                  </li>
 
-                      <option value="Electronics">Electronics</option>
+                  {/* Page Numbers */}
 
-                      <option value="Shoes">Shoes</option>
+                  {Array.from(
+                    {
+                      length: totalPages,
+                    },
+                    (_, index) => index + 1,
+                  ).map((page) => (
+                    <li key={page} className="page-item">
+                      <button
+                        className={`page-link ${
+                          currentPage === page
+                            ? "bg-danger text-white border-danger"
+                            : "text-danger"
+                        }`}
+                        onClick={() => handlePageChange(page)}
+                      >
+                        {page}
+                      </button>
+                    </li>
+                  ))}
 
-                      <option value="Accessories">Accessories</option>
+                  {/* Next */}
 
-                      <option value="Clothing">Clothing</option>
-                    </select>
-                  </div>
-
-                  <div className="row">
-                    {/* Price */}
-
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label fw-semibold">Price</label>
-
-                      <input
-                        type="number"
-                        name="price"
-                        className="form-control"
-                        placeholder="0"
-                        value={formData.price}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-
-                    {/* Stock */}
-
-                    <div className="col-md-6 mb-3">
-                      <label className="form-label fw-semibold">Stock</label>
-
-                      <input
-                        type="number"
-                        name="stock"
-                        className="form-control"
-                        placeholder="0"
-                        value={formData.stock}
-                        onChange={handleChange}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  {/* Image */}
-
-                  <div className="mb-3">
-                    <label className="form-label fw-semibold">
-                      Product Image URL
-                    </label>
-
-                    <input
-                      type="text"
-                      name="image"
-                      className="form-control"
-                      placeholder="https://..."
-                      value={formData.image}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="modal-footer border-0">
-                  <button
-                    type="button"
-                    className="btn btn-light"
-                    onClick={() => setShowModal(false)}
+                  <li
+                    className={`page-item ${
+                      currentPage === totalPages ? "disabled" : ""
+                    }`}
                   >
-                    Cancel
-                  </button>
-
-                  <button type="submit" className="btn btn-dark px-4">
-                    {editingProduct ? "Update Product" : "Create Product"}
-                  </button>
-                </div>
-              </form>
+                    <button
+                      className={`page-link ${
+                        currentPage !== totalPages ? "text-danger" : ""
+                      }`}
+                      onClick={() => handlePageChange(currentPage + 1)}
+                    >
+                      Next
+                    </button>
+                  </li>
+                </ul>
+              </nav>
             </div>
           </div>
-        </div>
-      )}
-
-      {/* ================================================= */}
-      {/* DELETE MODAL */}
-      {/* ================================================= */}
-
-      {showDeleteModal && (
-        <div
-          className="modal d-block"
-          style={{
-            backgroundColor: "rgba(0,0,0,0.5)",
-          }}
-        >
-          <div className="modal-dialog modal-dialog-centered">
-            <div className="modal-content border-0 shadow rounded-4">
-              <div className="modal-body text-center p-5">
-                <div className="bg-danger bg-opacity-10 rounded-circle d-inline-flex p-3 mb-3">
-                  <Trash2 size={28} className="text-danger" />
-                </div>
-
-                <h5 className="fw-bold">Delete Product?</h5>
-
-                <p className="text-muted">
-                  Are you sure you want to delete{" "}
-                  <strong>{selectedProduct?.name}</strong>
-                  ?
-                  <br />
-                  This action cannot be undone.
-                </p>
-
-                <div className="d-flex justify-content-center gap-2">
-                  <button
-                    className="btn btn-light px-4"
-                    onClick={() => setShowDeleteModal(false)}
-                  >
-                    Cancel
-                  </button>
-
-                  <button
-                    className="btn btn-danger px-4"
-                    onClick={handleDelete}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

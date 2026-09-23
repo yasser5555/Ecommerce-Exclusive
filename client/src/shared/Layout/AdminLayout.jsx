@@ -1,21 +1,16 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 
- import ProtectedRoute from "../../features/auth/routes/ProtectedRoute";
+import ProtectedRoute from "../../features/auth/routes/ProtectedRoute";
 import Sidebar from "../../features/Admin/Component/Sidebar";
- 
+
 export default function AdminLayout() {
   return (
     <ProtectedRoute>
-      <div className="d-flex">
+      <div className="d-flex min-vh-100">
         <Sidebar />
-        <main
-          style={{
-            marginLeft: "260px",
-            width: "calc(100% - 260px)",
-      
-          }}
-        >
+
+        <main className="flex-grow-1 min-vh-100">
           <Outlet />
         </main>
       </div>

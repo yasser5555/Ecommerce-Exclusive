@@ -26,7 +26,7 @@ const createProductController = async (req, res) => {
 const getAllProductController = async (req, res) => {
   try {
     const Products = await Adminservice.getAllProductService();
-    res.json({ msg: "Product Created Successfully", Products }).status(201);
+    res.json(Products).status(201);
   } catch (error) {
     res
       .json({
@@ -36,18 +36,18 @@ const getAllProductController = async (req, res) => {
   }
 };
 
-const deleteProductController = async (req, res) => {
-  try {
-    const data = await Adminservice.deleteProductService(req.body.product_id);
-    res.json({ msg: "Product Deleted Successfully", data }).status(201);
-  } catch (error) {
-    res
-      .json({
-        msg: `Error at Admin.controller.deleteProductController ${error}`,
-      })
-      .status(500);
-  }
-};
+// const deleteProductController = async (req, res) => {
+//   try {
+//     const data = await Adminservice.deleteProductService(req.body.product_id);
+//     res.json({ msg: "Product Deleted Successfully", data }).status(201);
+//   } catch (error) {
+//     res
+//       .json({
+//         msg: `Error at Admin.controller.deleteProductController ${error}`,
+//       })
+//       .status(500);
+//   }
+// };
 
 const update_ProductController = async (req, res) => {
   try {
@@ -73,18 +73,39 @@ const getAdminDashboardController = async (req, res) => {
     const data = await Adminservice.getAdminDashboardService();
     res.status(200).json(data);
   } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Service.getAdminDashboardService ${error}`,
+    });
+  }
+};
+const getAdminProductPageController = async (req, res) => {
+  try {
+    const response = await Adminservice.getAdminProductPageService();
+    res.status(200).json(response);
+  } catch (error) {
     res
       .status(500)
-      .json({
-        msg: `error at Admin.Service.getAdminDashboardService ${error}`,
-      });
+      .json(`error at Admin.Controller.getAdminProductPageController ${error}`);
   }
 };
 
+const Search_ProductController = async (req, res) => {
+  const {title}= req.body
+  try {
+    const data = await Adminservice.Search_ProductService(title);
+    res.status(200).json(data);
+  } catch (error) {
+    res
+      .status(500)
+      .json(`error at Admin.Controller.Search_ProductService ${error}`);
+  }
+};
 module.exports = {
   createProductController,
   getAllProductController,
-  deleteProductController,
+  // deleteProductController,
   update_ProductController,
   getAdminDashboardController,
+  getAdminProductPageController,
+  Search_ProductController,
 };

@@ -20,7 +20,9 @@ const createProduct = async (
 };
 const getAllProduct = async () => {
   try {
-    const [msg, x] = await pool.query(`SELECT * FROM product_card`);
+    const [msg, x] = await pool.query(
+      `SELECT * FROM product_card where is_active = 1 `,
+    );
     return msg;
   } catch (error) {
     throw new Error(`error at Admin.repo.getAllProduct ${error}`);
@@ -59,10 +61,34 @@ const getAdminDashboard = async () => {
     throw new Error(`error at Admin.repo.getAdminDashboard ${error}`);
   }
 };
+
+const getAdminProductPage = async () => {
+  try {
+    const [page, x] = await pool.query("call GetAdminProduct()");
+    return page;
+  } catch (error) {
+    throw new Error(`error at Admin.rep.getAdminProductPage ${error}`);
+  }
+};
+
+const Search_Product = async (Tite) => {
+  try {
+    const response = await pool.query(
+      "SELECT * FROM products WHERE title LIKE ? AND is_active = 1 LIMIT 10;",
+      [`%${Tite}%`],
+    );
+    return response[0];
+  } catch (error) {
+    throw new Error(`error at Admin.repo.update_product ${error}`);
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProduct,
   deleteProduct,
   update_product,
   getAdminDashboard,
+  getAdminProductPage,
+  Search_Product,
 };

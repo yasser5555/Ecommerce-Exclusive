@@ -2,8 +2,7 @@
 DROP PROCEDURE if EXISTS filter_Product;
 
 DELIMITER / /
-
-CREATE PROCEDURE filter_Product(
+CREATE  PROCEDURE filter_Product(
     IN p_catogery VARCHAR(120),
     IN p_rating FLOAT,
     IN p_min_price FLOAT,
@@ -24,7 +23,7 @@ BEGIN
         
         (p_min_price IS NULL OR price >= p_min_price)AND
         (p_max_price IS NULL OR price <= p_max_price)
-
+    and is_active = 1
     ORDER BY price;
 
 END //

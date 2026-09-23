@@ -31,13 +31,7 @@ export default function Productdetails() {
   isExist();
 
  const handleAddToCart = async () => {
-  if (!product?.p_id) {
-    console.log("Product ID is missing");
-    return;
-  }
-
-  console.log("Product ID:", product.p_id);
-  console.log("Selected Quantity:", quantity);
+  
 
   await addProductToCart({
     product_id: product.p_id,
