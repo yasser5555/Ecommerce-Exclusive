@@ -74,18 +74,19 @@ const getAdminProductPage = async () => {
 const Search_Product = async (Tite) => {
   try {
     const response = await pool.query(
-      "SELECT * FROM products WHERE title LIKE ? AND is_active = 1 LIMIT 10;",
+      "call search_product(?)",
+      // "SELECT * FROM products WHERE title LIKE ? AND is_active = 1 LIMIT 10;",
       [`%${Tite}%`],
     );
-    return response[0];
+    return response[0][0];
   } catch (error) {
-    throw new Error(`error at Admin.repo.update_product ${error}`);
+    throw new Error(`error at Admin.repo.Search_Product ${error}`);
   }
 };
  const getLowStock = async () => {
   try {
     const [Products, X] = await pool.query(
-      "SELECT *FROM products WHERE stock <= 5",
+      "SELECT *FROM product_card WHERE stock <= 10 and is_active = 1",
     );
     return Products;
   } catch (error) {
@@ -96,13 +97,26 @@ const Search_Product = async (Tite) => {
   const getOutOfStock = async () => {
   try {
     const [Products, X] = await pool.query(
-      "SELECT *FROM products WHERE stock <= 0",
+      "SELECT *   FROM product_card WHERE stock <= 0 and is_active = 1",
     );
     return Products;
   } catch (error) {
     throw new Error(`error at Admin.repo.getLowStock ${error}`);
   }
 };
+const GetCatogeries = async () => {
+  try {
+    const [catogeries, x] = await pool.query(
+      `select * from categories`,
+    );
+    return catogeries;
+  } catch (error) {
+    console.error(
+      `error at Product.repository.GetCatogeries ===> ${error.message}`,
+    );
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProduct,
@@ -113,4 +127,5 @@ module.exports = {
   Search_Product,
   getLowStock,
   getOutOfStock,
+  GetCatogeries
 };

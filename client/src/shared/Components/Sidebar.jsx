@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { NavLink } from "react-router-dom";
 
 import {
@@ -12,14 +12,13 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-export default function Sidebar() {
+export default function Sidebar({ sidebarOpen }) {
   const navItems = [
     {
       label: "Dashboard",
       path: "/admin",
       icon: Home,
     },
-
     {
       label: "Products",
       path: "/admin/products",
@@ -52,97 +51,97 @@ export default function Sidebar() {
     },
   ];
 
-  const bottomItems = [];
-  const [active, setActive] = useState(true);
   return (
     <aside
       className="bg-white border-end d-flex flex-column"
       style={{
-        width: active ? "260px" : "0px",
-        minWidth: active ? "260px" : "0px",
+        width: sidebarOpen ? "260px" : "0px",
+        minWidth: sidebarOpen ? "260px" : "0px",
         overflow: "hidden",
         flexShrink: 0,
-        transition: "width 0.4s ease, min-width 0.4s ease",
-        position: "relative",
+        transition: "width 0.35s ease, min-width 0.35s ease",
         height: "auto",
       }}
     >
-      {/* Logo */}
-      <div className="px-4 py-4 border-bottom">
-        <h5 className="fw-bold mb-0">
-          Execlusive
-          <span className="text-danger"> Admin</span>
-        </h5>
-      </div>
-
-      {/* Main Navigation */}
-      <div className="flex-grow-1 p-3 overflow-auto">
-        <div className="text-uppercase text-muted small fw-semibold px-2 mb-2">
-          Main
-        </div>
-
-        <nav className="d-flex flex-column gap-1">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-
-            return (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                end={item.path === "/admin"}
-                className={({ isActive }) =>
-                  `d-flex align-items-center gap-3 text-decoration-none rounded-3 px-3 py-2 ${
-                    isActive ? "bg-danger text-white" : "text-dark"
-                  }`
-                }
-              >
-                <Icon size={19} />
-                <span>{item.label}</span>
-              </NavLink>
-            );
-          })}
-        </nav>
-      </div>
-      <Settings
-        size={30}
-        color="black"
-        className="bg-light-subtle rounded-circle p-1"
+      <div
         style={{
-          position: "fixed",
-          top: "0%",
-          left: active ? "16%" : "0%",
-          cursor: "pointer",
-          zIndex: 2000,
-          transition: "left 0.4s ease",
+          width: "260px",
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
-        onClick={() => setActive((prev) => !prev)}
-      />
-      {/* Admin Profile */}
-      <div className="border-top p-3">
-        <div className="d-flex align-items-center gap-3">
-          <div
-            className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-semibold"
-            style={{
-              width: "40px",
-              height: "40px",
-            }}
-          >
-            A
-          </div>
+      >
+        {/* Logo */}
 
-          <div>
-            <div className="fw-semibold">Admin</div>
-            <small className="text-muted">Administrator</small>
-          </div>
+        <div className="px-4 py-4 border-bottom">
+          <h5 className="fw-bold mb-0">
+            Execlusive
+            <span className="text-danger"> Admin</span>
+          </h5>
         </div>
 
-        <NavLink
-          to="/"
-          className="d-flex align-items-center gap-2 text-decoration-none text-muted small mt-3 px-1"
-        >
-          <ExternalLink size={16} />
-          Open Store
-        </NavLink>
+        {/* Main Navigation */}
+
+        <div className="flex-grow-1 p-3 overflow-auto">
+          <div className="text-uppercase text-muted small fw-semibold px-2 mb-2">
+            Main
+          </div>
+
+          <nav className="d-flex flex-column gap-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+
+              return (
+                <NavLink
+                  key={item.path}
+                  to={item.path}
+                  end={item.path === "/admin"}
+                  className={({ isActive }) =>
+                    `d-flex align-items-center gap-3 text-decoration-none rounded-3 px-3 py-2 ${
+                      isActive
+                        ? "bg-danger text-white"
+                        : "text-dark"
+                    }`
+                  }
+                >
+                  <Icon size={19} />
+                  <span>{item.label}</span>
+                </NavLink>
+              );
+            })}
+          </nav>
+        </div>
+
+        {/* Admin Profile */}
+
+        <div className="border-top p-3">
+          <div className="d-flex align-items-center gap-3">
+            <div
+              className="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center fw-semibold"
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+            >
+              A
+            </div>
+
+            <div>
+              <div className="fw-semibold">Admin</div>
+              <small className="text-muted">
+                Administrator
+              </small>
+            </div>
+          </div>
+
+          <NavLink
+            to="/"
+            className="d-flex align-items-center gap-2 text-decoration-none text-muted small mt-3 px-1"
+          >
+            <ExternalLink size={16} />
+            Open Store
+          </NavLink>
+        </div>
       </div>
     </aside>
   );

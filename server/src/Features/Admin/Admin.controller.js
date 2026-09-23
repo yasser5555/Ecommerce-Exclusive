@@ -1,8 +1,7 @@
 const Adminservice = require("./Admin.service");
 const createProductController = async (req, res) => {
   try {
-    const ProductPath = `uploads/Products/${req.file.filename}`;
-
+    const ProductPath = `uploads/products/${req.file.filename}`;
     const data = await Adminservice.createProductService(
       req.body.category_id,
       req.body.title,
@@ -36,33 +35,18 @@ const getAllProductController = async (req, res) => {
   }
 };
 
-// const deleteProductController = async (req, res) => {
-//   try {
-//     const data = await Adminservice.deleteProductService(req.body.product_id);
-//     res.json({ msg: "Product Deleted Successfully", data }).status(201);
-//   } catch (error) {
-//     res
-//       .json({
-//         msg: `Error at Admin.controller.deleteProductController ${error}`,
-//       })
-//       .status(500);
-//   }
-// };
-
 const update_ProductController = async (req, res) => {
   try {
-    const msg = await Adminservice.update_ProductService(
+    const msg = await Adminservice.update_productServices(
       req.body.column,
       req.body.New_value,
       req.body.product_id,
     );
-    res
-      .json({ msg: `${req.body.column} Updated Successfully`, msg })
-      .status(201);
+    res.json(msg).status(201);
   } catch (error) {
     res
       .json({
-        msg: `Error at Admin.controller.update_ProductController ${error}`,
+        msg: `Error at Admin.controller.update_Product ${error}`,
       })
       .status(500);
   }
@@ -105,17 +89,17 @@ const Search_ProductController = async (req, res) => {
 const getOutOfStockController = async (req, res) => {
   try {
     const Products = await Adminservice.getOutOfStockServices();
-    (res.status(200), json(Products));
+    res.status(200).json(Products);
   } catch (error) {
     res
       .status(500)
       .json(`error at Admin.Controller.getOutOfStockController ${error}`);
   }
 };
-const getOutLowStockController = async (req, res) => {
+const getLowStockController = async (req, res) => {
   try {
     const Products = await Adminservice.getLowStockServices();
-    (res.status(200), json(Products));
+    res.status(200).json(Products);
   } catch (error) {
     res
       .status(500)
@@ -133,7 +117,16 @@ const deleteProductController = async (req, res) => {
       .json({ msg: `error at Adminservice.deleteProductController` });
   }
 };
-
+const GetCatogeriesController = async (req,res)=>{
+  try {
+    const response = await Adminservice.GetCatogeriesServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: `error at Adminservice.deleteProductController` });
+  }
+}
 module.exports = {
   createProductController,
   getAllProductController,
@@ -142,6 +135,7 @@ module.exports = {
   getAdminProductPageController,
   Search_ProductController,
   getOutOfStockController,
-  getOutLowStockController,
-  deleteProductController
+  getLowStockController,
+  deleteProductController,
+  GetCatogeriesController
 };

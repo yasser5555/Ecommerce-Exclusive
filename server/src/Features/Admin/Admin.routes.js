@@ -3,18 +3,36 @@ const express = require("express");
 const router = express.Router();
 
 const { protect } = require("../../shared/Middleware/auth.middleware");
-const upload = require("../../shared/Middleware/upload.middleware");
+const uploadProduct = require("../../shared/Middleware/productUpload");
 
-router.get("/all_product",protect,AdminController.getAllProductController);
-router.get("/",protect,AdminController.getAdminDashboardController);
-router.get("/product_page",protect,AdminController.getAdminProductPageController);
-router.get("/low_stock",protect,AdminController.deleteProductController);
-router.get("/out_of_stock",protect,AdminController.getOutOfStockController);
+router.get("/all_product", protect, AdminController.getAllProductController);
+router.get("/", protect, AdminController.getAdminDashboardController);
+router.get(
+  "/product_page",
+  protect,
+  AdminController.getAdminProductPageController,
+);
+router.get("/low_stock", protect, AdminController.getLowStockController);
+router.get("/out_of_stock", protect, AdminController.getOutOfStockController);
+router.get("/get_catogeries", protect, AdminController.GetCatogeriesController);
 
-router.patch("/",protect,AdminController.update_ProductController);
+router.patch("/", protect, AdminController.update_ProductController);
 
-router.post("/product",protect, upload.single("product_image"),AdminController.createProductController);
-router.post("/search_product",protect,AdminController.Search_ProductController);
-router.post("/delete_product",protect,AdminController.deleteProductController);
+router.post(
+  "/create_product",
+  protect,
+  uploadProduct.single("product_image"),
+  AdminController.createProductController,
+);
+router.post(
+  "/search_product",
+  protect,
+  AdminController.Search_ProductController,
+);
+router.post(
+  "/delete_product",
+  protect,
+  AdminController.deleteProductController,
+);
 
-module.exports = router
+module.exports = router;

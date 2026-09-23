@@ -1,20 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Search, Plus, Pencil, Trash2, Eye, Package } from "lucide-react";
+import { Package } from "lucide-react";
 import { useAdminProductStore } from "../Store/product.store";
 import ProductHeader from "../Component/ProductHeader";
 import ProductStatistics from "../Component/ProductStatistics";
 import ProductTable from "../Component/ProductTable";
 import ProductSearch from "../Component/ProductSearch";
+import ProductFilter from "../Component/ProductFilter";
 
 export default function Products() {
-  const {
-    productPage,
-    products,
-    SearchedProduct,
-    fetchProductPage,
-    fetchProducts,
-    SearchForProducts,
-  } = useAdminProductStore();
+const {
+  productPage,
+  products,
+  SearchedProduct,
+  fetchProductPage,
+  fetchProducts,
+  SearchForProducts,
+  getLowStock,
+  getOutOfStock,
+  deleteProduct,
+  update_Product,
+} = useAdminProductStore();
 
   // ================= PAGINATION =================
 
@@ -29,28 +34,12 @@ export default function Products() {
   // ================= FETCH PAGE DATA =================
 
   useEffect(() => {
-    const getPageData = async () => {
-      try {
-        await fetchProductPage();
-      } catch (error) {
-        console.error(`error at admin product page ${error}`);
-      }
-    };
-
-    getPageData();
-  }, [fetchProductPage]);
+    fetchProductPage();
+  }, []);
   // ================= FETCH ALL PRODUCTS =================
   useEffect(() => {
-    const getProductData = async () => {
-      try {
-        await fetchProducts();
-      } catch (error) {
-        console.error(`error at admin product page ${error}`);
-      }
-    };
-
-    getProductData();
-  }, [fetchProducts]);
+    fetchProducts();
+  }, []);
   // ================= SEARCH =================
   useEffect(() => {
     const timer = setTimeout(async () => {
@@ -72,39 +61,19 @@ export default function Products() {
 
   // ================= PRODUCTS TO DISPLAY =================
   const displayProducts =
-    title.trim() !== "" ? SearchedProduct || [] : products || [];
-  // ================= STOCK FILTER =================
-  const filteredProducts = displayProducts.filter((product) => {
-    const stock = Number(product.stock);
-    // ! Show all products
-    if (stockFilter === "all") {
-      return true;
-    }
+    title.trim() !== ""
+      ? Array.isArray(SearchedProduct)
+        ? SearchedProduct
+        : []
+      : Array.isArray(products)
+        ? products
+        : [];
 
-    // ! Products with no stock
-    if (stockFilter === "out") {
-      return stock <= 0;
-    }
-
-    // ! Products with low stock
-    if (stockFilter === "low") {
-      return stock > 0 && stock <= 5;
-    }
-
-    // ! Products with enough stock
-    if (stockFilter === "in") {
-      return stock > 5;
-    }
-    return true;
-  });
-  // ================= TOTAL PRODUCTS =================
-  const totalProducts = filteredProducts.length;
-  // ================= TOTAL PAGES =================
+  const totalProducts = displayProducts.length;
   const totalPages = Math.ceil(totalProducts / productsPerPage);
-  // ================= CURRENT PRODUCTS =================
   const startIndex = (currentPage - 1) * productsPerPage;
   const endIndex = startIndex + productsPerPage;
-  const currentProducts = filteredProducts.slice(startIndex, endIndex);
+  const currentProducts = displayProducts.slice(startIndex, endIndex);
   // ================= CHANGE PAGE =================
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -112,70 +81,44 @@ export default function Products() {
 
   // ================= CHANGE STOCK FILTER =================
 
-  const handleStockFilter = (filter) => {
+  const handleStockFilter = async (filter) => {
     setStockFilter(filter);
     setCurrentPage(1);
-  };
 
+    try {
+      switch (filter) {
+        case "all":
+          await fetchProducts();
+          break;
+
+        case "low":
+          await getLowStock();
+          break;
+
+        case "out":
+          await getOutOfStock();
+          break;
+
+        case "in":
+          // We don't have getInStock yet
+          await fetchProducts();
+          break;
+
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error("error at stock filter:", error);
+    }
+  };
   return (
     <div className="container-fluid bg-light min-vh-100 p-4">
       <ProductHeader />
       {/* ================= STATISTICS ================= */}
       <ProductStatistics productPage={productPage} />
       {/* ================= STOCK FILTERS ================= */}
-      <div className="mb-4">
-        <div className="btn-group" role="group" aria-label="Stock filters">
-          {/* All */}
 
-          <button
-            type="button"
-            className={`btn ${
-              stockFilter === "all" ? "btn-dark" : "btn-outline-dark"
-            }`}
-            onClick={() => handleStockFilter("all")}
-          >
-            All
-          </button>
-
-          {/* Out Of Stock */}
-
-          <button
-            type="button"
-            className={`btn ${
-              stockFilter === "out" ? "btn-danger" : "btn-outline-danger"
-            }`}
-            onClick={() => handleStockFilter("out")}
-          >
-            Out of Stock
-          </button>
-
-          {/* Low Stock */}
-
-          <button
-            type="button"
-            className={`btn ${
-              stockFilter === "low "
-                ? "btn-warning "
-                : "btn-outline-warning text-dark"
-            }`}
-            onClick={() => handleStockFilter("low")}
-          >
-            Low Stock
-          </button>
-
-          {/* In Stock */}
-
-          <button
-            type="button"
-            className={`btn ${
-              stockFilter === "in" ? "btn-success" : "btn-outline-success"
-            }`}
-            onClick={() => handleStockFilter("in")}
-          >
-            In Stock
-          </button>
-        </div>
-      </div>
+      <ProductFilter stockFilter={stockFilter} products={products} onStockFilterChange={handleStockFilter} />
 
       <div className="card border-0 shadow-sm rounded-4">
         {/* ================= SEARCH ================= */}
@@ -193,6 +136,8 @@ export default function Products() {
           currentProducts={currentProducts}
           title={title}
           stockFilter={stockFilter}
+          deleteProduct={deleteProduct}
+          update_Product={update_Product}
         />
         {/* ================= PAGINATION ================= */}
 
