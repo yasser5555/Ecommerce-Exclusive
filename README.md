@@ -414,6 +414,405 @@ Transactions are also used as part of database operations where multiple related
 
 # 🛠️ Admin
 
+The project includes a dedicated Admin section for managing the e-commerce application.
+
+The Admin interface is separated from the customer-facing application and provides administrative tools for managing products and monitoring the store.
+
+The Admin frontend is built using **React, Zustand, Bootstrap, and Axios**, while the backend follows the project's **Controller → Service → Repository → MySQL** architecture.
+
+---
+
+## 📊 Admin Dashboard
+
+The Admin Dashboard provides an overview of the store and acts as the main entry point for administrative functionality.
+
+The dashboard includes administrative statistics and information related to the store.
+
+The Admin Dashboard is connected to the backend through dedicated API endpoints and retrieves data dynamically from MySQL.
+
+The Admin area is structured around:
+
+```text
+Admin
+│
+├── Dashboard
+│
+├── Products
+│
+├── Categories
+│
+├── Orders
+│
+├── Users
+│
+├── Reports
+│
+└── Settings
+```
+
+Some administrative sections are still under development.
+
+---
+
+## 📦 Admin Product Management
+
+The Admin Product Management feature allows administrators to manage products from a dedicated product management interface.
+
+The current implementation includes:
+
+* Displaying products in an admin table
+* Product statistics
+* Product search
+* Debounced product search
+* Product pagination
+* Stock filtering
+* Low-stock products
+* Out-of-stock products
+* Product creation
+* Product category selection
+* Product image upload
+* Product title management
+* Product description management
+* Product price management
+* Product stock management
+* Product editing
+* Product deactivation
+* Product status display
+* Product deletion/deactivation confirmation
+* Product rating and review count display
+
+The admin product table displays information such as:
+
+```text
+Product
+Category
+Price
+Stock
+Rating
+Reviews
+Status
+Actions
+```
+
+---
+
+## ➕ Admin Product Creation
+
+Administrators can create new products through a dedicated product creation interface.
+
+The product creation form supports:
+
+* Product category
+* Product title
+* Product description
+* Product price
+* Product stock
+* Product image
+
+The product image is uploaded using **Multer** and stored on the backend.
+
+The creation workflow follows:
+
+```text
+Admin Product Form
+        ↓
+FormData
+        ↓
+Axios
+        ↓
+Express Route
+        ↓
+Multer
+        ↓
+Controller
+        ↓
+Service
+        ↓
+Repository
+        ↓
+MySQL
+```
+
+The image path is stored with the product information in the database.
+
+---
+
+## 🔎 Admin Product Search
+
+The Admin Product Management interface includes live product searching.
+
+The search request is triggered while the administrator types instead of requiring a separate search button.
+
+Example:
+
+```text
+Admin types:
+
+Redmi
+
+   ↓
+
+Wait for debounce period
+
+   ↓
+
+Search API
+
+   ↓
+
+Express
+
+   ↓
+
+MySQL
+
+   ↓
+
+Matching products
+```
+
+Debouncing is used to reduce unnecessary API requests while the administrator is typing.
+
+---
+
+## 📦 Admin Stock Management
+
+The Admin Product Management interface provides stock-based filtering.
+
+Administrators can view products based on their stock status.
+
+Current stock categories include:
+
+```text
+All Products
+     │
+     ├── In Stock
+     │
+     ├── Low Stock
+     │
+     └── Out of Stock
+```
+
+Products with low stock and products with no available stock can be displayed separately.
+
+The interface also displays the current stock status of each product.
+
+Example:
+
+```text
+Stock > 5
+    ↓
+In Stock
+
+1 - 5
+    ↓
+Low Stock
+
+0
+    ↓
+Out of Stock
+```
+
+---
+
+## ✏️ Admin Product Editing
+
+Administrators can edit product information directly from the product management interface.
+
+The current editing functionality supports updating:
+
+* Product title
+* Product price
+* Product stock
+
+The frontend detects which values were changed and sends the required updates to the backend.
+
+The update flow is:
+
+```text
+Admin
+  ↓
+Edit Product
+  ↓
+Detect Changed Fields
+  ↓
+Update API
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+MySQL
+```
+
+---
+
+## 🗑️ Product Deactivation
+
+Products are not physically deleted from the database.
+
+Instead, the project uses the `is_active` field to control product availability.
+
+Example:
+
+```text
+is_active = 1
+      ↓
+Active Product
+      ↓
+Available to customers
+```
+
+```text
+is_active = 0
+      ↓
+Inactive Product
+      ↓
+Removed from active product results
+```
+
+This approach preserves products that may already be referenced by historical orders.
+
+The Admin Product Management interface provides a deletion/deactivation action that changes the product's active state instead of removing the database record.
+
+---
+
+## 🏷️ Admin Category Integration
+
+The product creation interface retrieves available categories from the backend.
+
+Administrators select a category by its displayed name while the corresponding category ID is stored and sent to the backend.
+
+Example:
+
+```text
+Category Dropdown
+
+Smartphones
+Laptops
+Accessories
+Audio
+
+        ↓
+
+Selected Category
+
+        ↓
+
+category_id
+
+        ↓
+
+MySQL
+```
+
+This keeps the product-category relationship based on the relational database design.
+
+---
+
+## 🧠 Admin Product State Management
+
+The Admin Product feature uses **Zustand** for frontend state management.
+
+The Admin Product store manages data such as:
+
+```text
+Products
+Search Results
+Product Page Data
+Categories
+Loading State
+```
+
+The store also provides actions for:
+
+```text
+Fetch Products
+Search Products
+Fetch Categories
+Get Low Stock Products
+Get Out of Stock Products
+Create Product
+Update Product
+Delete / Deactivate Product
+```
+
+This keeps API communication and product state management separated from the UI components.
+
+---
+
+# 🔄 Admin Product Request Flow
+
+The Admin Product feature follows the same layered architecture used throughout the backend.
+
+```text
+React Admin Product Page
+          ↓
+Zustand Store
+          ↓
+Product API
+          ↓
+Express Route
+          ↓
+Controller
+          ↓
+Service
+          ↓
+Repository
+          ↓
+MySQL
+```
+
+For product image uploads, the request additionally passes through Multer:
+
+```text
+React
+  ↓
+FormData
+  ↓
+Axios
+  ↓
+Express
+  ↓
+Multer
+  ↓
+Controller
+  ↓
+Service
+  ↓
+Repository
+  ↓
+MySQL
+```
+
+---
+
+# 🧩 Admin Product UI
+
+The Admin Product interface is built using **React and Bootstrap**.
+
+The interface includes:
+
+* Responsive product table
+* Product statistics
+* Search interface
+* Stock filters
+* Product creation modal
+* Product editing modal
+* Product deletion/deactivation confirmation
+* Product image preview
+* Category dropdown
+* Product status badges
+* Product rating display
+* Review count display
+* Loading states
+* Toast notifications
+
+The interface uses Bootstrap for layout and styling and Lucide React for interface icons.
+
+
 The project includes an Admin section for managing the e-commerce application.
 
 The Admin interface is organized separately from the customer-facing application.
@@ -1082,7 +1481,9 @@ This project was built to practice several full-stack development concepts.
 
 The project is actively being developed and improved as a full-stack learning and portfolio project.
 
-Current major areas include:
+## Current major areas
+
+### Customer Features
 
 * Authentication
 * Home page
@@ -1099,6 +1500,7 @@ Current major areas include:
 * Pagination
 * Product reviews
 * User profiles
+* Avatar upload
 * Addresses
 * Saved cards
 * Shopping cart
@@ -1107,14 +1509,58 @@ Current major areas include:
 * Orders
 * Order history
 * Order details
+
+### Admin Features
+
 * Admin dashboard
+* Admin layout
+* Admin sidebar/navigation
 * Admin product management
-* Product active/inactive status
-* Database transactions
+* Product statistics
+* Product listing
+* Product creation
+* Product image upload
+* Product category selection
+* Product search
+* Debounced admin product search
+* Product pagination
+* Stock filtering
+* Low-stock products
+* Out-of-stock products
+* Product editing
+* Product title updates
+* Product price updates
+* Product stock updates
+* Product activation/deactivation
+* Product status indicators
+* Product rating and review information
+* Product deletion/deactivation confirmation
+* Admin product state management with Zustand
+* Toast notifications
+* Responsive Bootstrap-based admin UI
 
-Some parts of the application may still be under development or subject to architectural improvements.
+### Database & Backend
 
----
+* MySQL relational database
+* Foreign keys
+* SQL joins
+* Subqueries
+* Views
+* Stored procedures
+* Transactions
+* Aggregation
+* Pagination
+* Filtering
+* Product lifecycle management
+* Order and order-item relationships
+* File uploads using Multer
+* Email communication using Nodemailer
+* JWT authentication
+* Protected routes
+* Controller / Service / Repository architecture
+* Feature-Based Architecture
+
+Some Admin sections such as advanced user management, reports, settings, category administration, and full order administration are still under development.
 
 # 🎯 Project Goals
 
