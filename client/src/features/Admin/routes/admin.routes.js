@@ -1,18 +1,17 @@
 import Categories from "../pages/Categories";
-import Dashboard from "../pages/Dashboard";
-import Orders from "../pages/Orders";
-import Products from "../pages/Products";
+ import Orders from "../pages/Orders";
+import Products from "../Products/Pages/Products";
 import Settings from "../pages/Settings";
 import Users from "../pages/Users";
-import AdminHome from './../pages/AdminHome';
+import Dashboard from '../Dashboard/Pages/Dashboard';
 import Reports from './../pages/Reports';
-
+ 
 export const AdminRoutes = {
   path: "/admin",
   children: [
     {
       index: true,
-      element: <AdminHome />,
+      element: <Dashboard />,
     },
     {
       path: "dashboard",

@@ -24,8 +24,8 @@ BEGIN
         ON wishlist.product_id = product_card.p_id
         AND wishlist.user_id = p_user_id
 
+    WHERE product_card.stock > 0
     ORDER BY RAND()
-
     LIMIT p_offset, p_limit;
 
 END //

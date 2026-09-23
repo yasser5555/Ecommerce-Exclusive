@@ -1,3 +1,4 @@
+DROP PROCEDURE get_user_wishlist;
 DELIMITER / /
 CREATE PROCEDURE IF NOT EXISTS get_user_wishlist(
     IN p_user_id INT
@@ -12,7 +13,7 @@ BEGIN
     FROM product_card
     INNER JOIN wishlist
         ON wishlist.product_id = product_card.p_id
-    WHERE wishlist.user_id = p_user_id;
+    WHERE wishlist.user_id = p_user_id and stock >0;
 END //
 DELIMITER;
 CALL get_user_wishlist(1);

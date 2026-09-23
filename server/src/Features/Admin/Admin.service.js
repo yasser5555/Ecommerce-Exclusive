@@ -39,7 +39,7 @@ const deleteProductService = async (product_id) => {
     throw new Error(`error at Admin.repo.CreateProduct`);
   }
 };
-//
+
 const update_ProductService = async (column, New_value, product_id) => {
   try {
     const msg = await AdminRepo.update_Product(column, New_value, product_id);
@@ -68,14 +68,31 @@ const getAdminProductPageService = async () => {
   }
 };
 
-const Search_ProductService = async (Title) =>{
-try{
+const Search_ProductService = async (Title) => {
+  try {
     const data = await AdminRepo.Search_Product(Title);
-    return data
+    return data;
   } catch (error) {
     throw new Error(`error at Admin.repo.update_product ${error}`);
   }
-}
+};
+const getOutOfStockServices = async () => {
+  try {
+    const response = AdminRepo.getOutOfStock();
+    return response;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getOutOfStockServices ${error}`);
+  }
+};
+
+const getLowStockServices = async () => {
+  try {
+    const response = AdminRepo.getLowStock();
+    return response;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getLowStockServices ${error}`);
+  }
+};
 
 module.exports = {
   createProductService,
@@ -84,5 +101,7 @@ module.exports = {
   update_ProductService,
   getAdminDashboardService,
   getAdminProductPageService,
-  Search_ProductService
+  Search_ProductService,
+  getLowStockServices,
+  getOutOfStockServices,
 };

@@ -11,8 +11,8 @@ import {
 
 import { useProfile } from "../../features/Profile/Hooks/useProfile";
 import { useAuth } from "./../../features/auth/hooks/useAuth";
-import useWishlist from "../../features/Wishlist/Hooks/useWishlist";
-import useCartTable from "../../features/Cart/Hooks/useCartTable";
+import useWishlist from "../../features/User/Wishlist/Hooks/useWishlist";
+import useCartTable from "../../features/User/Cart/Hooks/useCartTable";
 import { FetchOnRender } from "../Utils/useFetch";
 
 export default function Navbar() {

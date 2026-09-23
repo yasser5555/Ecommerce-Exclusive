@@ -9,4 +9,4 @@ SELECT
     cart_items.quantity,
     (quantity * price) as sub_total
 FROM product_card
-    INNER JOIN cart_items on product_card.p_id = cart_items.product_id;
+    INNER JOIN cart_items on product_card.p_id = cart_items.product_id WHERE stock > 0;

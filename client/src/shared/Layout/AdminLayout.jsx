@@ -2,7 +2,8 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 
 import ProtectedRoute from "../../features/auth/routes/ProtectedRoute";
-import Sidebar from "../../features/Admin/Component/Sidebar";
+// import Sidebar from "../../features/Admin/Component/Sidebar";
+import Sidebar from "../Components/Sidebar";
 
 export default function AdminLayout() {
   return (

@@ -1,5 +1,5 @@
-const pool = require("../../shared/database/DB");
-const createProduct = async (
+const pool = require("../../shared/Database/DB");
+ const createProduct = async (
   category_id,
   title,
   description,
@@ -32,7 +32,7 @@ const getAllProduct = async () => {
 const deleteProduct = async (product_id) => {
   try {
     const [msg, x] = await pool.query(
-      `DELETE  from products WHERE products.id = ?;`,
+      `UPDATE products SET is_active = 0 WHERE id = ?;`,
       [product_id],
     );
     return msg;
@@ -82,7 +82,27 @@ const Search_Product = async (Tite) => {
     throw new Error(`error at Admin.repo.update_product ${error}`);
   }
 };
+ const getLowStock = async () => {
+  try {
+    const [Products, X] = await pool.query(
+      "SELECT *FROM products WHERE stock <= 5",
+    );
+    return Products;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getLowStock ${error}`);
+  }
+};
 
+  const getOutOfStock = async () => {
+  try {
+    const [Products, X] = await pool.query(
+      "SELECT *FROM products WHERE stock <= 0",
+    );
+    return Products;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getLowStock ${error}`);
+  }
+};
 module.exports = {
   createProduct,
   getAllProduct,
@@ -91,4 +111,6 @@ module.exports = {
   getAdminDashboard,
   getAdminProductPage,
   Search_Product,
+  getLowStock,
+  getOutOfStock,
 };
