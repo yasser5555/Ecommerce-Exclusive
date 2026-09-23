@@ -13,8 +13,6 @@ export default function OrderSummary({ cartProducts = [] }) {
   const { profile } = useProfileStore();
   const { selectedAddress, get_address } = useBillingDetails();
 
-  const { PayOrder } = useOrderStore();
-
   FetchOnRender(() => get_address());
 
   const {

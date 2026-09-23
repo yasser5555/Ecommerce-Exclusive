@@ -14,24 +14,17 @@ export default function CartTable({ userId }) {
     handleQuantity,
     handleDelete,
   } = useCartTable();
-
+  // ! Get user Data
   FetchOnRender(() => GetCart(userId), userId);
- 
-  if (isLoading) {
-    return (
-      <div className="text-center py-5">
-        <div className="spinner-border text-danger" role="status"></div>
-      </div>
-    );
-  }
 
+  // ! If there's no Product
   if (!cart || cart.length === 0) {
     return (
       <div className="text-center py-5">
         <h4 className="fw-bold">Your cart is empty</h4>
         <p className="text-secondary">Add some products to your cart.</p>
         <NavLink className="btn btn-danger" to={"/products"}>
-        to Shop
+          to Shop
         </NavLink>
       </div>
     );

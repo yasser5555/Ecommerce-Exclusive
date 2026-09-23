@@ -3,16 +3,12 @@ import { Tag, ArrowRight } from "lucide-react";
 
 export default function Coupon() {
     const [coupon, setCoupon] = useState("");
-
     const handleSubmit = (e) => {
         e.preventDefault();
-
         if (!coupon.trim()) {
             return;
         }
-
         console.log("Coupon entered:", coupon.trim());
-
         // Coupon API will be added later.
     };
 

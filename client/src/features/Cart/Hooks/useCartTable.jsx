@@ -9,6 +9,7 @@ export default function useCartTable() {
     updateProductQuantity,
     getUserCart,
   } = useCart();
+
   const GetCart = async (userId) => {
     try {
       await getUserCart(userId);
@@ -16,12 +17,12 @@ export default function useCartTable() {
       console.error(`error at Fetching user_Cart ${error}`);
     }
   };
- 
-  const handleQuantity = async (item, action ,userId) => {
+
+  const handleQuantity = async (item, action, userId) => {
     const success = await updateProductQuantity({
-      cart_id: item.cart_id,
-      user_id: userId,
-      quantity: 1, // Control how many is added or not Added
+      cart_id: item.cart_id, // ! which cart will be update
+      user_id: userId, // ! which user will update
+      quantity: 1, // ! Control how many is added or not Added
       action,
     });
     if (success) {
@@ -29,14 +30,14 @@ export default function useCartTable() {
     }
   };
 
-  const handleDelete = async (cartId , userId) => {
+  const handleDelete = async (cartId, userId) => {
     const success = await removeCartItem({
-      cart_id: cartId,
-      user_id: userId,
+      cart_id: cartId, // ! which cart will be deleted
+      user_id: userId, // ! which user will delete
     });
 
     if (success) {
-     GetCart(userId);
+      GetCart(userId);
     }
   };
   return {
@@ -46,6 +47,6 @@ export default function useCartTable() {
     updateProductQuantity,
     GetCart,
     handleQuantity,
-    handleDelete
+    handleDelete,
   };
 }

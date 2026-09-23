@@ -64,7 +64,7 @@ export default function ProductReviews({ productId }) {
               <div className="d-flex justify-content-between small">
                 <span className="text-muted"> Customer feedback </span>
                 <span className="fw-semibold">
-                  {reviews.length > 0 ? "Positive" : "-"}
+                  {reviews.length > 0 ? "Positive" : "Negative"}
                 </span>
               </div>
             </div>
@@ -150,7 +150,7 @@ export default function ProductReviews({ productId }) {
                         width="48"
                         height="48"
                         className="rounded-circle"
-                        style={{ objectFit: "cover" }}
+                        style={{ objectFit: "contain" }}
                       />
                     ) : (
                       <div
@@ -182,6 +182,12 @@ export default function ProductReviews({ productId }) {
                         </small>
 
                         {user?.id === review.user_id && (
+                          /*
+                           * here we will delete based on two things:
+                           * user_id: Ensuring that no user delete review of other user
+                           * review_id: which id user will delete
+                           * by using user_id and comparing it to review.user_id we will display delete btn if match
+                           */
                           <button
                             type="button"
                             className="btn btn-sm btn-outline-danger"
@@ -192,7 +198,7 @@ export default function ProductReviews({ productId }) {
                         )}
                       </div>
                     </div>
-                    <p className="text-secondary mb-0 mt-3 lh-lg">
+                    <p className="text-dark mb-0 mt-3 lh-lg">
                       {review.COMMENT}
                     </p>
                   </div>

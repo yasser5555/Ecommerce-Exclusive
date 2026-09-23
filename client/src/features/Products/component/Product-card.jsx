@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import useWishlist from "../../Wishlist/Hooks/useWishlist";
 import { useAuthStore } from "../../auth/store/auth.store";
 import useCartStore from "../../Cart/store/Cart.store";
+import { toast } from "react-toastify";
 
 function ProductCard({ product, callback, isactive }) {
+  const { cart, isLoading, removeCartItem, updateProductQuantity } =
+    useCartStore();
   // ! For Handling User wishList
   const { handleAddToWishlist, handleRemoveFromWishlist } = useWishlist();
   // ! Fetch User id for Product Reviews
@@ -38,13 +41,26 @@ function ProductCard({ product, callback, isactive }) {
   };
 
   const handleAddToCart = async () => {
-    // ! Sending Added data to store
+    // ! Check if the product already exists in the user's cart
+    const existingProduct = cart.find(
+      (item) => Number(item.product_id) === Number(product.p_id),
+    );
+
+    // ! If the product already exists, show a message and stop
+    if (existingProduct) {
+      toast.info("Product Already Added to your Cart");
+      return;
+    }
+
+    // ! If the product does not exist, add it to the cart with quantity 1
     await addProductToCart({
-      // ! Which product does user added it to his Cart
+      // ! Which product does the user want to add to the cart
       product_id: product.p_id,
-      // ! can be modifeied but logically 1
+
+      // ! The initial quantity is 1
       quantity: 1,
-      // ! Which user added this product to his Cart
+
+      // ! Which user is adding the product to the cart
       user_id: user?.id,
     });
   };
@@ -128,7 +144,7 @@ function ProductCard({ product, callback, isactive }) {
               } else if (Rating > star - 1) {
                 fillPercentage = (Rating - (star - 1)) * 100;
               }
-            /*
+              /*
             * assume that:
             * rating: 3.7 , star:4 
             ? fill percentage = (3.7-(4-1)) * 100 = (3.7-3) * 100 = 0.7 * 100 = 70% 
@@ -153,7 +169,6 @@ function ProductCard({ product, callback, isactive }) {
                     className="position-absolute top-0 star-filled start-0 overflow-hidden text-warning"
                     style={{
                       width: `${fillPercentage}%`,
-  
                     }}
                   >
                     <Star size={16} fill="currentColor" strokeWidth={1.5} />

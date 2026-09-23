@@ -7,12 +7,12 @@ import { FetchOnRender } from "../../../shared/Utils/useFetch";
 import useCartStore from "../../Cart/store/Cart.store";
 import { useAuthStore } from "../../auth/store/auth.store";
 import { useChangeTitle } from "../../../shared/Utils/useChangeTitle";
+import { toast } from "react-toastify";
 
 export default function Productdetails() {
-
   const [quantity, setQuantity] = useState(1);
   const { user } = useAuthStore();
-  const { addProductToCart } = useCartStore();
+  const { addProductToCart, cart } = useCartStore();
 
   const {
     product,
@@ -30,16 +30,25 @@ export default function Productdetails() {
 
   isExist();
 
- const handleAddToCart = async () => {
-  
+  const handleAddToCart = async () => {
+    // ! Check if the product already exists in the user's cart
+    const existingProduct = cart.find(
+      (item) => Number(item.product_id) === Number(product.p_id),
+    );
 
-  await addProductToCart({
-    product_id: product.p_id,
-    quantity: quantity,
-    user_id: user?.id,
-  });
-};
-  useChangeTitle({title:`${product?.name}`})
+    // ! If the product already exists, show a message and stop
+    if (existingProduct) {
+      toast.info("Product Already Added to your Cart");
+      return;
+    }
+
+    await addProductToCart({
+      product_id: product.p_id,
+      quantity: quantity,
+      user_id: user?.id,
+    });
+  };
+  useChangeTitle({ title: `${product?.name}` });
   return (
     <div className="container py-5">
       <div className="row g-5">

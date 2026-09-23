@@ -14,18 +14,13 @@ export default function BillingDetails() {
     handleSelectAddress,
     selectAddress,
   } = useBillingDetails();
-//  console.log(`user profile is ${profile}`);
- 
-  // console.log(`user address is ${userAddresses}`);
+  
 useEffect(() => {
   if (userAddresses?.length > 0) {
     selectAddress();
   }
 }, [userAddresses]);
-  // FetchOnRender(() => get_address(), );
-
   FetchOnRender(() => selectAddress(), userAddresses);
-
   return (
     <div className="col-lg-7">
       <div className="mb-4">
@@ -34,14 +29,12 @@ useEffect(() => {
           Complete your information to place your order.
         </p>
       </div>
-
       <form>
         <div className="row g-3 mb-4">
           <div className="col-md-6">
             <label className="form-label small fw-medium">
               First Name <span className="text-danger">*</span>
             </label>
-
             <input
               type="text"
               value={profile?.first_name ?? ""}
@@ -49,12 +42,10 @@ useEffect(() => {
               readOnly
             />
           </div>
-
           <div className="col-md-6">
             <label className="form-label small fw-medium">
               Last Name <span className="text-danger">*</span>
             </label>
-
             <input
               type="text"
               value={profile?.last_name ?? ""}
