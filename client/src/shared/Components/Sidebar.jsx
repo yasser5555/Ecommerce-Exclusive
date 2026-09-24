@@ -1,5 +1,6 @@
+ 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 import {
   Home,
@@ -12,7 +13,11 @@ import {
   ExternalLink,
 } from "lucide-react";
 
+import { useChangeTitle } from "../../shared/Utils/useChangeTitle";
+
 export default function Sidebar({ sidebarOpen }) {
+  const location = useLocation();
+
   const navItems = [
     {
       label: "Dashboard",
@@ -51,6 +56,14 @@ export default function Sidebar({ sidebarOpen }) {
     },
   ];
 
+  const currentPage = navItems.find(
+    (item) => item.path === location.pathname,
+  );
+
+  useChangeTitle({
+    title: currentPage?.label || "Admin",
+  });
+
   return (
     <aside
       className="bg-white border-end d-flex flex-column"
@@ -71,16 +84,12 @@ export default function Sidebar({ sidebarOpen }) {
           flexDirection: "column",
         }}
       >
-        {/* Logo */}
-
         <div className="px-4 py-4 border-bottom">
           <h5 className="fw-bold mb-0">
             Execlusive
             <span className="text-danger"> Admin</span>
           </h5>
         </div>
-
-        {/* Main Navigation */}
 
         <div className="flex-grow-1 p-3 overflow-auto">
           <div className="text-uppercase text-muted small fw-semibold px-2 mb-2">
@@ -111,8 +120,6 @@ export default function Sidebar({ sidebarOpen }) {
             })}
           </nav>
         </div>
-
-        {/* Admin Profile */}
 
         <div className="border-top p-3">
           <div className="d-flex align-items-center gap-3">

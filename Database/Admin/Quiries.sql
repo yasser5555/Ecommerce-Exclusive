@@ -55,4 +55,19 @@ SELECT COUNT(*) as out_of_stock FROM products WHERE stock <= 0;
 SELECT * FROM products WHERE title LIKE "%red%"  ORDER BY RAND() LIMIT 10;
 SELECT * FROM products;
 UPDATE products SET is_active = 1 WHERE id = 1;
-SELECT * FROM products WHERE id = 1
+SELECT * FROM products WHERE id = 1;
+
+SELECT COUNT(*) as Total_Categories FROM categories;
+SELECT COUNT(category_id) as Total_products FROM products;
+-- 
+SELECT 
+    categories.name,
+    COUNT(products.id) AS product_count
+FROM products
+INNER JOIN categories 
+    ON products.category_id = categories.id
+GROUP BY categories.id, categories.name
+ORDER BY product_count DESC;
+
+
+SELECT * FROM categories;

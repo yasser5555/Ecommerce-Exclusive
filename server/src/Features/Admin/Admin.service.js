@@ -78,17 +78,16 @@ const Search_ProductService = async (Title) => {
 };
 const getOutOfStockServices = async () => {
   try {
-    const response = AdminRepo.getOutOfStock();
+    const response = await AdminRepo.getOutOfStock();
     return response;
   } catch (error) {
     throw new Error(`error at Admin.repo.getOutOfStockServices ${error}`);
   }
 };
 
-
 const getLowStockServices = async () => {
   try {
-    const response = AdminRepo.getLowStock();
+    const response =  await AdminRepo.getLowStock();
     return response;
   } catch (error) {
     throw new Error(`error at Admin.repo.getLowStockServices ${error}`);
@@ -96,7 +95,7 @@ const getLowStockServices = async () => {
 };
 const update_productServices = async (column, New_value, product_id) => {
   try {
-    const response = AdminRepo.update_product(column, New_value, product_id);
+    const response = await AdminRepo.update_product(column, New_value, product_id);
     return response;
   } catch (error) {
     throw new Error(`error at Admin.Services.update_productServices ${error}`);
@@ -105,12 +104,51 @@ const update_productServices = async (column, New_value, product_id) => {
 
 const GetCatogeriesServices = async () => {
   try {
-    const response = AdminRepo.GetCatogeries();
+    const response = await AdminRepo.GetCatogeries();
     return response;
   } catch (error) {
     throw new Error(`error at Admin.Services.GetCatogeries ${error}`);
   }
-}
+};
+
+const getCatogeryPageService = async () => {
+  try {
+    const response = await AdminRepo.getCatogeryPage();
+    return response;
+  } catch (error) {
+    throw new Error(`error at Admin.Services.getCatogeryPageService ${error}`);
+  }
+};
+
+const CreateCatogeryServices = async (name) => {
+  try {
+    const response = await AdminRepo.CreateCatogery(name);
+    return response;
+  } catch (error) {
+    console.error(`error at Admin.Services..getCatogeryPage ${error.message}`);
+  }
+};
+const DeleteCatogeryServices = async (category_id) => {
+  try {
+    const response = await AdminRepo.DeleteCatogery(category_id);
+    return response;
+  } catch (error) {
+    console.error(
+      `error at Admin.Services.DeleteCatogeryServices ${error.message}`,
+    );
+  }
+};
+const updateCategeryNameServices = async (newName, category_id) => {
+  try {
+    const response = await AdminRepo.updateCategeryName(newName, category_id);
+    return response;
+  } catch (error) {
+    console.error(
+      `error at Admin.Services.updateCategeryNameServices ${error.message}`,
+    );
+  }
+};
+
 module.exports = {
   createProductService,
   getAllProductService,
@@ -123,4 +161,8 @@ module.exports = {
   getOutOfStockServices,
   update_productServices,
   GetCatogeriesServices,
+  getCatogeryPageService,
+  CreateCatogeryServices,
+  DeleteCatogeryServices,
+  updateCategeryNameServices,
 };

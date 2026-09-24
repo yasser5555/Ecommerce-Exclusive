@@ -117,16 +117,65 @@ const deleteProductController = async (req, res) => {
       .json({ msg: `error at Adminservice.deleteProductController` });
   }
 };
-const GetCatogeriesController = async (req,res)=>{
+const GetCatogeriesController = async (req, res) => {
   try {
     const response = await Adminservice.GetCatogeriesServices();
     res.status(200).json(response);
   } catch (error) {
     res
       .status(500)
-      .json({ msg: `error at Adminservice.deleteProductController` });
+      .json({ msg: `error at Admin.Controller.deleteProductController` });
   }
-}
+};
+
+const getCatogeryPageController = async (req, res) => {
+  try {
+    const response = await Adminservice.getCatogeryPageService();
+    res.status(200).json(response);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: `error at Admin.Controller.getCatogeryPageController` });
+  }
+};
+
+const CreateCatogeryController = async (req, res) => {
+  try {
+    const response = await Adminservice.CreateCatogeryServices(req.body.name);
+    res.status(200).json(response);
+  } catch (error) {
+    (res.status(500),
+      json({
+        msg: `error at Admin.Controller.CreateCatogeryController ${error.message}`,
+      }));
+  }
+};
+
+const DeleteCatogeryController = async (req, res) => {
+  try {
+    const response = await Adminservice.DeleteCatogeryServices(
+      req.body.category_id,
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.CreateCatogeryController ${error.message}`,
+    });
+  }
+};
+const updateCategeryNameController = async (req, res) => {
+  try {
+    const response = await Adminservice.updateCategeryNameServices(
+      req.body.newName,
+      req.body.category_id,
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    console.error(
+      `error at Admin.Controller.updateCategeryNameController ${error.message}`,
+    );
+  }
+};
 module.exports = {
   createProductController,
   getAllProductController,
@@ -137,5 +186,9 @@ module.exports = {
   getOutOfStockController,
   getLowStockController,
   deleteProductController,
-  GetCatogeriesController
+  GetCatogeriesController,
+  getCatogeryPageController,
+  CreateCatogeryController,
+  DeleteCatogeryController,
+  updateCategeryNameController,
 };

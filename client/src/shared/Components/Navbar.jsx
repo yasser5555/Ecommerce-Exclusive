@@ -1,5 +1,6 @@
+ 
 import React, { useEffect } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import {
   Heart,
   ShoppingCart,
@@ -14,8 +15,11 @@ import { useAuth } from "./../../features/auth/hooks/useAuth";
 import useWishlist from "../../features/User/Wishlist/Hooks/useWishlist";
 import useCartTable from "../../features/User/Cart/Hooks/useCartTable";
 import { FetchOnRender } from "../Utils/useFetch";
+import { useChangeTitle } from "../Utils/useChangeTitle";
 
 export default function Navbar() {
+  const location = useLocation();
+
   const { cart, GetCart } = useCartTable();
   const { wishlist } = useWishlist();
   const { profile, fetchProfile } = useProfile();
@@ -58,6 +62,24 @@ export default function Navbar() {
     },
   ];
 
+  const pageTitles = {
+    "/home": "Home",
+    "/products": "Shop",
+    "/about": "About",
+    "/contact": "Contact",
+    "/wishlist": "Wishlist",
+    "/cart": "Cart",
+    "/settings": "Setting",
+    "/profile": "Profile",
+    "/myOrders": "My Orders",
+  };
+
+  const currentTitle = pageTitles[location.pathname] || "Exclusive";
+
+  useChangeTitle({
+    title: currentTitle,
+  });
+
   useEffect(() => {
     const FetchProfile = async () => {
       try {
@@ -75,12 +97,13 @@ export default function Navbar() {
   return (
     <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
-        {/* Logo */}
-        <NavLink className={`navbar-brand fw-bold fs-4  text-dark`} to="/home">
+        <NavLink
+          className="navbar-brand fw-bold fs-4 text-dark"
+          to="/home"
+        >
           Exclusive
         </NavLink>
 
-        {/* Mobile Toggle */}
         <button
           className="navbar-toggler"
           type="button"
@@ -93,8 +116,10 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div className="collapse navbar-collapse" id="navbarContent">
-          {/* Navigation */}
+        <div
+          className="collapse navbar-collapse"
+          id="navbarContent"
+        >
           <ul className="navbar-nav me-auto align-items-lg-center">
             {navLinks.map((link) => (
               <li className="nav-item" key={link.path}>
@@ -102,7 +127,9 @@ export default function Navbar() {
                   to={link.path}
                   className={({ isActive }) =>
                     `nav-link px-3 ${
-                      isActive ? "active text-danger fw-semibold" : "text-dark"
+                      isActive
+                        ? "active text-danger fw-semibold"
+                        : "text-dark"
                     }`
                   }
                 >
@@ -112,10 +139,8 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* Right Side */}
           <div className="d-flex flex-column flex-lg-row align-items-lg-center gap-3">
             <div className="d-flex align-items-lg-center align-items-baseline justify-content-lg-center gap-4">
-              {/* Wishlist */}
               <NavLink
                 to="/wishlist"
                 className={({ isActive }) =>
@@ -132,7 +157,6 @@ export default function Navbar() {
                 </span>
               </NavLink>
 
-              {/* Cart */}
               <NavLink
                 to="/cart"
                 className={({ isActive }) =>
@@ -149,7 +173,6 @@ export default function Navbar() {
                 </span>
               </NavLink>
 
-              {/* Profile */}
               <div className="dropdown">
                 <button
                   className="btn p-0 border-0 bg-transparent dropdown-toggle"
@@ -170,7 +193,10 @@ export default function Navbar() {
                       }}
                     />
                   ) : (
-                    <UserCircle size={35} strokeWidth={1.5} />
+                    <UserCircle
+                      size={35}
+                      strokeWidth={1.5}
+                    />
                   )}
                 </button>
 
@@ -184,7 +210,9 @@ export default function Navbar() {
                           to={link.path}
                           className={({ isActive }) =>
                             `dropdown-item d-flex align-items-center gap-2 ${
-                              isActive ? "active bg-danger text-white" : ""
+                              isActive
+                                ? "active bg-danger text-white"
+                                : ""
                             }`
                           }
                         >
@@ -213,3 +241,4 @@ export default function Navbar() {
     </nav>
   );
 }
+ 
