@@ -2,7 +2,7 @@
 DESCRIBE orders;
 
 DELETE FROM orders;
-
+SELECT * FROM user_order;
 CREATE OR REPLACE VIEW user_order AS
 SELECT
     orders.id AS order_id,

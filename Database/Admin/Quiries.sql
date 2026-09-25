@@ -44,30 +44,70 @@ where
     stock < 10;
 
 SELECT orders.id, users.first_name, users.first_name, orders.created_at, orders.total_price, orders.status
-from orders
+from
+    orders
     INNER JOIN users on orders.user_id = users.id
-    INNER JOIN order_items on orders.id = order_items.order_id   order by RAND() limit 5 ;
-    SELECT * FROM orders;
-    -- enum('pending','processing','shipped','delivered','cancelled')
+    INNER JOIN order_items on orders.id = order_items.order_id
+order by RAND()
+limit 5;
+
+SELECT * FROM orders;
+-- enum('pending','processing','shipped','delivered','cancelled')
 SELECT COUNT(*) FROM products;
+
 SELECT COUNT(*) FROM products WHERE stock > 0;
+
 SELECT COUNT(*) as out_of_stock FROM products WHERE stock <= 0;
-SELECT * FROM products WHERE title LIKE "%red%"  ORDER BY RAND() LIMIT 10;
+
+SELECT *
+FROM products
+WHERE
+    title LIKE "%red%"
+ORDER BY RAND()
+LIMIT 10;
+
 SELECT * FROM products;
+
 UPDATE products SET is_active = 1 WHERE id = 1;
+
 SELECT * FROM products WHERE id = 1;
 
 SELECT COUNT(*) as Total_Categories FROM categories;
+
 SELECT COUNT(category_id) as Total_products FROM products;
--- 
-SELECT 
-    categories.name,
-    COUNT(products.id) AS product_count
+--
+SELECT categories.name, COUNT(products.id) AS product_count
 FROM products
-INNER JOIN categories 
-    ON products.category_id = categories.id
-GROUP BY categories.id, categories.name
+    INNER JOIN categories ON products.category_id = categories.id
+GROUP BY
+    categories.id,
+    categories.name
 ORDER BY product_count DESC;
 
-
 SELECT * FROM categories;
+
+SELECT COUNT(*) as total_orders FROM orders;
+
+SELECT COUNT(*) as Pending FROM orders WHERE status = "Pending";
+
+SELECT COUNT(*) as Pending FROM orders WHERE status = "Delivered";
+
+SELECT SUM(total_price) as Pending FROM orders;
+
+SELECT orders.id, users.first_name, users.last_name, orders.created_at, orders.total_price, orders.status
+from orders
+    INNER join users on orders.user_id = users.id
+ORDER BY RAND();
+
+SELECT * from user_order;
+
+SELECT * from users;
+
+SELECT * FROM credit_card;
+
+SELECT * FROM addresses;
+
+SELECT * FROM user_order WHERE order_id = 333;
+SELECT * FROM users WHERE users.id = 1;
+SELECT * from orders WHERE orders.id =333;
+SELECT * from addresses WHERE user_id =1;

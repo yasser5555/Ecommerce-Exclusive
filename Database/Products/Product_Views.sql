@@ -9,10 +9,7 @@ SELECT
     categories.id AS cat_id,
     products.product_image AS image,
     products.title AS name,
-    COALESCE(
-        categories.name,
-        'Uncategorized'
-    ) AS category,
+    categories.name as category,
     products.old_price AS price,
     products.description,
     products.stock,
@@ -23,7 +20,7 @@ SELECT
     COUNT(product_reviews.id) AS review_count
 FROM
     products
-    LEFT JOIN categories ON products.category_id = categories.id
+    INNER JOIN categories ON products.category_id = categories.id
     AND categories.is_category_active = 1
     LEFT JOIN product_reviews ON products.id = product_reviews.product_id
 WHERE

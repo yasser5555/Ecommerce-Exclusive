@@ -10,7 +10,7 @@ export const OrderRoutes = {
       element: <MyOrders />,
     },
     { 
-      path: "orderDetials/:orderID", 
+      path: "orderDetials/:order_id", 
       element: <OrderDetails />   
     },
     { 

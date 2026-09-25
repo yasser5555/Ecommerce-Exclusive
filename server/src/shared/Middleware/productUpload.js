@@ -2,6 +2,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 
+// Define the directory path for product image uploads
 const uploadPath = "server/src/uploads/products";
 
 if (!fs.existsSync(uploadPath)) {

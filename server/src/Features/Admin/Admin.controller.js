@@ -176,6 +176,30 @@ const updateCategeryNameController = async (req, res) => {
     );
   }
 };
+
+const getOrderPageController = async (req, res) => {
+  try {
+    const response = await Adminservice.getOrderPageServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ msg: `error at Admin.Controller.getOrderPageController` });
+  }
+};
+
+const getAdminOrderDetailsController = async (req, res) => {
+  try {
+    const order_id = req.params.order_id ;// || req.params.id;
+    const response = await Adminservice.getAdminOrderDetailsService(req.params.order_id);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getAdminOrderDetailsController ${error.message}`,
+    });
+  }
+};
+
 module.exports = {
   createProductController,
   getAllProductController,
@@ -191,4 +215,6 @@ module.exports = {
   CreateCatogeryController,
   DeleteCatogeryController,
   updateCategeryNameController,
+  getOrderPageController,
+  getAdminOrderDetailsController,
 };

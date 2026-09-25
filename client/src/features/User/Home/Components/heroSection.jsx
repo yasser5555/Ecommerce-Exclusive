@@ -125,9 +125,10 @@ export default function HeroSection() {
       {!isLoading && !error && heroSection.length > 0 && (
         <div
           id="heroCarousel"
+          
           className="carousel slide overflow-hidden rounded-4 shadow-sm"
           data-bs-ride="carousel"
-          data-bs-interval="5000"
+          data-bs-interval="3000"
         >
           {/* Indicators */}
           <div className="carousel-indicators  mb-3">
@@ -135,6 +136,7 @@ export default function HeroSection() {
               <button
                 key={product.p_id}
                 type="button"
+                
                 data-bs-target="#heroCarousel"
                 data-bs-slide-to={index}
                 className={`bg-black ${index === 0 ? "active" : ""}`}

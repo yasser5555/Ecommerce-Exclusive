@@ -10,6 +10,7 @@ app.use(express.json());
 // POST /seed
 // =====================================================
 
+// Seed product reviews in database with transaction and rollback support
 app.post("/seed_Reviews", async (req, res) => {
   let connection;
   try {
@@ -122,6 +123,7 @@ app.post("/seed_Reviews", async (req, res) => {
     // 4. REVIEW GENERATOR
     // =====================================================
 
+    // Generate weighted random rating favoring positive reviews
     function generateRating() {
       /*
        * Weighted ratings.
@@ -142,6 +144,7 @@ app.post("/seed_Reviews", async (req, res) => {
       ]);
     }
 
+    // Select review feedback comment based on rating value
     function generateComment(rating) {
       switch (rating) {
         case 5:

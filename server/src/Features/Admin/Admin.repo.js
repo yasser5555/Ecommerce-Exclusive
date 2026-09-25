@@ -153,6 +153,41 @@ const updateCategeryName = async (newName, category_id) => {
   }
 };
 
+const getOrderPage = async() =>{
+  try {
+    const [PageData , X] = await pool.execute("call GetAdminOrderStatistics()");
+    return PageData;
+  } catch (error) {
+    console.error(`error at Admin.repo.getOrderPage   ${error.message}`);
+  }
+}
+
+const getAdminOrderDetails = async (order_id) => {
+  try {
+    const [orderDetails] = await pool.query(
+      `SELECT 
+          user_order.*, 
+          users.first_name,
+          users.last_name,
+          users.email,
+          users.phone_number,
+          addresses.street_number,
+          addresses.city,
+          addresses.country
+       FROM user_order
+       INNER JOIN users ON user_order.user_id = users.id
+       INNER JOIN addresses ON users.id = addresses.user_id
+       WHERE user_order.order_id = ?;`,
+      [order_id],
+    );
+    return orderDetails;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.repo.getAdminOrderDetails ${error.message || error}`,
+    );
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProduct,
@@ -168,4 +203,6 @@ module.exports = {
   DeleteCatogery,
   CreateCatogery,
   updateCategeryName,
+  getOrderPage,
+  getAdminOrderDetails,
 };

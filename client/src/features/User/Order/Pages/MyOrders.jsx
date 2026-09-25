@@ -1,15 +1,17 @@
 import {
-  Search,
   ShoppingCart,
   Package,
   Truck,
   CreditCard,
   ChevronLeft,
   ChevronRight,
+  Search,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useChangeTitle } from "./../../../../shared/Utils/useChangeTitle";
 import { useMyOrders } from "../Hooks/useMyOrders";
+// Import OrderSearch component
+import OrderSearch from "../Components/OrderSearch";
 
 export default function MyOrders() {
   useChangeTitle({ title: "My orders" });
@@ -29,6 +31,7 @@ export default function MyOrders() {
     handlePageChange,
     handleSearchChange,
     clearSearch,
+    isloading,
   } = useMyOrders();
   return (
     <div className="bg-light min-vh-100">
@@ -66,32 +69,13 @@ export default function MyOrders() {
               </div>
             </div>
 
-            {/* ================= SEARCH ================= */}
-            <div className="bg-white p-3 mb-4 shadow-sm">
-              <div className="input-group">
-                <span className="input-group-text bg-light border-0">
-                  <Search size={16} />
-                </span>
-
-                <input
-                  type="text"
-                  value={search}
-                  onChange={handleSearchChange}
-                  className="form-control bg-light border-0"
-                  placeholder="Search by product name..."
-                />
-
-                {search && (
-                  <button
-                    type="button"
-                    className="btn btn-light border-0"
-                    onClick={clearSearch}
-                  >
-                    ×
-                  </button>
-                )}
-              </div>
-
+            {/* ================= SEARCH COMPONENT ================= */}
+            <OrderSearch
+              search={search}
+              onSearchChange={handleSearchChange}
+              onClear={clearSearch}
+              totalOrders={orders.length}
+            >
               {/* ================= FILTERS ================= */}
               <div className="d-flex gap-2 mt-3 flex-wrap">
                 <button className="btn btn-danger btn-sm rounded-pill px-3">
@@ -114,20 +98,10 @@ export default function MyOrders() {
                   Cancelled
                 </button>
               </div>
-            </div>
-
-            {/* ================= SEARCH RESULT ================= */}
-            {search.trim() !== "" && (
-              <div className="mb-3">
-                <small className="text-secondary">
-                  Search results for{" "}
-                  <strong className="text-dark">"{search}"</strong> (
-                  {orders.length} {orders.length === 1 ? "order" : "orders"})
-                </small>
-              </div>
-            )}
+            </OrderSearch>
 
             {/* ================= ORDERS ================= */}
+            
             {currentOrders.length > 0 ? (
               currentOrders.map((order) => (
                 <div className="border-0 shadow-sm mb-4" key={order.order_id}>
@@ -141,9 +115,12 @@ export default function MyOrders() {
                       </button>
 
                       <button
-                        onClick={() =>
-                          Navigate(`/myOrders/orderDetials/${order.order_id}`)
-                        }
+                        onClick={() => {
+                          const {order_id} = order 
+                          console.log(`Order id from myOrders is ${order_id}`);
+                          
+                          Navigate(`/myOrders/orderDetials/${order.order_id}`);
+                        }}
                         className="btn btn-outline-danger btn-sm"
                       >
                         View Details

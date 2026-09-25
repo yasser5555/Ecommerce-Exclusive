@@ -30,4 +30,7 @@ END //
 
 DELIMITER;
 
-CALL filter_Product ("electronics", 4,NULL ,NULL  )
+CALL filter_Product ("electronics", 4,NULL ,NULL  );
+
+select product_card.category , count(product_card.cat_id) as product_number from product_card GROUP BY category;
+SELECT * FROM categories;

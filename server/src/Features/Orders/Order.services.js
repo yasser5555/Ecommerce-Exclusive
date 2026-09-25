@@ -45,8 +45,36 @@ const getTotalPayment = async (order_id, user_id) => {
   }
 };
 
+// Search orders containing product by title or within specific order
+const search_Order = async (title, order_id) => {
+  try {
+    // Call repository to search orders
+    const result = await ordersRepo.search_Order(title, order_id);
+    // Return search result
+    return result;
+  } catch (error) {
+    // Throw error if service operation fails
+    throw new Error(`Error at Orders.Services.search_Order: ${error.message}`);
+  }
+};
+
+// Get order details by order_id
+const getOrderDetails = async (order_id) => {
+  try {
+    // Call repository to get order details
+    const result = await ordersRepo.getOrderDetails(order_id);
+    // Return order details result
+    return result;
+  } catch (error) {
+    // Throw error if service operation fails
+    throw new Error(`Error at Orders.Services.getOrderDetails: ${error.message}`);
+  }
+};
+
 module.exports = {
   CreateOrders,
   GetOrders,
   getTotalPayment,
+  getOrderDetails,
+  search_Order,
 };

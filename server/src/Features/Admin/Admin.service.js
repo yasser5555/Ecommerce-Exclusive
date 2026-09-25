@@ -148,6 +148,25 @@ const updateCategeryNameServices = async (newName, category_id) => {
     );
   }
 };
+const getOrderPageServices = async () => {
+  try {
+    const response = await AdminRepo.getOrderPage();
+    return response;
+  } catch (error) {
+    throw new Error(`error at Admin.Services.getOrderPageServices ${error}`);
+  }
+};
+
+const getAdminOrderDetailsService = async (order_id) => {
+  try {
+    const response = await AdminRepo.getAdminOrderDetails(order_id);
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getAdminOrderDetailsService ${error}`,
+    );
+  }
+};
 
 module.exports = {
   createProductService,
@@ -165,4 +184,6 @@ module.exports = {
   CreateCatogeryServices,
   DeleteCatogeryServices,
   updateCategeryNameServices,
+  getOrderPageServices,
+  getAdminOrderDetailsService,
 };

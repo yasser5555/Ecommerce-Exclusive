@@ -151,3 +151,5 @@ where
 
 UPDATE products SET  stock = stock - 1  WHERE products.id = 1;
 SELECT * FROM products  WHERE products.id = 1;
+
+SELECT * FROM user_order WHERE products LIKE "%boAt%" ;

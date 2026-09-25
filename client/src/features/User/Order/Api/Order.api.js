@@ -60,3 +60,42 @@ export const payOrder = async ({ order_id, card_id }) => {
     throw error;
   }
 };
+
+// Search orders containing product by title or within order_id
+export const searchOrders = async ({ title, order_id }) => {
+  try {
+    // Send GET request to orders search endpoint with query params
+    const response = await axiosInstance.get("/orders/search", {
+      params: {
+        title: title || undefined,
+        order_id: order_id || undefined,
+      },
+    });
+    // Return response data
+
+    return response.data;
+  } catch (error) {
+    // Log error message to console
+    console.error(`There's an error at searchOrders API: ${error.message}`);
+    // Rethrow error for calling code to handle
+    throw error;
+  }
+};
+
+// Get order details by order_id
+export const getOrderDetails = async (order_id) => {
+  try {
+    // Send GET request to fetch order details by order_id
+    const response = await axiosInstance.get(`/orders/details/${order_id}`);
+    // Return response data
+
+     // console.log(`Current Response From api is ${response.data}`);
+    
+    return response.data;
+  } catch (error) {
+    // Log error message to console
+    console.error(`There's an error at getOrderDetails API: ${error.message}`);
+    // Rethrow error for calling code to handle
+    throw error;
+  }
+};

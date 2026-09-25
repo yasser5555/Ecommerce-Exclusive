@@ -20,6 +20,16 @@ router.get(
   protect,
   AdminController.getCatogeryPageController,
 );
+router.get(
+  "/get_order_Page",
+  protect,
+  AdminController.getOrderPageController,
+);
+router.get(
+  "/get_order_details/:order_id",
+  protect,
+  AdminController.getAdminOrderDetailsController,
+);
 
 router.patch("/", protect, AdminController.update_ProductController);
 router.patch(
