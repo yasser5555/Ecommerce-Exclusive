@@ -40,8 +40,8 @@ export const useAuthStore = create(
             isLoading: true,
             error: null,
           });
-            const data = await loginRequest(payload);
-           localStorage.setItem("token", data.token);
+          const data = await loginRequest(payload);
+          localStorage.setItem("token", data.token);
           set({
             user: data.user,
             token: data.token,
@@ -50,8 +50,8 @@ export const useAuthStore = create(
           });
           return data;
         } catch (error) {
-           set({
-            error: error.data.error,
+          set({
+            error: error?.response?.data?.message || error?.message || "Login failed",
             isLoading: false,
           });
 

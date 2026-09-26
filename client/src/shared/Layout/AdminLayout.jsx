@@ -9,7 +9,7 @@ export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <ProtectedRoute>
+    <ProtectedRoute requireAdmin={true}>
       <div className="d-flex min-vh-100 position-relative">
         
         {/* Sidebar */}

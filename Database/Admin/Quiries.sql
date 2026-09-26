@@ -111,3 +111,14 @@ SELECT * FROM user_order WHERE order_id = 333;
 SELECT * FROM users WHERE users.id = 1;
 SELECT * from orders WHERE orders.id =333;
 SELECT * from addresses WHERE user_id =1;
+SELECT * from user_order; ;
+SELECT COUNT(*) AS sold_count
+FROM user_order
+WHERE JSON_CONTAINS(
+    products,
+    JSON_OBJECT('product_id', 1)
+);
+DESCRIBE user_order;
+WHERE product_id = 1;SELECT count(product_id) as total_orders from orders where user_id = 1;
+
+SELECT * FROM users where users.id = 101;

@@ -167,6 +167,96 @@ const getAdminOrderDetailsService = async (order_id) => {
     );
   }
 };
+const getallusersServices = async () => {
+  try {
+    const response = await AdminRepo.getallusers();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getallusersServices ${error}`,
+    );
+  }
+};
+const getActiveUsersServices = async () => {
+  try {
+    const response = await AdminRepo.getActiveUsers();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getActiveUsersServices ${error}`,
+    );
+  }
+};
+const getBlockedUsersServices = async () => {
+  try {
+    const response = await AdminRepo.getBlockedUsers();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getBlockedUsersServices ${error}`,
+    );
+  }
+};
+const getAdminUsersServices = async () => {
+  try {
+    const response = await AdminRepo.getAdminUsers();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getAdminUsersServices ${error}`,
+    );
+  }
+};
+const getRegularUsersServices = async () => {
+  try {
+    const response = await AdminRepo.getRegularUsers();
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.getRegularUsersServices ${error}`,
+    );
+  }
+};
+const delete_userServices = async (user_id) => {
+  try {
+    const response = await AdminRepo.delete_user(user_id);
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.delete_userServices ${error}`,
+    );
+  } 
+};
+const update_user_statusServices = async (user_id, new_status) => {
+  try {
+    const response = await AdminRepo.update_user_status(user_id, new_status);
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.update_user_statusServices ${error}`,
+    );
+  }
+};
+const search_userServices = async (searchTerm) => {
+  try {
+    const response = await AdminRepo.search_user(searchTerm);
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.search_userServices ${error}`,
+    );
+  }
+};
+const modify_user_roleServices = async (user_id, new_role) => {
+  try {
+    const response = await AdminRepo.modify_user_role(user_id, new_role);
+    return response;
+  } catch (error) {
+    throw new Error(
+      `error at Admin.Services.modify_user_roleServices ${error}`,
+    );
+  }
+};
 
 module.exports = {
   createProductService,
@@ -186,4 +276,13 @@ module.exports = {
   updateCategeryNameServices,
   getOrderPageServices,
   getAdminOrderDetailsService,
+  getallusersServices,
+  getActiveUsersServices,
+  getBlockedUsersServices,
+  getAdminUsersServices,
+  getRegularUsersServices,
+  delete_userServices,
+  update_user_statusServices,
+  search_userServices,
+  modify_user_roleServices,
 };

@@ -21,6 +21,13 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+alter table users add COLUMN status ENUM('active', 'blocked') DEFAULT 'active';
+alter table users add COLUMN role ENUM('admin', 'user') DEFAULT 'user';
+select * from users; -- get all users
+select * from users WHERE status = 'active'; -- get all active users
+select * from users WHERE status = 'blocked'; -- get all blocked users
+select * from users WHERE role = 'admin'; -- get all admin users
+select * from users WHERE role = 'user'; -- get all admin users
 
 -- ===================================
 -- CATEGORIES

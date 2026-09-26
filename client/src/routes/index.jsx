@@ -15,6 +15,8 @@ import { ContactRoutes } from "../features/User/Contact/routes/contact.routes";
 import { SettingsRoutes } from "../features/User/Settings/routes/setting.routes";
 import { AdminRoutes } from "../features/Admin/routes/admin.routes";
 import AdminLayout from "../shared/Layout/AdminLayout";
+import BlockedLayout from "../shared/Layout/BlockedLayout";
+ import { BlockedRoutes } from "../features/Blocked/Routes/blocked.routes";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -39,6 +41,10 @@ export const router = createBrowserRouter([
   {
     element:<AdminLayout/>,
     children:[AdminRoutes]
+  },
+  {
+    element:<BlockedLayout/>,
+    children:[BlockedRoutes]
   }
 ], 
  

@@ -114,7 +114,7 @@ const GetCatogeries = async () => {
 };
 const getCatogeryPage = async () => {
   try {
-    const [PageData , X] = await pool.execute("call GetCategoryStatistics()");
+    const [PageData, X] = await pool.execute("call GetCategoryStatistics()");
     return PageData;
   } catch (error) {
     console.error(`error at Admin.repo.getCatogeryPage   ${error.message}`);
@@ -122,9 +122,10 @@ const getCatogeryPage = async () => {
 };
 const CreateCatogery = async (name) => {
   try {
-    const response = await  pool.execute("insert into categories (name) values(?)", [
-      name,
-    ]);
+    const response = await pool.execute(
+      "insert into categories (name) values(?)",
+      [name],
+    );
     return response;
   } catch (error) {
     console.error(`error at Admin.repo.getCatogeryPage   ${error.message}`);
@@ -132,7 +133,7 @@ const CreateCatogery = async (name) => {
 };
 const DeleteCatogery = async (category_id) => {
   try {
-    const response = await  pool.execute(
+    const response = await pool.execute(
       "update categories set categories.is_category_active = 0 where id = ?",
       [category_id],
     );
@@ -143,7 +144,7 @@ const DeleteCatogery = async (category_id) => {
 };
 const updateCategeryName = async (newName, category_id) => {
   try {
-    const response = await  pool.execute(
+    const response = await pool.execute(
       "update categories set name = ? where id = ?",
       [newName, category_id],
     );
@@ -153,14 +154,14 @@ const updateCategeryName = async (newName, category_id) => {
   }
 };
 
-const getOrderPage = async() =>{
+const getOrderPage = async () => {
   try {
-    const [PageData , X] = await pool.execute("call GetAdminOrderStatistics()");
+    const [PageData, X] = await pool.execute("call GetAdminOrderStatistics()");
     return PageData;
   } catch (error) {
     console.error(`error at Admin.repo.getOrderPage   ${error.message}`);
   }
-}
+};
 
 const getAdminOrderDetails = async (order_id) => {
   try {
@@ -188,6 +189,109 @@ const getAdminOrderDetails = async (order_id) => {
   }
 };
 
+
+const getallusers = async () => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users`,
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getallusers ${error.message || error}`);
+  }
+};
+
+const getActiveUsers = async () => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users WHERE status = 'active'`,
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getActiveUsers ${error.message || error}`);
+  }
+};
+
+const getBlockedUsers = async () => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users WHERE status = 'blocked'`,
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getBlockedUsers ${error.message || error}`);
+  }
+};
+
+const getAdminUsers = async () => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users WHERE role = 'admin'`,
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getAdminUsers ${error.message || error}`);
+  }
+};
+
+const getRegularUsers = async () => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users WHERE role = 'user'`,
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.getRegularUsers ${error.message || error}`);
+  }
+};
+
+const delete_user = async (user_id) => {
+  try {
+    const [result] = await pool.query(
+      `DELETE FROM users WHERE id = ?`,
+      [user_id],
+    );
+    return result;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.delete_user ${error.message || error}`);
+  } 
+};
+
+const update_user_status = async (user_id, new_status) => {
+  try {
+    const [result] = await pool.query(
+      `UPDATE users SET status = ? WHERE id = ?`,
+      [new_status, user_id],
+    );
+    return result;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.update_user_status ${error.message || error}`);
+  }
+};
+
+const search_user = async (searchTerm) => {
+  try {
+    const [users] = await pool.query(
+      `SELECT * FROM users WHERE first_name LIKE ? OR last_name like ? OR email LIKE ?`,
+      [`%${searchTerm}%`, `%${searchTerm}%`, `%${searchTerm}%`],
+    );
+    return users;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.search_user ${error.message || error}`); 
+  }
+};
+const modify_user_role = async (user_id, new_role) => {
+  try {
+    const [result] = await pool.query(
+      `UPDATE users SET role = ? WHERE id = ?`,
+      [new_role, user_id],
+    );
+    return result;
+  } catch (error) {
+    throw new Error(`error at Admin.repo.modify_user_role ${error.message || error}`);
+  }
+};
+
 module.exports = {
   createProduct,
   getAllProduct,
@@ -205,4 +309,13 @@ module.exports = {
   updateCategeryName,
   getOrderPage,
   getAdminOrderDetails,
+  getallusers,
+  getActiveUsers,
+  getBlockedUsers,
+  getAdminUsers,
+  getRegularUsers,
+  delete_user,
+  update_user_status,
+  search_user,
+  modify_user_role
 };

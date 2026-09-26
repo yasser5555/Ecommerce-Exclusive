@@ -190,12 +190,114 @@ const getOrderPageController = async (req, res) => {
 
 const getAdminOrderDetailsController = async (req, res) => {
   try {
-    const order_id = req.params.order_id ;// || req.params.id;
-    const response = await Adminservice.getAdminOrderDetailsService(req.params.order_id);
+    const order_id = req.params.order_id; // || req.params.id;
+    const response = await Adminservice.getAdminOrderDetailsService(
+      req.params.order_id,
+    );
     res.status(200).json(response);
   } catch (error) {
     res.status(500).json({
       msg: `error at Admin.Controller.getAdminOrderDetailsController ${error.message}`,
+    });
+  }
+};
+
+const getallusersController = async (req, res) => {
+  try {
+    const response = await Adminservice.getallusersServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getallusersController ${error.message}`,
+    });
+  }
+};
+const getActiveUsersController = async (req, res) => {
+  try {
+    const response = await Adminservice.getActiveUsersServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getActiveUsersController ${error.message}`,
+    });
+  }
+};
+const getBlockedUsersController = async (req, res) => {
+  try {
+    const response = await Adminservice.getBlockedUsersServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getBlockedUsersController ${error.message}`,
+    });
+  }
+};
+const getAdminUsersController = async (req, res) => {
+  try {
+    const response = await Adminservice.getAdminUsersServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getAdminUsersController ${error.message}`,
+    });
+  }
+};
+const getRegularUsersController = async (req, res) => {
+  try {
+    const response = await Adminservice.getRegularUsersServices();
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.getRegularUsersController ${error.message}`,
+    });
+  }
+};
+const delete_userController = async (req, res) => {
+  try {
+    const response = await Adminservice.delete_userServices(req.body.user_id);
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.delete_userController ${error.message}`,
+    });
+  }
+};
+
+const update_user_statusController = async (req, res) => {
+  try {
+    const response = await Adminservice.update_user_statusServices(
+      req.body.user_id,
+      req.body.new_status,
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.update_user_statusController ${error.message}`,
+    });
+  }
+};
+const search_userController = async (req, res) => {
+  try {
+    const response = await Adminservice.search_userServices(
+      req.body.searchTerm,
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.search_userController ${error.message}`,
+    });
+  }
+};
+const modify_user_roleController = async (req, res) => {
+  try {
+    const response = await Adminservice.modify_user_roleServices(
+      req.body.user_id,
+      req.body.new_role,
+    );
+    res.status(200).json(response);
+  } catch (error) {
+    res.status(500).json({
+      msg: `error at Admin.Controller.modify_user_roleController ${error.message}`,
     });
   }
 };
@@ -217,4 +319,13 @@ module.exports = {
   updateCategeryNameController,
   getOrderPageController,
   getAdminOrderDetailsController,
+  getallusersController,
+  getActiveUsersController,
+  getBlockedUsersController,
+  getAdminUsersController,
+  getRegularUsersController,
+  delete_userController,
+  update_user_statusController,
+  search_userController,
+  modify_user_roleController,
 };

@@ -37,6 +37,7 @@ GROUP BY
     products.stock
 ORDER BY products.id;
 
-SELECT * from product_card;
+SELECT * from product_card WHERE name like '%Redmi%';
+SELECT * from categories;
 
 DESCRIBE product_card;

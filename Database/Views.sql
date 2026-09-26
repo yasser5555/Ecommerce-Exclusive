@@ -14,4 +14,6 @@ select * from addresses ;
 
 
 
-SELECT * FROM user_orders WHERE id = 5 ORDER BY total_price Desc
+SELECT * FROM user_orders WHERE id = 5 ORDER BY total_price Desc;
+
+select * from users where id = 101;

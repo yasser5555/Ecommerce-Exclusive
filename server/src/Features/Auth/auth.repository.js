@@ -2,12 +2,15 @@
 const db = require("../../shared/Database/DB");
 const findUserByEmail = async (email) => {
   try {
-    const [rows] = await db.execute(
+    // This executes the user lookup query by the exact email value.
+    const [rows] = await db.query(
       "SELECT * FROM users WHERE email = ?",
       [email]
     );
-    return rows[0];
+    // This returns the first matching user row instead of the full array.
+    return rows[0] || null;
   } catch (error) {
+    // This catches any database issue and returns a clear error object.
     const Error = {};
     Error.error = `Error at Auth_Repo in findUserByEmail ===> ${error}`;
     return Error;

@@ -6,12 +6,12 @@ const sendEmail = require("../../shared/utils/sendEmail");
 
 // Register
 const register = async (data) => {
-  var error = null
+  var error = null;
   try {
     const existingUser = await authRepository.findUserByEmail(data.email);
     if (existingUser) {
-      error ="Email already exists";
-      return error
+      error = "Email already exists";
+      return error;
     }
     const hashedPassword = await bcrypt.hash(data.password, 10);
 
@@ -42,25 +42,27 @@ const register = async (data) => {
 // Login
 const login = async (email, password) => {
   try {
+    // This gets the real user row from the database for the submitted email.
     const user = await authRepository.findUserByEmail(email);
+    // This stops login attempts when no account exists for the provided email.
     if (!user) {
       throw new Error("User Not Found");
     }
-    // const isMatch = await bcrypt.compare(password, user.password);
-    // if (!isMatch) {
-    //   throw new Error("Wrong Password");
-    // }
+    // This validates the submitted password against the stored hash.
+    const isMatch = await bcrypt.compare(password, user.password);
+    // This blocks invalid credentials before generating a token.
+    if (!isMatch) {
+      throw new Error("Wrong Password");
+    }
+    // This creates the JWT for the verified user.
     const token = generateToken(user.id);
+    // This returns the real user payload including status and role for blocked-user checks.
     return {
       token,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        avatar: user.avatar,
-      },
+      user,
     };
   } catch (error) {
+    // This catches any login issue and returns a readable error payload.
     const Error = {};
     Error.error = `error at auth.service in Login ${error}`;
     return Error;
@@ -281,10 +283,7 @@ const resetPassword = async (token, newPassword) => {
 
     const hashedPassword = await bcrypt.hash(newPassword, 10);
 
-    await authRepository.updatePassword(
-      resetToken.user_id,
-      hashedPassword
-    );
+    await authRepository.updatePassword(resetToken.user_id, hashedPassword);
   } catch (error) {
     const Error = {};
     Error.error = `error at auth.service in Reset Password ${error}`;

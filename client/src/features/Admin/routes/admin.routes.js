@@ -1,11 +1,12 @@
 import Products from "../Products/Pages/Products";
 import Settings from "../pages/Settings";
-import Users from "../pages/Users";
-import Dashboard from "../Dashboard/Pages/Dashboard";
-import Reports from "./../pages/Reports";
+ import Dashboard from "../Dashboard/Pages/Dashboard";
+ 
 import Categories from "./../Categories/Pages/Categories";
 import Orders from "../Orders/Pages/Orders";
 import OrderDetails from "../Orders/Pages/OrderDetails";
+import Reports from './../Reports/Pages/Reports';
+import Users from "../Users/Pages/Users";
  
 export const AdminRoutes = {
   path: "/admin",

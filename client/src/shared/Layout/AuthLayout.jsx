@@ -1,5 +1,5 @@
 import { Outlet } from "react-router-dom";
-import authImage from "../Assets/log_and_reg.png";
+import authImage from "../../features/auth/Assets/log_and_reg.png";
 
 function AuthLayout() {
   return (
