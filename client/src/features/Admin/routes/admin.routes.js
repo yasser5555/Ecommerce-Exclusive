@@ -5,8 +5,7 @@ import Settings from "../pages/Settings";
 import Categories from "./../Categories/Pages/Categories";
 import Orders from "../Orders/Pages/Orders";
 import OrderDetails from "../Orders/Pages/OrderDetails";
-import Reports from './../Reports/Pages/Reports';
-import Users from "../Users/Pages/Users";
+ import Users from "../Users/Pages/Users";
  
 export const AdminRoutes = {
   path: "/admin",
@@ -35,10 +34,7 @@ export const AdminRoutes = {
       path: "users",
       element: <Users />,
     },
-    {
-      path: "reports",
-      element: <Reports />,
-    },
+ 
     {
       path: "settings",
       element: <Settings />,

@@ -1,5 +1,4 @@
- 
-import React from "react";
+import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 import {
@@ -14,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useChangeTitle } from "../../shared/Utils/useChangeTitle";
+import { useProfileStore } from "../../features/Profile/Store/profile.store";
 
 export default function Sidebar({ sidebarOpen }) {
   const location = useLocation();
@@ -44,25 +44,24 @@ export default function Sidebar({ sidebarOpen }) {
       path: "/admin/users",
       icon: Users,
     },
-    {
-      label: "Reports",
-      path: "/admin/reports",
-      icon: BarChart3,
-    },
-    {
-      label: "Settings",
-      path: "/admin/settings",
-      icon: Settings,
-    },
   ];
 
-  const currentPage = navItems.find(
-    (item) => item.path === location.pathname,
-  );
-
+  const currentPage = navItems.find((item) => item.path === location.pathname);
   useChangeTitle({
     title: currentPage?.label || "Admin",
   });
+
+  const { profile, fetchProfile } = useProfileStore();
+  useEffect(() => {
+    const getProfile = async () => {
+      try {
+        await fetchProfile();
+      } catch (error) {
+        throw new Error(`error at Sidebar.getProfile ${error}`);
+      }
+    };
+    getProfile();
+  }, []);
 
   return (
     <aside
@@ -107,9 +106,7 @@ export default function Sidebar({ sidebarOpen }) {
                   end={item.path === "/admin"}
                   className={({ isActive }) =>
                     `d-flex align-items-center gap-3 text-decoration-none rounded-3 px-3 py-2 ${
-                      isActive
-                        ? "bg-danger text-white"
-                        : "text-dark"
+                      isActive ? "bg-danger text-white" : "text-dark"
                     }`
                   }
                 >
@@ -134,10 +131,10 @@ export default function Sidebar({ sidebarOpen }) {
             </div>
 
             <div>
-              <div className="fw-semibold">Admin</div>
-              <small className="text-muted">
-                Administrator
-              </small>
+              <div className="fw-semibold">
+                {profile?.first_name || "Admin"}
+              </div>
+              <small className="text-muted">Administrator</small>
             </div>
           </div>
 

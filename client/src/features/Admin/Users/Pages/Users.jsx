@@ -125,16 +125,9 @@ export default function Users() {
     <div className="container-fluid bg-light min-vh-100 p-4">
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <p className="text-uppercase text-muted fw-semibold mb-1">User Hub</p>
-          <h2 className="fw-bold mb-0">Customer Management</h2>
+           <h2 className="fw-bold mb-0">Customer Management</h2>
         </div>
-        <button
-          className="btn btn-primary rounded-pill px-3 d-flex align-items-center gap-2"
-          onClick={handleRefresh}
-        >
-          <RefreshCw size={16} />
-          Refresh
-        </button>
+        
       </div>
 
       <UserStatis stats={stats} />
@@ -147,7 +140,7 @@ export default function Users() {
             </span>
             <input
               className="form-control bg-light border-0"
-              placeholder="Search users by name, email, or phone..."
+              placeholder="Search users by email..."
               value={search}
               onChange={(event) => handleSearch(event.target.value)}
             />

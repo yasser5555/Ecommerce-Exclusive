@@ -23,7 +23,8 @@ export default function Navbar() {
   const { cart, GetCart } = useCartTable();
   const { wishlist } = useWishlist();
   const { profile, fetchProfile } = useProfile();
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const isAdmin = String(user?.role || "").toLowerCase() === "admin";
 
   const navLinks = [
     {
@@ -34,6 +35,14 @@ export default function Navbar() {
       title: "Shop",
       path: "/products",
     },
+    ...(isAdmin
+      ? [
+          {
+            title: "Admin",
+            path: "/admin",
+          },
+        ]
+      : []),
     {
       title: "About",
       path: "/about",

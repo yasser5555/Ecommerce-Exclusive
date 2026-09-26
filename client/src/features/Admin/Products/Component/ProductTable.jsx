@@ -1,6 +1,7 @@
 import { Pencil, Trash2, Star } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { useAdminProductStore } from "../Store/product.store";
 
 export default function ProductTable({
   currentProducts,
@@ -12,14 +13,21 @@ export default function ProductTable({
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [productToDelete, setProductToDelete] = useState(null);
 
+  const { Catogeries, FetchCatogery } = useAdminProductStore();
+
   const [isDeleting, setIsDeleting] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
 
   const [editForm, setEditForm] = useState({
     title: "",
+    category_id: "",
     price: "",
     stock: "",
   });
+
+  useEffect(() => {
+    FetchCatogery();
+  }, [FetchCatogery]);
 
   // =========================
   // EDIT
@@ -28,8 +36,16 @@ export default function ProductTable({
   const handleEdit = (product) => {
     setSelectedProduct(product);
 
+    const matchingCategory = Catogeries.find(
+      (category) =>
+        String(category.name || "").toLowerCase() ===
+        String(product.category || product.category_name || "").toLowerCase(),
+    );
+
     setEditForm({
       title: product.title || product.name || "",
+      category_id:
+        product.category_id ?? product.categoryId ?? matchingCategory?.id ?? "",
       price: product.old_price || product.price || "",
       stock: product.stock ?? "",
     });
@@ -61,6 +77,24 @@ export default function ProductTable({
         updates.push({
           column: "title",
           value: editForm.title.trim(),
+        });
+      }
+
+      // CATEGORY
+      const oldCategoryId = Number(
+        selectedProduct.category_id ?? selectedProduct.categoryId ?? 0,
+      );
+      const newCategoryId = Number(editForm.category_id);
+
+      if (
+        !Number.isNaN(newCategoryId) &&
+        Number.isFinite(newCategoryId) &&
+        newCategoryId !== oldCategoryId &&
+        String(editForm.category_id).trim() !== ""
+      ) {
+        updates.push({
+          column: "category_id",
+          value: newCategoryId,
         });
       }
 
@@ -467,6 +501,34 @@ export default function ProductTable({
                       onChange={handleEditChange}
                       disabled={isUpdating}
                     />
+                  </div>
+
+                  {/* CATEGORY */}
+
+                  <div className="mb-3">
+                    <label className="form-label fw-semibold">Category</label>
+
+                    <select
+                      name="category_id"
+                      className="form-select form-select-lg"
+                      value={editForm.category_id}
+                      onChange={handleEditChange}
+                      disabled={isUpdating}
+                    >
+                      <option value="">Select category</option>
+
+                      {Catogeries?.length > 0 ? (
+                        Catogeries.map((category) => (
+                          <option key={category.id} value={category.id}>
+                            {category.name}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>
+                          No categories available
+                        </option>
+                      )}
+                    </select>
                   </div>
 
                   {/* PRICE */}
