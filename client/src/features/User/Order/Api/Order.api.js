@@ -89,7 +89,7 @@ export const getOrderDetails = async (order_id) => {
     const response = await axiosInstance.get(`/orders/details/${order_id}`);
     // Return response data
 
-     // console.log(`Current Response From api is ${response.data}`);
+     console.log(`Current Response From api is ${response.data}`);
     
     return response.data;
   } catch (error) {

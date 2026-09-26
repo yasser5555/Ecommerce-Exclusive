@@ -53,10 +53,7 @@ export default function MyOrders() {
                 </div>
 
                 <div className="d-flex flex-wrap gap-2">
-                  <button className="btn btn-light btn-sm">
-                    <Package size={14} className="me-1" />
-                    Track Order
-                  </button>
+                 
 
                   <button
                     onClick={() => Navigate("/products/")}
@@ -77,27 +74,7 @@ export default function MyOrders() {
               totalOrders={orders.length}
             >
               {/* ================= FILTERS ================= */}
-              <div className="d-flex gap-2 mt-3 flex-wrap">
-                <button className="btn btn-danger btn-sm rounded-pill px-3">
-                  All Orders
-                </button>
-
-                <button className="btn btn-light btn-sm rounded-pill px-3">
-                  Processing
-                </button>
-
-                <button className="btn btn-light btn-sm rounded-pill px-3">
-                  Shipped
-                </button>
-
-                <button className="btn btn-light btn-sm rounded-pill px-3">
-                  Delivered
-                </button>
-
-                <button className="btn btn-light btn-sm rounded-pill px-3">
-                  Cancelled
-                </button>
-              </div>
+               
             </OrderSearch>
 
             {/* ================= ORDERS ================= */}
@@ -108,11 +85,8 @@ export default function MyOrders() {
                   {/* ================= ORDER HEADER ================= */}
 
                   <div className="bg-white py-3 px-3">
-                    <div className="d-flex flex-wrap bg-body  gap-2">
-                      <button className="btn btn-outline-danger btn-sm">
-                        <Truck size={14} className="me-1" />
-                        Track Order
-                      </button>
+                    <div className="d-flex flex-wrap bg-body justify-content-end gap-2">
+         
 
                       <button
                         onClick={() => {
@@ -121,7 +95,7 @@ export default function MyOrders() {
                           
                           Navigate(`/myOrders/orderDetials/${order.order_id}`);
                         }}
-                        className="btn btn-outline-danger btn-sm"
+                        className="btn btn-outline-danger btn-sm my-3"
                       >
                         View Details
                       </button>

@@ -54,11 +54,7 @@ export default function Navbar() {
   ];
 
   const profileLinks = [
-    {
-      title: "Setting",
-      path: "/settings",
-      icon: Settings,
-    },
+    
     {
       title: "Profile Page",
       path: "/profile",

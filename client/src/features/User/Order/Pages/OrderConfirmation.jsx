@@ -51,9 +51,11 @@ export default function OrderConfirmationPage() {
     return () => clearInterval(interval);
   }, [orderID]);
 
-  const order = orderHistory?.data?.find((item) => item.order_id === parseInt(orderID));
-  console.log(`order is ${order}`); // why undefined
+const order = orderHistory?.find(
+  (item) => Number(item.order_id) === Number(orderID)
+);
 
+ 
   return (
     <div className="container">
       <Introduction order={order} isLoading={isloading} />

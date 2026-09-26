@@ -228,7 +228,7 @@ export default function OrderDetails() {
                       {/* Price */}
                       <div className="col-12 col-md-4 text-md-end">
                         <div className="small text-muted mb-1">
-                          {product.quantity} ×{" "}
+                          {product.quantity} ×
                           {Number(product.price).toLocaleString()}
                         </div>
 
@@ -282,21 +282,7 @@ export default function OrderDetails() {
         </div>
 
         {/* Bottom */}
-        <div className="card border-0 shadow-sm mt-4">
-          <div className="card-body p-3 p-md-4">
-            <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
-              <div>
-                <h6 className="fw-bold mb-1">Need help with your order?</h6>
-
-                <p className="text-muted mb-0 small">
-                  Contact support if you have any issue with this order.
-                </p>
-              </div>
-
-              <button className="btn btn-danger px-4">Contact Support</button>
-            </div>
-          </div>
-        </div>
+     
       </div>
     </div>
   );

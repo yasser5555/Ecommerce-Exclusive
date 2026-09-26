@@ -6,7 +6,7 @@ import { FetchOnRender } from "./../../../../shared/Utils/useFetch";
 import useBillingDetails from "./../Hooks/useBillingDetails";
 import useCartStore from "./../../Cart/store/Cart.store";
 import { useProfileStore } from "./../../../Profile/Store/profile.store";
- 
+
 export default function OrderSummary({ cartProducts = [] }) {
   const { clearUserCart } = useCartStore();
   const { profile } = useProfileStore();
@@ -25,7 +25,6 @@ export default function OrderSummary({ cartProducts = [] }) {
     userCards,
     Get_UserCards,
     CreateOrder,
-    CreateOrderHistory,
   } = useOrderSummary();
 
   FetchOnRender(() => Get_UserCards());
@@ -57,6 +56,14 @@ export default function OrderSummary({ cartProducts = [] }) {
         return;
       }
 
+      if (
+        paymentMethod === "card" &&
+        Number(selectedCard?.balance ?? 0) < Number(subtotal)
+      ) {
+        toast.error("Not enough money.");
+        return;
+      }
+
       return true;
     } catch (error) {
       toast.error(`there's an Error ${error.message}`);
@@ -77,7 +84,6 @@ export default function OrderSummary({ cartProducts = [] }) {
 
       const orderID = order.result[0][0].order_id;
       const newBalcne = parseInt(order.result[0][0].new_balance);
-      console.log(`new balcne is ${newBalcne}`); //
 
       setselectedCard({
         ...selectedCard,
@@ -227,7 +233,7 @@ export default function OrderSummary({ cartProducts = [] }) {
                     <div
                       key={`${card.last4}-${index}`}
                       className={`border rounded-3 p-3 mb-2 ${
-                        selectedCard?.last4 === card.last4
+                        selectedCard?.card_id === card.card_id
                           ? "border-danger bg-white"
                           : ""
                       }`}
@@ -239,7 +245,7 @@ export default function OrderSummary({ cartProducts = [] }) {
                           className="form-check-input"
                           type="radio"
                           name="savedCard"
-                          checked={selectedCard?.last4 === card.last4}
+                          checked={selectedCard?.card_id === card.card_id}
                           onChange={() => setselectedCard(card)}
                         />
 

@@ -19,8 +19,7 @@ export default function DeliveryAddress({
 }) {
   const navigate = useNavigate();
  
-console.log("Selected Card:", selectedCard);
-console.log("Current Balance:", selectedCard?.balance);
+ 
   return (
     <div className="col-lg-4">
       <div className="card border-0 shadow-sm mb-4">

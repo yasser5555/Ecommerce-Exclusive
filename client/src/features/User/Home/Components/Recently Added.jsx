@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import ProductCard from "../../Products/component/Product-card";
 import { ArrowRight } from "lucide-react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useHomeStore } from "../Store/Home.store";
 
 export default function RecentlyAdded() {
+  const Navigate = useNavigate();
   const {
     RecentySection,
     fetchRecentlySection,
@@ -61,7 +62,7 @@ export default function RecentlyAdded() {
               <ProductCard
                 product={product}
                 isactive={0}
-                callback={() => {}}
+                callback={() => {Navigate(`/products/${product.p_id}`)}}
               />
             </div>
           ))}

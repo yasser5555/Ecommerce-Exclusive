@@ -33,8 +33,6 @@ export const useOrderStore = create((set, get) => ({
 
       const orders = Array.isArray(response?.data) ? response.data : [];
 
-      console.log("FINAL ORDERS:", orders);
-
       set({
         orderHistory: orders,
         isloading: false,

@@ -1,0 +1,7 @@
+@baseUrl = http://localhost:5000/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTAxLCJpYXQiOjE3OTAwMzY4NTksImV4cCI6MTgzMTUwODg1OX0.rZjh0OwCmBitmqCcROP3XcFIVC5E7FsLfHlXy_FF8c8
+
+### Get admin order details
+GET {{baseUrl}}/Admin/get_order_details/1
+Authorization: Bearer {{token}}
+Content-Type: application/json

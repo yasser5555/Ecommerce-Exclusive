@@ -12,8 +12,7 @@ import { AboutRoutes } from "../features/User/About/routes/About.routes";
 import { CheckoutRoutes } from "../features/User/Checkout/routes/checkout.routes";
 import { OrderRoutes } from "../features/User/Order/routes/order.routes";
 import { ContactRoutes } from "../features/User/Contact/routes/contact.routes";
-import { SettingsRoutes } from "../features/User/Settings/routes/setting.routes";
-import { AdminRoutes } from "../features/Admin/routes/admin.routes";
+ import { AdminRoutes } from "../features/Admin/routes/admin.routes";
 import AdminLayout from "../shared/Layout/AdminLayout";
 import BlockedLayout from "../shared/Layout/BlockedLayout";
  import { BlockedRoutes } from "../features/Blocked/Routes/blocked.routes";
@@ -35,7 +34,7 @@ export const router = createBrowserRouter([
       CheckoutRoutes,
       OrderRoutes,
       ContactRoutes,
-      SettingsRoutes,
+ 
     ],
   },
   {

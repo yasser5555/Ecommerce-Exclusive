@@ -11,6 +11,7 @@ export const useMyOrders = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
 
   const orderPerPage = 5;
 
@@ -40,8 +41,38 @@ export const useMyOrders = () => {
     ? orderHistory
     : [];
 
+  const normalizeStatus = (value = "") =>
+    String(value)
+      .trim()
+      .toLowerCase()
+      .replace(/[_-]+/g, " ")
+      .replace(/\s+/g, " ");
+
+  const matchesStatusFilter = (orderStatus) => {
+    const normalizedOrderStatus = normalizeStatus(orderStatus);
+    const normalizedFilter = normalizeStatus(statusFilter);
+
+    if (normalizedFilter === "all") return true;
+
+    const aliases = {
+      processing: ["processing", "pending", "in progress", "in-progress"],
+      shipped: ["shipped", "shipping", "on the way", "in transit"],
+      delivered: ["delivered", "completed"],
+      cancelled: ["cancelled", "canceled", "rejected"],
+    };
+
+    return (aliases[normalizedFilter] || [normalizedFilter]).includes(
+      normalizedOrderStatus,
+    );
+  };
+
+  const filteredOrders =
+    statusFilter === "all"
+      ? orders
+      : orders.filter((order) => matchesStatusFilter(order.status));
+
   const totalPage = Math.ceil(
-    orders.length / orderPerPage
+    filteredOrders.length / orderPerPage
   );
 
   const startIndex =
@@ -50,7 +81,7 @@ export const useMyOrders = () => {
   const endIndex =
     startIndex + orderPerPage;
 
-  const currentOrders = orders.slice(
+  const currentOrders = filteredOrders.slice(
     startIndex,
     endIndex
   );
@@ -79,9 +110,15 @@ export const useMyOrders = () => {
     setSearch("");
   };
 
+  const handleStatusChange = (status) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+  };
+
   return {
     search,
     orders,
+    filteredOrders,
     currentOrders,
     currentPage,
     totalPage,
@@ -89,10 +126,12 @@ export const useMyOrders = () => {
     endIndex,
     orderPerPage,
     isloading,
+    statusFilter,
     handlePrevious,
     handleNext,
     handlePageChange,
     handleSearchChange,
     clearSearch,
+    handleStatusChange,
   };
 };
