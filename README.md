@@ -1609,3 +1609,89 @@ Additional project notes and documentation are maintained inside the repository,
 # 📄 License
 
 This project is currently intended for educational and portfolio purposes.
+
+---
+
+# 🔒 Initial Security Review
+
+This is a static code review dated 2026-09-30, not a comprehensive penetration test. The findings below are based on routes and procedures present in the repository; I did not modify application code or test exploitation against a live server.
+
+## Findings by Priority
+
+### Critical: Access to Other Users' Orders (BOLA / IDOR)
+
+The order-details and search routes require only a valid JWT. Order details are fetched using the order ID alone, and the search procedure returns matching orders across all users. Any authenticated user could try order IDs or search for products and read order data that does not belong to them.
+
+References: [Order routes](server/src/Features/Orders/Order.routes.js), [Order controller](server/src/Features/Orders/Order.controller.js), [Order repository](server/src/Features/Orders/Order.repo.js), [Order search procedure](Database/Orders/Procedure/SearchForProduct%20in%20order.sql).
+
+How to fix: Pass the user identity from the JWT into the service and query, and require `orders.user_id = req.user.id` in the details query, search query, and stored procedure. Do not rely on a client-supplied ID to establish ownership. Add tests proving one user cannot access another user's order. Create separate administrative routes with explicit authorization when needed.
+
+### Critical: Product Modification and SQL Injection
+
+The `PATCH /api/admin/` route uses `protect` without `isAdmin`, so any authenticated account can call it. In addition, the `update_product` stored procedure concatenates `p_column` directly into SQL text; this value comes from the request and may enable SQL injection.
+
+References: [Admin routes](server/src/Features/Admin/Admin.routes.js), [Admin controller](server/src/Features/Admin/Admin.controller.js), [Product update procedure](Database/Admin/Procedures/Update_column.sql).
+
+How to fix: Add `isAdmin` to this route and allow only fixed, explicitly defined column names in both the server and stored procedure. Never construct SQL identifiers from user input; use an allowlist or explicit column branches, while continuing to bind ordinary values as SQL parameters.
+
+### High: Order Price, Status, and Inventory Tampering
+
+The API passes `status` and `products` from the request body to `create_order`. The stored procedure calculates totals from client-supplied prices and quantities, records the supplied status, decrements inventory without checking available stock, and deducts from the card without verifying sufficient balance or whether the deduction succeeded. This can allow price or status tampering and negative stock or balances.
+
+References: [Order controller](server/src/Features/Orders/Order.controller.js), [Order creation procedure](Database/Orders/Procedure/Create_order.sql).
+
+How to fix: Resolve prices and status on the server or from the database; accept only product IDs and quantities from the client. Validate that quantities are positive integers, products are active and in stock, and the address and card belong to the user. Verify balance/payment results, and make order creation, inventory updates, and deductions atomic with appropriate locking. Do not mark an order as paid until payment is confirmed by a trusted server-side source.
+
+### High: Secrets in a File Not Excluded from Git
+
+The workspace's `server/.env` contains database and email credentials and a JWT secret. The file is currently untracked, but it is not covered by the current `.gitignore`, so it could be added to the repository by mistake. Secret values are intentionally not included here.
+
+References: `server/.env`, `.gitignore`.
+
+Urgent remediation: Rotate the database and email credentials and JWT secret in this file, and revoke old keys. Add environment files to `.gitignore`, use a secrets manager for deployment, and provide only dummy values in `.env.example`. If the file was ever pushed to Git, treat the secrets as exposed even after deleting it, and clean the repository history after rotating them.
+
+### High: Password Reset Tokens Can Be Reused
+
+The server checks whether the token has expired and then updates the password, but does not delete or mark the token as used. The token remains valid for additional password resets until it expires, and the raw token is stored in the database.
+
+References: [Auth service](server/src/Features/Auth/auth.service.js), [Auth repository](server/src/Features/Auth/auth.repository.js).
+
+How to fix: Consume each token exactly once in an atomic transaction when the password changes, and store a hash of the token instead of its raw value. Invalidate previous tokens when issuing a new one, and revoke active sessions/tokens after a password change.
+
+### Medium: Password Hash Exposed in Login and Registration Responses
+
+`findUserById` uses `SELECT *`, and the registration and login services return the user row in their responses. This sends the password hash to the browser. A hash is not the original password, but exposing it enables offline cracking if it is leaked.
+
+References: [Auth repository](server/src/Features/Auth/auth.repository.js), [Auth service](server/src/Features/Auth/auth.service.js), [Auth controller](server/src/Features/Auth/auth.controller.js).
+
+How to fix: Select only the required fields and construct a public response object that excludes `password` and other internal fields. Add API tests for registration and login responses.
+
+### Medium: JWT Stored in `localStorage`
+
+The client stores the JWT in `localStorage` and automatically attaches it to requests. Any XSS in the client application or its dependencies could read the token and steal the session.
+
+References: [Auth store](client/src/features/auth/store/auth.store.js), [Axios client](client/src/shared/services/axiosInstance.js).
+
+How to fix: Prefer a cookie-based session with `HttpOnly`, `Secure`, and `SameSite` attributes and appropriate CSRF protection, or keep short-lived tokens in memory. Add a CSP, prevent insertion of untrusted HTML, use HTTPS in production, and provide token revocation/rotation.
+
+### Medium: No Visible Protection Against Credential Guessing or Account Enumeration
+
+There are no visible rate limits for login attempts or password-reset requests. The login route also returns different messages for a nonexistent account and an incorrect password, which enables account enumeration, and returns service error details in the HTTP response.
+
+References: [Auth routes](server/src/Features/Auth/auth.routes.js), [Auth controller](server/src/Features/Auth/auth.controller.js), [Auth service](server/src/Features/Auth/auth.service.js).
+
+How to fix: Add rate limits by IP and account, progressive delays or temporary lockouts, and use one generic message for invalid credentials. Return generic errors to clients and log details internally without secrets. Check `express-validator` results before calling the service.
+
+### Medium: Upload File-Type Checks Can Be Spoofed
+
+The Multer filter trusts the client-provided `file.mimetype` and takes the extension from the original filename. This does not prove that the content is actually an image; a malicious file may be uploaded and then served from `/uploads`, creating risk for visitors.
+
+References: [Avatar upload](server/src/shared/Middleware/upload.middleware.js), [Product image upload](server/src/shared/Middleware/productUpload.js), [Static file serving](server/src/app.js).
+
+How to fix: Verify file signatures and content with a trusted library, allow only specific formats, and re-encode images when possible. Generate the file extension on the server. Serve uploads from a separate origin without application cookies, retain the existing size limits, and add dimension/processing limits.
+
+## Additional Hardening Notes
+
+- `app.use(cors())` allows all origins by default. Restrict allowed frontend origins in production. CORS is not a substitute for authentication and authorization, and does not by itself bypass Bearer JWT protection.
+- Review controller error messages, as some return internal details to clients. Send generic messages and log details on the server.
+- These findings do not prove that no other issues exist. After remediation, test API authorization and order/payment scenarios, and review deployment settings and dependencies.
