@@ -11,16 +11,13 @@ import {
 export const useOrderStore = create((set, get) => ({
   // Order Details Page
   orderId: null,
-
   // For Creating Orders
   order: null,
-
   // Displaying Order History
   orderHistory: [],
-
+  error: null,
   // Payment result
   payment: null,
-
   // Indicates that data is loading
   isloading: false,
 
@@ -177,16 +174,12 @@ export const useOrderStore = create((set, get) => ({
 
   // Fetch single order details
   FetchOrderDetails: async (order_id) => {
-    set({
-      isloading: true,
-    });
-
+    set({ isloading: true, order: null, orderId: order_id });
     try {
       const response = await getOrderDetails(order_id);
 
       set({
         order: response,
-        orderId: order_id,
         isloading: false,
       });
 
@@ -195,6 +188,7 @@ export const useOrderStore = create((set, get) => ({
       console.error(`error at FetchOrderDetails Store: ${error.message}`);
 
       set({
+        order: null,
         isloading: false,
       });
 

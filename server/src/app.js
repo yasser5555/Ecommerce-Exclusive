@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
 const authRoutes = require("./Features/Auth/auth.routes");
 const profileRoutes = require("./Features/Profile/profile.routes.js");
 const productRoutes = require("./Features/Product/Product.routes.js");
@@ -13,11 +14,46 @@ const AdminRoutes = require("./Features/Admin/Admin.routes.js");
 const app = express();
 const path = require("path");
 
-// Enable CORS for cross-origin client requests
-app.use(cors());
+const isPrivateNetworkAddress = (hostname) =>
+  hostname === "localhost" ||
+  hostname === "127.0.0.1" ||
+  /^(10\.\d{1,3}\.\d{1,3}\.\d{1,3}|192\.168\.\d{1,3}\.\d{1,3}|172\.(1[6-9]|2\d|3[01])\.\d{1,3}\.\d{1,3})$/.test(
+    hostname,
+  );
+
+// Allow the configured client URL and local development clients on the LAN.
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || origin === process.env.CLIENT_URL) {
+      return callback(null, true);
+    }
+
+    if (process.env.NODE_ENV === "production") {
+      return callback(new Error("Origin is not allowed by CORS"));
+    }
+
+    try {
+      const clientUrl = new URL(origin);
+      const isDevelopmentClient =
+        clientUrl.protocol === "http:" &&
+        clientUrl.port === "3000" &&
+        isPrivateNetworkAddress(clientUrl.hostname);
+      return callback(
+        isDevelopmentClient
+          ? null
+          : new Error("Origin is not allowed by CORS"),
+        isDevelopmentClient,
+      );
+    } catch (error) {
+      return callback(error);
+    }
+  },
+  credentials: true,
+}));
 
 // Parse incoming JSON request payloads
 app.use(express.json());
+app.use(cookieParser());
 
 // Mount authentication routes
 app.use("/api/auth", authRoutes);

@@ -34,7 +34,7 @@ export const useUserLogin = () => {
       // This checks the returned user record for a blocked account before redirecting.
       if (String(response?.user?.status || "").toLowerCase() === "blocked") {
         // This clears the current session immediately to prevent access.
-        logout();
+        await logout();
         // This shows a custom blocked-account toast to explain the restriction.
         toast.error("Your account is blocked. Please contact support to regain access.", {
           position: "top-center",

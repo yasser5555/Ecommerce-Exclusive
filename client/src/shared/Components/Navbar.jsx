@@ -16,6 +16,7 @@ import useWishlist from "../../features/User/Wishlist/Hooks/useWishlist";
 import useCartTable from "../../features/User/Cart/Hooks/useCartTable";
 import { FetchOnRender } from "../Utils/useFetch";
 import { useChangeTitle } from "../Utils/useChangeTitle";
+import { serverBaseUrl } from "../services/axiosInstance";
 
 export default function Navbar() {
   const location = useLocation();
@@ -97,7 +98,11 @@ export default function Navbar() {
     FetchProfile();
   }, [fetchProfile]);
 
-  FetchOnRender(() => GetCart(profile?.userId), profile?.userId);
+  FetchOnRender(() => {
+    if (user?.id) {
+      GetCart(user.id);
+    }
+  }, user?.id);
 
   return (
     <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
@@ -187,7 +192,7 @@ export default function Navbar() {
                 >
                   {profile?.avatar ? (
                     <img
-                      src={`http://localhost:5000/${profile.avatar}`}
+                      src={`${serverBaseUrl}/${profile.avatar}`}
                       alt="User"
                       width="38"
                       height="38"

@@ -1,5 +1,9 @@
+DROP PROCEDURE IF EXISTS SearchForOrder;
 DELIMITER $$
-CREATE PROCEDURE SearchForOrder(IN p_title VARCHAR(255))
+CREATE PROCEDURE SearchForOrder(
+    IN p_title VARCHAR(255),
+    IN p_user_id INT
+)
 BEGIN
 
     SELECT
@@ -32,18 +36,15 @@ BEGIN
     INNER JOIN products
         ON order_items.product_id = products.id
 
-    WHERE orders.id IN (
-        SELECT DISTINCT order_items.order_id
-
-        FROM order_items
-
-        INNER JOIN products
-            ON order_items.product_id = products.id
-
-        WHERE products.title LIKE CONCAT('%', p_title, '%')
-    )
-
-    AND products.title LIKE CONCAT('%', p_title, '%')
+    WHERE orders.user_id = p_user_id
+      AND EXISTS (
+          SELECT 1
+          FROM order_items AS matching_items
+          INNER JOIN products AS matching_products
+              ON matching_items.product_id = matching_products.id
+          WHERE matching_items.order_id = orders.id
+            AND matching_products.title LIKE CONCAT('%', p_title, '%')
+      )
 
     GROUP BY
         orders.id,
@@ -53,4 +54,4 @@ BEGIN
         orders.arrive_at;
 END $$
 DELIMITER ;
-CALL SearchForOrder('REDMI');
+CALL SearchForOrder('REDMI', 1);

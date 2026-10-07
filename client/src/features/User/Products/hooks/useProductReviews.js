@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useProductStore } from "../store/product.store";
 import { Star } from "lucide-react";
+import { serverBaseUrl } from "../../../../shared/services/axiosInstance";
 
 export const useProductReviews = () => {
   const stars = [1, 2, 3, 4, 5];
@@ -65,7 +66,7 @@ export const useProductReviews = () => {
       return avatar;
     }
     // ! otherwise local server Avatar  
-    return `http://localhost:5000/${avatar}`;
+    return `${serverBaseUrl}/${avatar}`;
   };
   const isloaded = () => {
     if (isLoading) {

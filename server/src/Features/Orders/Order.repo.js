@@ -53,12 +53,12 @@ const getTotalPayment = async (order_id, user_id) => {
   }
 };
 // Get order details by order_id
-const getOrderDetails = async (order_id) => {
+const getOrderDetails = async (order_id,user_id) => {
   try {
     // Query user_order view to find order by order_id
     const [user_order] = await pool.query(
-      "select * from user_order where order_id = ?",
-      [order_id],
+      "select * from user_order where order_id = ? and user_id = ?",
+      [order_id, user_id],
     );
     // Return order details
     return user_order;
@@ -69,21 +69,11 @@ const getOrderDetails = async (order_id) => {
 }; 
 
 // Search orders containing product by title or search within a specific order
-const search_Order = async (title) => {
+const search_Order = async (title, user_id) => {
   try {
-    // If order_id is provided, search within that specific order
-  
-
-    // Query user_order view to find orders matching product title
-  
-    // const [product] = await pool.query(
-    //   "SELECT * FROM user_order WHERE products LIKE ?",
-    //   [`%${title}%`],
-    // );
-  
     const [product] = await pool.query(
-      "call SearchForOrder(?)",
-      [`%${title}%`],
+      "CALL SearchForOrder(?, ?)",
+      [title, user_id],
     );
     // Return matched orders
     return product;

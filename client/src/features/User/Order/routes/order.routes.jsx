@@ -14,7 +14,7 @@ export const OrderRoutes = {
       element: <OrderDetails />   
     },
     { 
-      path: "orderConfirmation/:orderID", 
+      path: "orderConfirmation/:orderid", 
       element: <OrderConfirmation />   
     },
   ],

@@ -69,6 +69,8 @@ const login = async (email, password) => {
   }
 };
 
+const getUserById = (userId) => authRepository.findUserById(userId);
+
 // Forget Password
 const forgotPassword = async (email) => {
   try {
@@ -294,6 +296,7 @@ const resetPassword = async (token, newPassword) => {
 module.exports = {
   register,
   login,
+  getUserById,
   forgotPassword,
   resetPassword,
 };

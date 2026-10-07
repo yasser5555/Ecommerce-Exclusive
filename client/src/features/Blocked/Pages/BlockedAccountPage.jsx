@@ -13,8 +13,8 @@ export default function BlockedAccountPage() {
   // This handles the logout action when the user chooses to leave the blocked screen.
   const handleLogout = async () => {
     try {
-      // This clears the saved token and user state from storage.
-      logout();
+      // This clears the session cookie and the in-memory auth state.
+      await logout();
       // This sends the user back to the login page after logging out.
       navigate("/auth/login", { replace: true });
     } catch (error) {

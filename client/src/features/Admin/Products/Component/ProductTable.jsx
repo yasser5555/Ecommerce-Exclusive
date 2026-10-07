@@ -2,6 +2,7 @@ import { Pencil, Trash2, Star } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useAdminProductStore } from "../Store/product.store";
+import { serverBaseUrl } from "../../../../shared/services/axiosInstance";
 
 export default function ProductTable({
   currentProducts,
@@ -300,7 +301,7 @@ export default function ProductTable({
                                 src={
                                   image.startsWith("http")
                                     ? image
-                                    : `http://localhost:5000/${image}`
+                                    : `${serverBaseUrl}/${image}`
                                 }
                                 alt={productName}
                                 className="w-100 h-100 object-fit-cover"

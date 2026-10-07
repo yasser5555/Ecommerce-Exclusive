@@ -1,53 +1,58 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLeft, CheckCircle, Package, Truck } from "lucide-react";
 
 import { useOrderStore } from "../Store/Orders.store";
+import NotAuthorized from "../Components/notAuthorized";
 
 export default function OrderDetails() {
   const { order_id } = useParams();
-  console.log(`current order_id is ${order_id}`);
-    
-  const { order, isloading, FetchOrderDetails } = useOrderStore();
-
+  const [accessDenied, setAccessDenied] = useState(false);
+  const { order, orderId, isloading, FetchOrderDetails } = useOrderStore();
+  
   useEffect(() => {
+    setAccessDenied(false);
+
     const getOrderDetails = async (order_id) => {
       try {
-        // console.log(`1.Fethcing now from Store`);
         await FetchOrderDetails(order_id);
-        // console.log(`2.Data fetched from store Successfully ${order}`);
       } catch (error) {
+        if (error.response?.status === 403) {
+          setAccessDenied(true);
+        }
         console.error(`Error at GetOrderDetails: ${error.message}`);
       }
     };
 
     getOrderDetails(order_id);
   }, [order_id, FetchOrderDetails]);
-     console.log();
 
-  if (isloading) {
+  if (isloading || orderId !== order_id) {
     return (
-      <div className="container py-5">
-        <div className="d-flex justify-content-center align-items-center py-5">
-          <div className="spinner-border text-danger" role="status">
-            <span className="visually-hidden">Loading...</span>
-          </div>
+      <div className="container py-5 text-center">
+        <div className="spinner-border text-danger" role="status">
+          <span className="visually-hidden">Loading order...</span>
         </div>
       </div>
     );
   }
 
-  if (!order || order.length === 0) {
+  if (accessDenied) {
+    return <NotAuthorized />;
+  }
+
+  const currentOrder = Array.isArray(order) ? order[0] : null;
+  if (!currentOrder) {
     return (
       <div className="container py-5">
-        <div className="alert alert-warning text-center">Order not found.</div>
+        <div className="alert alert-warning text-center" role="alert">
+          Order not found.
+        </div>
       </div>
     );
   }
 
-  const currentOrder = order?.data?.["0"];
   const {
-    user_id,
     status,
     created_at,
     arrive_at,
@@ -282,7 +287,6 @@ export default function OrderDetails() {
         </div>
 
         {/* Bottom */}
-     
       </div>
     </div>
   );

@@ -1,17 +1,38 @@
 const pool = require("../../shared/database/DB");
 
+const getRandomProductCards = async (limit, filter = "", filterParams = []) => {
+  const [countRows] = await pool.query(
+    `SELECT COUNT(*) AS total FROM product_card ${filter}`,
+    filterParams,
+  );
+  const total = Number(countRows[0].total);
+
+  if (total === 0) {
+    return [];
+  }
+
+  const offset = Math.floor(Math.random() * total);
+  const [rows] = await pool.query(
+    `SELECT * FROM product_card ${filter} ORDER BY p_id LIMIT ? OFFSET ?`,
+    [...filterParams, limit, offset],
+  );
+
+  if (rows.length === limit || offset === 0) {
+    return rows;
+  }
+
+  const [wrappedRows] = await pool.query(
+    `SELECT * FROM product_card ${filter} ORDER BY p_id LIMIT ?`,
+    [...filterParams, limit - rows.length],
+  );
+
+  return rows.concat(wrappedRows);
+};
+
 // Get random products for the Home page.
 const getRandomProducts = async (limit) => {
   try {
-    const [rows] = await pool.query(
-      `SELECT *
-       FROM product_card
-       ORDER BY RAND()
-       LIMIT ?`,
-      [limit],
-    );
-
-    return rows;
+    return await getRandomProductCards(limit);
   } catch (error) {
     console.error(`Error in Home.repo - getRandomProducts: ${error.message}`);
     throw error;
@@ -21,13 +42,7 @@ const getRandomProducts = async (limit) => {
 // Get highly rated products for the Home page.
 const getBestSellingProducts = async () => {
   try {
-    const [rows] = await pool.query(
-      `SELECT *
-       FROM product_card
-       WHERE rating > 3 order by rand() limit 4`,
-    );
-
-    return rows;
+    return await getRandomProductCards(4, "WHERE rating > ?", [3]);
   } catch (error) {
     console.error(
       `Error in Home.repo - getBestSellingProducts: ${error.message}`,

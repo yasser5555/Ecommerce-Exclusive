@@ -10,6 +10,16 @@ export const loginRequest = async (data) => {
   return response.data;
 };
 
+export const currentUserRequest = async () => {
+  const response = await axiosInstance.get("/auth/me");
+  return response.data;
+};
+
+export const logoutRequest = async () => {
+  const response = await axiosInstance.post("/auth/logout");
+  return response.data;
+};
+
 
 export const forgotPasswordRequest = async (
   email

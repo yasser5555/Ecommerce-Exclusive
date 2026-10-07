@@ -1,4 +1,5 @@
 import { useAvatarUploader } from "../Hooks/useAvatarUploader";
+import { serverBaseUrl } from "../../../shared/services/axiosInstance";
 
 function AvatarUploader() {
   const { profile, uploadAvatar, file, handleSubmit, handleFileChange } =
@@ -16,7 +17,7 @@ function AvatarUploader() {
   <img
     src={
       profile?.avatar
-        ? `http://localhost:5000/${profile.avatar}`
+        ? `${serverBaseUrl}/${profile.avatar}`
         : "https://i.imgur.com/HeIi0wU.png"
     }
     alt="Profile Avatar"

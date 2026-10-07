@@ -4,16 +4,16 @@ import { toast } from "react-toastify";
 
 export default function ProtectedRoute({ children, requireAdmin = false }) {
   // This reads the current auth state to decide whether a user may enter the app.
-  const { token, isLoading, user, logout } = useAuth();
+  const { isAuthenticated, authChecked, user, logout } = useAuth();
   const isAdminUser = String(user?.role || "").toLowerCase() === "admin";
 
   // This shows a loading screen while the auth store is still hydrating.
-  if (isLoading) {
+  if (!authChecked) {
     return <h1>Loading...</h1>;
   }
 
   // This redirects users without a token back to the login page.
-  if (!token) {
+  if (!isAuthenticated) {
     try {
       // This warns the user that a login is required before viewing the page.
       toast.error("please Login to access page");
@@ -28,7 +28,9 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
   if (String(user?.status || "").toLowerCase() === "blocked") {
     try {
       // This clears the blocked session immediately to stop repeated access attempts.
-      logout();
+      logout().catch((error) => {
+        console.error("Failed to clear the blocked user's session", error);
+      });
       // This shows a custom message to the user before redirecting.
       toast.error("This account is blocked. Please contact support.", {
         position: "top-center",
@@ -45,7 +47,9 @@ export default function ProtectedRoute({ children, requireAdmin = false }) {
   // This protects admin-only routes by returning a boolean state from the user role.
   if (requireAdmin && !isAdminUser) {
     try {
-      logout();
+      logout().catch((error) => {
+        console.error("Failed to clear the unauthorized session", error);
+      });
       toast.error("not authorized for this access");
     } catch (error) {
       console.error(`error at ProtectedRoute.requireAdmin ${error}`);

@@ -46,10 +46,10 @@ const getTotalPayment = async (order_id, user_id) => {
 };
 
 // Search orders containing product by title or within specific order
-const search_Order = async (title, order_id) => {
+const search_Order = async (title, user_id) => {
   try {
     // Call repository to search orders
-    const result = await ordersRepo.search_Order(title, order_id);
+    const result = await ordersRepo.search_Order(title, user_id);
     // Return search result
     return result;
   } catch (error) {
@@ -59,10 +59,10 @@ const search_Order = async (title, order_id) => {
 };
 
 // Get order details by order_id
-const getOrderDetails = async (order_id) => {
+const getOrderDetails = async (order_id,user_id) => {
   try {
     // Call repository to get order details
-    const result = await ordersRepo.getOrderDetails(order_id);
+    const result = await ordersRepo.getOrderDetails(order_id,user_id);
     // Return order details result
     return result;
   } catch (error) {

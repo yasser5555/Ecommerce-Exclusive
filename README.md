@@ -1392,25 +1392,59 @@ EMAIL_PASSWORD=your_email_password
 
 # ▶️ Running the Project
 
-## Start the backend
+### Start React and Express together (recommended)
 
-```bash
-cd server
+From the project root, install dependencies once if you have not already:
 
-npm start
+```sh
+npm install
+cd client && npm install
+cd ../server && npm install
 ```
 
-## Start the frontend
+Then, from the project root, start both development servers:
 
-Open another terminal:
-
-```bash
-cd client
-
-npm start
+```sh
+npm run dev
 ```
 
-The frontend and backend can then run independently during development.
+This runs the React development server on port `3000` and the Express API on port `5000`.
+
+### Start them in separate terminals
+
+Open two terminals at the project root. In the first terminal, start Express:
+
+```sh
+npm run server
+```
+
+In the second terminal, start React:
+
+```sh
+npm run client
+```
+
+### Open the app on a tablet or another device
+
+1. Connect the computer running the project and the tablet to the same Wi-Fi network. Some guest Wi-Fi networks block devices from connecting to each other.
+2. On the computer, run `ipconfig` in PowerShell or Command Prompt. Find the IPv4 address under the active Wi-Fi adapter (for example, `192.168.1.25`).
+3. On the tablet, open `http://<computer-ipv4-address>:3000`, replacing the placeholder with that address. For example: `http://192.168.1.25:3000`.
+4. Keep both development servers running in their terminals while using the app.
+
+The React dev server is configured to listen on the network. Express listens on `0.0.0.0:5000`, and the React app uses the same hostname as the page to reach the API and load uploaded images. You do not need to edit the API URL when your computer's local IP changes.
+
+If Windows Firewall asks, allow Node.js on **Private networks**. If you still cannot connect, check that both devices are on the same non-guest Wi-Fi, that ports `3000` and `5000` are allowed on the computer's private network, and that both servers started without errors.
+
+The database remains on the computer running Express; `DB_HOST=localhost` in `server/.env` refers to that computer, not the tablet. These settings are for local development only. Do not expose the development servers to the public internet.
+
+## Open the development app on a tablet
+
+1. Connect the computer and tablet to the same Wi-Fi network.
+2. Start both applications from the project root with `npm run dev`.
+3. On Windows, run `ipconfig` and find the computer's IPv4 address for the Wi-Fi adapter.
+4. On the tablet, open `http://<computer-ipv4-address>:3000` (for example, `http://192.168.1.25:3000`).
+
+The development client and API listen on the network, and the API URL follows the host used to open the app. If the page does not load, allow Node.js through Windows Defender Firewall on private networks for ports 3000 and 5000. Do not expose these development servers to the public internet.
 
 ---
 
