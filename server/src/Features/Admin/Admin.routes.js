@@ -21,7 +21,6 @@ router.get(
   "/low_stock",
   protect,
   isAdmin,
-
   AdminController.getLowStockController,
 );
 router.get(
@@ -55,7 +54,7 @@ router.get(
   AdminController.getAdminOrderDetailsController,
 );
 
-router.patch("/", protect, AdminController.update_ProductController);
+router.patch("/", protect, isAdmin, AdminController.update_ProductController);
 router.patch(
   "/Update_category",
   protect,

@@ -1,47 +1,33 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { ArrowLeft, CheckCircle, Package, Truck } from "lucide-react";
-
-import { useOrderStore } from "../Store/Orders.store";
 import NotAuthorized from "../Components/notAuthorized";
+import useOrderDetials from "../Hooks/userOrderDetials";
 
 export default function OrderDetails() {
   const { order_id } = useParams();
-  const [accessDenied, setAccessDenied] = useState(false);
-  const { order, orderId, isloading, FetchOrderDetails } = useOrderStore();
-  
+  const {
+    order,
+    orderId,
+    isloading,
+    accessDenied,
+    setAccessDenied,
+    getOrderDetails,
+    formatDate,
+    getStatusBadge
+  } = useOrderDetials();
+
   useEffect(() => {
     setAccessDenied(false);
-
-    const getOrderDetails = async (order_id) => {
-      try {
-        await FetchOrderDetails(order_id);
-      } catch (error) {
-        if (error.response?.status === 403) {
-          setAccessDenied(true);
-        }
-        console.error(`Error at GetOrderDetails: ${error.message}`);
-      }
-    };
-
     getOrderDetails(order_id);
-  }, [order_id, FetchOrderDetails]);
-
-  if (isloading || orderId !== order_id) {
-    return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border text-danger" role="status">
-          <span className="visually-hidden">Loading order...</span>
-        </div>
-      </div>
-    );
-  }
+  }, [order_id, getOrderDetails, setAccessDenied]);
 
   if (accessDenied) {
     return <NotAuthorized />;
   }
 
-  const currentOrder = Array.isArray(order) ? order[0] : null;
+ 
+  const currentOrder = Array.isArray(order) ? order[0] : order;
   if (!currentOrder) {
     return (
       <div className="container py-5">
@@ -60,40 +46,7 @@ export default function OrderDetails() {
     products = [],
   } = currentOrder;
 
-  const formatDate = (date) => {
-    if (!date) return "N/A";
-
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  const getStatusBadge = () => {
-    switch (status?.toLowerCase()) {
-      case "pending":
-        return <span className="badge text-bg-warning px-3 py-2">Pending</span>;
-
-      case "shipped":
-        return <span className="badge text-bg-primary px-3 py-2">Shipped</span>;
-
-      case "delivered":
-        return (
-          <span className="badge text-bg-success px-3 py-2">Delivered</span>
-        );
-
-      case "cancelled":
-        return (
-          <span className="badge text-bg-danger px-3 py-2">Cancelled</span>
-        );
-
-      default:
-        return (
-          <span className="badge text-bg-secondary px-3 py-2">{status}</span>
-        );
-    }
-  };
+ 
 
   return (
     <div className="container-fluid bg-light min-vh-100 py-3 py-md-4">
@@ -116,7 +69,7 @@ export default function OrderDetails() {
             </p>
           </div>
 
-          <div>{getStatusBadge()}</div>
+          <div>{getStatusBadge(status)}</div>
         </div>
 
         {/* Order Progress */}

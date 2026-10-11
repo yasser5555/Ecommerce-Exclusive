@@ -10,14 +10,10 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useChangeTitle } from "./../../../../shared/Utils/useChangeTitle";
 import { useMyOrders } from "../Hooks/useMyOrders";
-// Import OrderSearch component
 import OrderSearch from "../Components/OrderSearch";
-
 export default function MyOrders() {
   useChangeTitle({ title: "My orders" });
-
   const Navigate = useNavigate();
-
   const {
     search,
     orders,
@@ -53,8 +49,6 @@ export default function MyOrders() {
                 </div>
 
                 <div className="d-flex flex-wrap gap-2">
-                 
-
                   <button
                     onClick={() => Navigate("/products/")}
                     className="btn btn-danger btn-sm"
@@ -74,11 +68,10 @@ export default function MyOrders() {
               totalOrders={orders.length}
             >
               {/* ================= FILTERS ================= */}
-               
             </OrderSearch>
 
             {/* ================= ORDERS ================= */}
-            
+
             {currentOrders.length > 0 ? (
               currentOrders.map((order) => (
                 <div className="border-0 shadow-sm mb-4" key={order.order_id}>
@@ -86,13 +79,11 @@ export default function MyOrders() {
 
                   <div className="bg-white py-3 px-3">
                     <div className="d-flex flex-wrap bg-body justify-content-end gap-2">
-         
-
                       <button
                         onClick={() => {
-                          const {order_id} = order 
+                          const { order_id } = order;
                           console.log(`Order id from myOrders is ${order_id}`);
-                          
+
                           Navigate(`/myOrders/orderDetials/${order.order_id}`);
                         }}
                         className="btn btn-outline-danger btn-sm my-3"
