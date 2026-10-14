@@ -1,8 +1,11 @@
 import React from "react";
 import { ShoppingCart, Heart, Star, Eye } from "lucide-react";
 import { NavLink } from "react-router-dom";
+import { useRef } from "react";
 
 export default function WishlistCard({ product, onRemove, onAddToCart }) {
+  const imageRef = useRef(null);
+
   const removeFromWishlist = () => {
     try {
       onRemove(product.p_id);
@@ -11,9 +14,9 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
     }
   };
 
-  const addToCart = () => {
+  const addToCart = async () => {
     try {
-      onAddToCart(product);
+      await onAddToCart(product, imageRef.current);
     } catch (error) {
       console.log(
         "4. WishlistCard: error while adding product to cart:",
@@ -43,6 +46,7 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
             }}
           >
             <img
+              ref={imageRef}
               src={product.image}
               alt={product.name}
               className="w-100 h-100"
@@ -107,8 +111,8 @@ export default function WishlistCard({ product, onRemove, onAddToCart }) {
                 <ShoppingCart size={14} />
                 Add to Cart
               </button>
-              <NavLink to={`/products/${product.p_id}`}
-                onClick={addToCart}
+              <NavLink
+                to={`/products/${product.p_id}`}
                 className="btn btn-danger btn-sm w-100 d-flex align-items-center justify-content-center gap-1"
               >
                 <Eye size={14} />

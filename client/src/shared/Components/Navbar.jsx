@@ -1,4 +1,3 @@
- 
 import React, { useEffect } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import {
@@ -17,7 +16,8 @@ import useCartTable from "../../features/User/Cart/Hooks/useCartTable";
 import { FetchOnRender } from "../Utils/useFetch";
 import { useChangeTitle } from "../Utils/useChangeTitle";
 import { serverBaseUrl } from "../services/axiosInstance";
-
+import { AnimatePresence, motion, useAnimationControls } from "framer-motion";
+import useCartAnimationStore from "../Store/cartAnimation.store";
 export default function Navbar() {
   const location = useLocation();
 
@@ -55,7 +55,6 @@ export default function Navbar() {
   ];
 
   const profileLinks = [
-    
     {
       title: "Profile Page",
       path: "/profile",
@@ -79,6 +78,37 @@ export default function Navbar() {
     "/profile": "Profile",
     "/myOrders": "My Orders",
   };
+  const animationKey = useCartAnimationStore((state) => state.animationKey);
+  const animation = useCartAnimationStore((state) => state.animation);
+  const clearAnimation = useCartAnimationStore(
+    (state) => state.clearAnimation,
+  );
+
+  const cartControls = useAnimationControls();
+
+  const flyX = animation
+    ? animation.endRect.left +
+      animation.endRect.width / 2 -
+      (animation.startRect.left + animation.startRect.width / 2)
+    : 0;
+  const flyY = animation
+    ? animation.endRect.top +
+      animation.endRect.height / 2 -
+      (animation.startRect.top + animation.startRect.height / 2)
+    : 0;
+
+  useEffect(() => {
+    if (animationKey === 0) return;
+
+    cartControls.start({
+      scale: [1, 1.3, 0.9, 1.1, 1],
+      rotate: [0, -12, 12, -6, 0],
+      transition: {
+        duration: 0.55,
+        ease: "easeInOut",
+      },
+    });
+  }, [animationKey, cartControls]);
 
   const currentTitle = pageTitles[location.pathname] || "Exclusive";
 
@@ -107,10 +137,31 @@ export default function Navbar() {
   return (
     <nav className="navbar priorty navbar-expand-lg bg-body-tertiary position-sticky top-0 z-3 border-bottom shadow-sm">
       <div className="container">
-        <NavLink
-          className="navbar-brand fw-bold fs-4 text-dark"
-          to="/home"
-        >
+        <AnimatePresence>
+          {animation && (
+            <motion.img
+              key={animationKey}
+              src={animation.image}
+              alt=""
+              aria-hidden="true"
+              initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
+              animate={{ x: flyX, y: flyY, scale: 0.12, opacity: 0.25 }}
+              transition={{ duration: 0.75, ease: "easeInOut" }}
+              onAnimationComplete={clearAnimation}
+              style={{
+                position: "fixed",
+                left: animation.startRect.left,
+                top: animation.startRect.top,
+                width: animation.startRect.width,
+                height: animation.startRect.height,
+                objectFit: "contain",
+                pointerEvents: "none",
+                zIndex: 2000,
+              }}
+            />
+          )}
+        </AnimatePresence>
+        <NavLink className="navbar-brand fw-bold fs-4 text-dark" to="/home">
           Exclusive
         </NavLink>
 
@@ -126,10 +177,7 @@ export default function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        <div
-          className="collapse navbar-collapse"
-          id="navbarContent"
-        >
+        <div className="collapse navbar-collapse" id="navbarContent">
           <ul className="navbar-nav me-auto align-items-lg-center">
             {navLinks.map((link) => (
               <li className="nav-item" key={link.path}>
@@ -137,9 +185,7 @@ export default function Navbar() {
                   to={link.path}
                   className={({ isActive }) =>
                     `nav-link px-3 ${
-                      isActive
-                        ? "active text-danger fw-semibold"
-                        : "text-dark"
+                      isActive ? "active text-danger fw-semibold" : "text-dark"
                     }`
                   }
                 >
@@ -176,8 +222,13 @@ export default function Navbar() {
                 }
                 aria-label="Shopping cart"
               >
-                <ShoppingCart size={21} strokeWidth={1.8} />
-
+                <motion.div
+                  data-cart-icon
+                  animate={cartControls}
+                  style={{ display: "inline-flex" }}
+                >
+                  <ShoppingCart size={21} strokeWidth={1.8} />
+                </motion.div>
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   {cart?.length > 10 ? "+10" : cart?.length}
                 </span>
@@ -203,10 +254,7 @@ export default function Navbar() {
                       }}
                     />
                   ) : (
-                    <UserCircle
-                      size={35}
-                      strokeWidth={1.5}
-                    />
+                    <UserCircle size={35} strokeWidth={1.5} />
                   )}
                 </button>
 
@@ -220,9 +268,7 @@ export default function Navbar() {
                           to={link.path}
                           className={({ isActive }) =>
                             `dropdown-item d-flex align-items-center gap-2 ${
-                              isActive
-                                ? "active bg-danger text-white"
-                                : ""
+                              isActive ? "active bg-danger text-white" : ""
                             }`
                           }
                         >
@@ -251,4 +297,3 @@ export default function Navbar() {
     </nav>
   );
 }
- 

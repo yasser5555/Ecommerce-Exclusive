@@ -4,8 +4,14 @@ import useWishlist from "../../Wishlist/Hooks/useWishlist";
 import { useAuthStore } from "../../../auth/store/auth.store";
 import useCartStore from "../../Cart/store/Cart.store";
 import { toast } from "react-toastify";
-
+import { useRef } from "react";
+import useCartAnimationStore from "../../../../shared/Store/cartAnimation.store";
 function ProductCard({ product, callback, isactive }) {
+  const imageRef = useRef(null);
+
+  const triggerAnimation = useCartAnimationStore(
+    (state) => state.triggerAnimation,
+  );
   const { cart, isLoading, removeCartItem, updateProductQuantity } =
     useCartStore();
   // ! For Handling User wishList
@@ -21,6 +27,7 @@ function ProductCard({ product, callback, isactive }) {
   useEffect(() => {
     setActive(isactive === 1);
   }, [isactive, product?.p_id]);
+
   const handleWishlist = async () => {
     try {
       // !  reversing Current State in order to Toggle Product in WishList
@@ -30,6 +37,7 @@ function ProductCard({ product, callback, isactive }) {
       // ! newState is true value then add it to wishlist
       if (newState) {
         await handleAddToWishlist(product?.p_id);
+        
       } else {
         // ! otherwise remove it from wishlist
         await handleRemoveFromWishlist(product?.p_id);
@@ -51,18 +59,26 @@ function ProductCard({ product, callback, isactive }) {
       toast.info("Product Already Added to your Cart");
       return;
     }
-
     // ! If the product does not exist, add it to the cart with quantity 1
-    await addProductToCart({
+    const added = await addProductToCart({
       // ! Which product does the user want to add to the cart
       product_id: product.p_id,
-
       // ! The initial quantity is 1
       quantity: 1,
-
       // ! Which user is adding the product to the cart
       user_id: user?.id,
     });
+
+    if (added && imageRef.current) {
+      const cartIcon = document.querySelector("[data-cart-icon]");
+      if (cartIcon) {
+        triggerAnimation({
+          image: imageRef.current.currentSrc || product.image,
+          startRect: imageRef.current.getBoundingClientRect(),
+          endRect: cartIcon.getBoundingClientRect(),
+        });
+      }
+    }
   };
   // ! Parsing Rating into Number will be used later on
   const Rating = Number(product?.rating) || 0;
@@ -74,8 +90,9 @@ function ProductCard({ product, callback, isactive }) {
         style={{ height: "260px" }}
       >
         <img
-          src={product?.image}
-          alt={product?.name}
+          ref={imageRef}
+          src={product.image}
+          alt={product.name}
           className="w-100 h-100"
           style={{
             objectFit: "contain",

@@ -1,16 +1,21 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Star } from "lucide-react";
 
-import ProductComments from "./../component/ProductReviews";
+import ProductComments from "../component/ProductReviews";
 import useProductdetails from "../hooks/useProductdetails";
 import { FetchOnRender } from "../../../../shared/Utils/useFetch";
 import useCartStore from "../../Cart/store/Cart.store";
 import { useAuthStore } from "../../../auth/store/auth.store";
 import { useChangeTitle } from "../../../../shared/Utils/useChangeTitle";
 import { toast } from "react-toastify";
+import useCartAnimationStore from "../../../../shared/Store/cartAnimation.store";
 
 export default function Productdetails() {
   const [quantity, setQuantity] = useState(1);
+  const imageRef = useRef(null);
+  const triggerAnimation = useCartAnimationStore(
+    (state) => state.triggerAnimation,
+  );
   const { user } = useAuthStore();
   const { addProductToCart, cart } = useCartStore();
 
@@ -42,11 +47,22 @@ export default function Productdetails() {
       return;
     }
 
-    await addProductToCart({
+    const added = await addProductToCart({
       product_id: product.p_id,
       quantity: quantity,
       user_id: user?.id,
     });
+
+    if (added && imageRef.current) {
+      const cartIcon = document.querySelector("[data-cart-icon]");
+      if (cartIcon) {
+        triggerAnimation({
+          image: imageRef.current.currentSrc || selectedImage || product.image,
+          startRect: imageRef.current.getBoundingClientRect(),
+          endRect: cartIcon.getBoundingClientRect(),
+        });
+      }
+    }
   };
   useChangeTitle({ title: `${product?.name}` });
   return (
@@ -62,6 +78,7 @@ export default function Productdetails() {
               }}
             >
               <img
+                ref={imageRef}
                 src={selectedImage || product?.image}
                 alt={product?.name || "Product"}
                 className="w-100 h-100"

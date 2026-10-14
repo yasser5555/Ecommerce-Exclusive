@@ -1,13 +1,13 @@
 import React from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import ProductCard from "../component/Product-card";
 import ProductFilterSidebar from "../component/ProductFilterSidebar";
-
 import useProductPage from "../hooks/useProductPage";
 import useHeavyFetchOnRender from "../../../../shared/Utils/useheavyFetch";
 import useWishlist from "../../Wishlist/Hooks/useWishlist";
 import { useChangeTitle } from "../../../../shared/Utils/useChangeTitle";
-
 export default function Productspage() {
+
   useChangeTitle({ title: `Shop` });
   const {
     filters,
@@ -26,7 +26,6 @@ export default function Productspage() {
 
   const getWishlistStatus = (product_id) => {
     const wishlistProduct = wishlist?.find((item) => item.p_id === product_id);
-
     return wishlistProduct?.isWishList ?? 0;
   };
   useHeavyFetchOnRender(() => {
@@ -80,28 +79,37 @@ export default function Productspage() {
             )}
           </div>
 
-          <div className="row g-3 g-md-4">
-            {products?.length === 0 ? (
-              <div className="container py-5 text-center">
-                <h2>Product not found</h2>
-                <p className="text-muted">
-                  The product you're looking for doesn't exist.
-                </p>
-              </div>
-            ) : (
-              products?.map((product) => (
-                <div key={product.p_id} className="col-6 col-md-4">
-                  <ProductCard
-                    isactive={getWishlistStatus(product.p_id)}
-                    product={product}
-                    callback={() => {
-                      navigate(`/products/${product.p_id}`);
-                    }}
-                  />
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={products?.map((product) => product.p_id).join("-") || "empty"}
+              className="row g-3 g-md-4"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+            >
+              {products?.length === 0 ? (
+                <div className="container py-5 text-center">
+                  <h2>Product not found</h2>
+                  <p className="text-muted">
+                    The product you're looking for doesn't exist.
+                  </p>
                 </div>
-              ))
-            )}
-          </div>
+              ) : (
+                products?.map((product) => (
+                  <div key={product.p_id} className="col-6 col-md-4">
+                    <ProductCard
+                      isactive={getWishlistStatus(product.p_id)}
+                      product={product}
+                      callback={() => {
+                        navigate(`/products/${product.p_id}`);
+                      }}
+                    />
+                  </div>
+                ))
+              )}
+            </motion.div>
+          </AnimatePresence>
 
           {!searchResults && (
             <nav className="mt-5">

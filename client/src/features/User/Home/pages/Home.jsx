@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import { NavLink } from "react-router-dom";
 import { Search, ShoppingBag, Truck, ArrowRight } from "lucide-react";
 
@@ -11,6 +12,19 @@ import SHOPPINGEXPERIENCE from "../Components/SHOPPING EXPERIENCE";
 import TRENDINGNOW from "../Components/TRENDING NOW";
 import FEATURED from "../Components/FEATURED";
 
+function ScrollReveal({ children, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15 }}
+      transition={{ duration: 0.55, delay, ease: "easeOut" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function Homepage() {
   useChangeTitle({ title: "Home" });
 
@@ -20,147 +34,165 @@ function Homepage() {
           HERO
       ====================================================== */}
 
-      <HeroSection />
+      <ScrollReveal>
+        <HeroSection />
+      </ScrollReveal>
 
       {/* =====================================================
           QUICK CATEGORIES
       ====================================================== */}
-      <QuickCatogeries />
+      <ScrollReveal>
+        <QuickCatogeries />
+      </ScrollReveal>
 
       {/* =====================================================
           TRENDING NOW
       ====================================================== */}
 
-      <TRENDINGNOW  />
+      <ScrollReveal>
+        <TRENDINGNOW />
+      </ScrollReveal>
 
       {/* =====================================================
           SHOPPING EXPERIENCE
       ====================================================== */}
 
-      <SHOPPINGEXPERIENCE />
+      <ScrollReveal>
+        <SHOPPINGEXPERIENCE />
+      </ScrollReveal>
 
       {/* =====================================================
           FEATURED COLLECTION
       ====================================================== */}
-      <FEATURED />
+      <ScrollReveal>
+        <FEATURED />
+      </ScrollReveal>
 
       {/* =====================================================
           RECENTLY ADDED
       ====================================================== */}
-      <RecentlyAdded recentlyAddedProducts={[]} />
+      <ScrollReveal>
+        <RecentlyAdded recentlyAddedProducts={[]} />
+      </ScrollReveal>
 
       {/* =====================================================
           YOUR SHOPPING JOURNEY
       ====================================================== */}
 
-      <section className="container py-5">
-        <div className="text-center mb-5">
-          <span className="text-danger fw-bold">How It Works</span>
+      <ScrollReveal>
+        <section className="container py-5">
+          <div className="text-center mb-5">
+            <span className="text-danger fw-bold">How It Works</span>
 
-          <h2 className="fw-bold mt-2 mb-2">Your Shopping Journey</h2>
+            <h2 className="fw-bold mt-2 mb-2">Your Shopping Journey</h2>
 
-          <p className="text-secondary mb-0">
-            From discovering a product to receiving your order, everything is
-            simple.
-          </p>
-        </div>
-
-        <div className="row g-4 align-items-stretch">
-          <div className="col-md-4">
-            <div className="border rounded-4 p-4 h-100 text-center position-relative">
-              <div
-                className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
-                style={{ width: "64px", height: "64px" }}
-              >
-                <Search size={27} />
-              </div>
-
-              <span className="d-block text-danger fw-bold small mb-2">
-                STEP 01
-              </span>
-
-              <h5 className="fw-bold">Discover</h5>
-
-              <p className="text-secondary mb-0">
-                Browse categories and search through our collection to find
-                products you like.
-              </p>
-            </div>
+            <p className="text-secondary mb-0">
+              From discovering a product to receiving your order, everything is
+              simple.
+            </p>
           </div>
 
-          <div className="col-md-4">
-            <div className="border rounded-4 p-4 h-100 text-center position-relative">
-              <div
-                className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
-                style={{ width: "64px", height: "64px" }}
-              >
-                <ShoppingBag size={27} />
+          <div className="row g-4 align-items-stretch">
+            <div className="col-md-4">
+              <div className="border rounded-4 p-4 h-100 text-center position-relative">
+                <div
+                  className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
+                  style={{ width: "64px", height: "64px" }}
+                >
+                  <Search size={27} />
+                </div>
+
+                <span className="d-block text-danger fw-bold small mb-2">
+                  STEP 01
+                </span>
+
+                <h5 className="fw-bold">Discover</h5>
+
+                <p className="text-secondary mb-0">
+                  Browse categories and search through our collection to find
+                  products you like.
+                </p>
               </div>
+            </div>
 
-              <span className="d-block text-danger fw-bold small mb-2">
-                STEP 02
-              </span>
+            <div className="col-md-4">
+              <div className="border rounded-4 p-4 h-100 text-center position-relative">
+                <div
+                  className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
+                  style={{ width: "64px", height: "64px" }}
+                >
+                  <ShoppingBag size={27} />
+                </div>
 
-              <h5 className="fw-bold">Choose</h5>
+                <span className="d-block text-danger fw-bold small mb-2">
+                  STEP 02
+                </span>
 
-              <p className="text-secondary mb-0">
-                Add your favorite products to the cart and choose your preferred
-                checkout options.
-              </p>
+                <h5 className="fw-bold">Choose</h5>
+
+                <p className="text-secondary mb-0">
+                  Add your favorite products to the cart and choose your
+                  preferred checkout options.
+                </p>
+              </div>
+            </div>
+
+            <div className="col-md-4">
+              <div className="border rounded-4 p-4 h-100 text-center">
+                <div
+                  className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
+                  style={{ width: "64px", height: "64px" }}
+                >
+                  <Truck size={27} />
+                </div>
+
+                <span className="d-block text-danger fw-bold small mb-2">
+                  STEP 03
+                </span>
+
+                <h5 className="fw-bold">Receive</h5>
+
+                <p className="text-secondary mb-0">
+                  Place your order, follow its status and receive it at your
+                  selected address.
+                </p>
+              </div>
             </div>
           </div>
-
-          <div className="col-md-4">
-            <div className="border rounded-4 p-4 h-100 text-center">
-              <div
-                className="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4"
-                style={{ width: "64px", height: "64px" }}
-              >
-                <Truck size={27} />
-              </div>
-
-              <span className="d-block text-danger fw-bold small mb-2">
-                STEP 03
-              </span>
-
-              <h5 className="fw-bold">Receive</h5>
-
-              <p className="text-secondary mb-0">
-                Place your order, follow its status and receive it at your
-                selected address.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
+      </ScrollReveal>
 
       {/* =====================================================
           WHY CHOOSE US
       ====================================================== */}
 
-      <WhyChooseUs />
+      <ScrollReveal>
+        <WhyChooseUs />
+      </ScrollReveal>
 
       {/* =====================================================
           FINAL CTA
       ====================================================== */}
 
-      <section className="container py-5">
-        <div className="bg-danger text-white rounded-4 p-4 p-md-5 text-center">
-          <h2 className="fw-bold mb-3">Ready to find something you love?</h2>
+      <ScrollReveal>
+        <section className="container py-5">
+          <div className="bg-danger text-white rounded-4 p-4 p-md-5 text-center">
+            <h2 className="fw-bold mb-3">Ready to find something you love?</h2>
 
-          <p className="mb-4 text-white-50 fs-5">
-            Explore our collection and discover your next favorite product.
-          </p>
+            <p className="mb-4 text-white-50 fs-5">
+              Explore our collection and discover your next favorite product.
+            </p>
 
-          <NavLink
-            to="/products"
-            className="btn btn-light rounded-3 px-5 py-2 fw-semibold"
-          >
-            Start Shopping
-            <ArrowRight size={17} className="ms-2" />
-          </NavLink>
-        </div>
-      </section>
+            <NavLink
+              to="/products"
+              className="btn btn-light rounded-3 px-5 py-2 fw-semibold"
+            >
+              Start Shopping
+              <ArrowRight size={17} className="ms-2" />
+            </NavLink>
+          </div>
+        </section>
+      </ScrollReveal>
     </main>
   );
 }

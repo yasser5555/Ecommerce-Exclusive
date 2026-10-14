@@ -105,7 +105,7 @@ export default function ContactPage() {
                 <div>
                   <h6 className="fw-bold mb-1">Address</h6>
 
-                  <p className="text-muted mb-0">Sixth of october , Egypt</p>
+                  <p className="text-muted mb-0">6th-october , Egypt</p>
                 </div>
               </div>
             </div>

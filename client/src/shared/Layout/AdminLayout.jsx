@@ -1,12 +1,18 @@
-import React, { useState } from "react";
-import { Outlet } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { Menu, X } from "lucide-react";
 
 import ProtectedRoute from "../../features/auth/routes/ProtectedRoute";
 import Sidebar from "../Components/Sidebar";
+import scrollToTop from "../Utils/scrollToTop";
 
 export default function AdminLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const { key } = useLocation();
+
+  useEffect(() => {
+    scrollToTop();
+  }, [key]);
 
   return (
     <ProtectedRoute requireAdmin={true}>
@@ -39,7 +45,7 @@ export default function AdminLayout() {
 
         {/* Main Content */}
 
-        <main className="flex-grow-1 min-vh-100">
+        <main className="flex-grow-1">
           <Outlet />
         </main>
       </div>

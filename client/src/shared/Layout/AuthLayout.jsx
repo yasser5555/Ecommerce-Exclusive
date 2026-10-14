@@ -1,36 +1,46 @@
+import { useEffect } from "react";
 import { Outlet } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import authImage from "../../features/auth/Assets/log_and_reg.png";
-
+import scrollToTop from "../Utils/scrollToTop";
 function AuthLayout() {
-  return (
-    <div className="container-fluid p-0">
-      <div className="row min-vh-100 g-0">
-        {/* Left Side Image */}
-        <div className="col-lg-7 d-none d-lg-block">
-          <img src={authImage} alt="Shopping" className="img-fluid max-height  w-100" />
-        </div>
+  const { key } = useLocation();
 
-        {/* Right Side Form */}
-        <div
-          className="
+  useEffect(() => {
+    scrollToTop();
+  }, [key]);
+
+  return (
+    <>
+      <div className="container-fluid p-0 min-vh-100">
+        <div className="row min-vh-100 g-0">
+          {/* Left Side Image */}
+          <div className="col-lg-7 d-none d-lg-block">
+            <img src={authImage} alt="Shopping" className="img-fluid max-height  w-100" />
+          </div>
+
+          {/* Right Side Form */}
+          <div
+            className="
             col-12
             col-lg-5
             d-flex
             justify-content-center
             align-items-center
           "
-        >
-          <div
-            className="w-100 px-4"
-            style={{
-              maxWidth: "420px",
-            }}
           >
-            <Outlet />
+            <div
+              className="w-100 px-4"
+              style={{
+                maxWidth: "420px",
+              }}
+            >
+              <Outlet />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
