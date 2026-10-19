@@ -3,6 +3,7 @@ import { Mail, Phone, MapPin, Send } from "lucide-react";
 import { useContactStore } from "../Store/Contact.store";
 import { useProfileStore } from "./../../../Profile/Store/profile.store";
 import { useChangeTitle } from "./../../../../shared/Utils/useChangeTitle";
+import { NavLink } from "react-router-dom";
 
 export default function ContactPage() {
   const { loading, success, error, sendMessage, resetContactState } =
@@ -64,10 +65,20 @@ export default function ContactPage() {
 
   return (
     <div className="container py-5">
+      <header className="mb-4 mb-md-5">
+        <span className="text-danger fw-bold text-uppercase small">
+          We're here for you
+        </span>
+        <h1 className="display-5 fw-bold mt-2 mb-2">Let’s talk.</h1>
+        <p className="text-secondary fs-5 mb-0">
+          Questions about an order or need a hand? Send us a message and we’ll
+          help you find the right answer.
+        </p>
+      </header>
       <div className="row g-4">
         {/* Contact Information */}
         <div className="col-lg-4">
-          <div className="card border-0 shadow-sm h-100">
+          <div className="card border-0 shadow-sm h-100 rounded-4">
             <div className="card-body p-4">
               <h3 className="fw-bold mb-4">Contact Information</h3>
 
@@ -114,7 +125,7 @@ export default function ContactPage() {
 
         {/* Contact Form */}
         <div className="col-lg-8">
-          <div className="card border-0 shadow-sm">
+          <div className="card border-0 shadow-sm rounded-4">
             <div className="card-body p-4 p-md-5">
               <h2 className="fw-bold mb-2">Get In Touch</h2>
 
@@ -218,6 +229,7 @@ export default function ContactPage() {
               </form>
             </div>
           </div>
+    
         </div>
       </div>
     </div>

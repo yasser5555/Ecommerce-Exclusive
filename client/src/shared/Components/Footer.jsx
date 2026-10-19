@@ -6,7 +6,7 @@ export default function Footer() {
     {
       type: "brand",
       title: "Exclusive",
-      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+      text: "Thoughtful finds, a smoother way to shop, and support when you need it.",
     },
     {
       type: "contact",
@@ -41,10 +41,10 @@ export default function Footer() {
       type: "links",
       title: "Quick Link",
       links: [
-        { name: "Privacy Policy", href: "#" },
-        { name: "Terms Of Use", href: "#" },
-        { name: "FAQ", href: "#" },
-        { name: "Contact", href: "#" },
+        { name: "Privacy Policy", href: "/privacy-policy" },
+        { name: "Terms of Use", href: "/terms-of-use" },
+        { name: "FAQ", href: "/faq" },
+        { name: "Contact", href: "/contact" },
       ],
     },
   ];

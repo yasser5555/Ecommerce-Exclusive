@@ -12,6 +12,7 @@ import { AboutRoutes } from "../features/User/About/routes/About.routes";
 import { CheckoutRoutes } from "../features/User/Checkout/routes/checkout.routes";
 import { OrderRoutes } from "../features/User/Order/routes/order.routes";
 import { ContactRoutes } from "../features/User/Contact/routes/contact.routes";
+import { LegalRoutes } from "../features/User/Legal/routes/legal.routes";
  import { AdminRoutes } from "../features/Admin/routes/admin.routes";
 import AdminLayout from "../shared/Layout/AdminLayout";
 import BlockedLayout from "../shared/Layout/BlockedLayout";
@@ -34,7 +35,7 @@ export const router = createBrowserRouter([
       CheckoutRoutes,
       OrderRoutes,
       ContactRoutes,
- 
+      ...LegalRoutes,
     ],
   },
   {

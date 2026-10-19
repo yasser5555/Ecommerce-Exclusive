@@ -6,6 +6,30 @@ The project focuses on building a complete e-commerce workflow while practicing 
 
 ---
 
+## ✨ Recent Enhancements
+
+Recent updates have refined the customer shopping experience and expanded the
+support pages:
+
+* **Storefront and product discovery:** The Home page features a data-backed
+  Trending Now section, alongside responsive refinements to product browsing,
+  product details, and product cards.
+* **Cart and wishlist:** Shopping cart and wishlist interfaces have been
+  refreshed to make item details and available actions clearer.
+* **Orders and authentication:** Order confirmation and order details flows
+  have been improved, including clearer handling for users who are not
+  authorized to view an order. Authentication and session restoration have
+  also been refined.
+* **Support contact:** The Contact page uses the signed-in user's profile
+  details and provides subject/message fields with loading and success/error
+  feedback.
+* **Legal and help pages:** Dedicated FAQ, Privacy Policy, and Terms of Use
+  pages are available from the footer.
+* **Navigation and layouts:** Customer, authentication, and admin navigation
+  and layouts have received usability and responsive improvements.
+
+---
+
 ## 🚀 Tech Stack
 
 ### Frontend
@@ -889,13 +913,14 @@ Products that are associated with historical orders can be deactivated instead o
 
 The application includes a dedicated Contact feature.
 
-Users can submit:
+Signed-in users can send a support message. Their name and email are populated
+from their profile, and they provide:
 
-* Name
-* Email
-* Telephone
 * Subject
 * Message
+
+The form displays loading and success/error feedback while the request is
+processed.
 
 The Contact feature communicates with the backend through a dedicated API.
 
